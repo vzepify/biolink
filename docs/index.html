@@ -291,11 +291,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="auth-form active" id="login-form">
       <div class="form-group">
         <label>Username</label>
-        <input type="text" id="login-user" placeholder="yourname" value="demo">
+        <input type="text" id="login-user" placeholder="yourname" autocomplete="username">
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input type="password" id="login-pass" placeholder="••••••••" value="demo123">
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
       </div>
       <button class="btn-primary" onclick="doLogin()">Sign In →</button>
     </div>
@@ -314,7 +314,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
       <button class="btn-primary" onclick="doRegister()">Create Account →</button>
     </div>
-    <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:20px">Demo: username <strong>demo</strong> / password <strong>demo123</strong></p>
   </div>
 </div>
 
@@ -682,53 +681,12 @@ let store = {
   currentUser: null
 };
 
-const defaultProfile = {
-  name: 'Demo User',
-  username: 'demo',
-  bio: 'Welcome to my profile! I create things on the internet.',
-  location: '',
-  pronouns: '',
-  website: '',
-  avatar: null,
-  links: [
-    {id:1, icon:'🌐', title:'My Website', url:'https://example.com'},
-    {id:2, icon:'📺', title:'YouTube Channel', url:'https://youtube.com'},
-  ],
-  socials: {
-    twitter:'', instagram:'', tiktok:'', youtube:'',
-    twitch:'', discord:'', github:'', linkedin:'',
-    spotify:'', reddit:'',
-  },
-  theme:'dark-purple',
-  bgEffect:'none',
-  font:'DM Sans',
-  colorAccent:'#7c5cfc',
-  colorBg:'#0a0a0f',
-  colorText:'#f0f0f8',
-  colorCard:'#13131a',
-  typewriter:false,
-  typewriterLines:'Developer\nCreator\nDreamer',
-  badges:[],
-  hideViews:false,
-  hideBadges:false,
-  active:true,
-  seoTitle:'',
-  seoDesc:'',
-  alias1:'',
-  alias2:'',
-  cursorEffect:false,
-  music:{title:'',artist:'',url:''},
-  analytics:{views:247, clicks:89, history:[30,45,22,67,55,80,48,90,35,60,75,40,55,70,88,44,33,78,92,65,50,41,68,80,73,58,44,62,88,95]},
-  linkClicks:{},
-};
+
 
 // ===== INIT =====
 function init(){
   const saved = localStorage.getItem('biolink_store');
   if(saved) store = JSON.parse(saved);
-  if(!store.users['demo']){
-    store.users['demo'] = {password:'demo123', profile:{...defaultProfile}};
-  }
   if(!store.users) store.users = {};
   renderBadgesGrid();
   renderSocialsGrid();
@@ -754,8 +712,9 @@ function switchAuthTab(tab){
 }
 
 function doLogin(){
-  const u = document.getElementById('login-user').value.trim();
+  const u = document.getElementById('login-user').value.trim().toLowerCase();
   const p = document.getElementById('login-pass').value;
+  if(!u || !p){ toast('❌ Please enter your username and password'); return; }
   if(!store.users[u] || store.users[u].password !== p){
     toast('❌ Invalid username or password'); return;
   }
@@ -765,14 +724,49 @@ function doLogin(){
 }
 
 function doRegister(){
-  const u = document.getElementById('reg-user').value.trim();
+  const u = document.getElementById('reg-user').value.trim().toLowerCase();
   const e = document.getElementById('reg-email').value.trim();
   const p = document.getElementById('reg-pass').value;
   if(!u || !e || !p){ toast('❌ Please fill all fields'); return; }
-  if(store.users[u]){ toast('❌ Username taken'); return; }
-  store.users[u] = {password:p, profile:{...defaultProfile, name:u, username:u, analytics:{views:0,clicks:0,history:Array(30).fill(0)}, linkClicks:{}}};
+  if(!/^[a-z0-9_]{2,20}$/.test(u)){ toast('❌ Username: 2–20 chars, letters/numbers/underscores only'); return; }
+  if(p.length < 6){ toast('❌ Password must be at least 6 characters'); return; }
+  if(store.users[u]){ toast('❌ Username already taken'); return; }
+  const freshProfile = {
+    name: u,
+    username: u,
+    bio: '',
+    location: '',
+    pronouns: '',
+    website: '',
+    avatar: null,
+    links: [],
+    socials: {twitter:'',instagram:'',tiktok:'',youtube:'',twitch:'',discord:'',github:'',linkedin:'',spotify:'',reddit:''},
+    theme: 'dark-purple',
+    bgEffect: 'none',
+    font: 'DM Sans',
+    colorAccent: '#7c5cfc',
+    colorBg: '#0a0a0f',
+    colorText: '#f0f0f8',
+    colorCard: '#13131a',
+    typewriter: false,
+    typewriterLines: '',
+    badges: [],
+    hideViews: false,
+    hideBadges: false,
+    active: true,
+    seoTitle: '',
+    seoDesc: '',
+    alias1: '',
+    alias2: '',
+    cursorEffect: false,
+    music: {title:'',artist:'',url:''},
+    analytics: {views:0, clicks:0, history:Array(30).fill(0)},
+    linkClicks: {},
+  };
+  store.users[u] = {password: p, email: e, profile: freshProfile};
   store.currentUser = u;
   save();
+  toast('✅ Account created! Welcome, ' + u);
   showDashboard();
 }
 
@@ -1453,10 +1447,10 @@ function exportData(){
 
 // ===== BOOT =====
 init();
-const saved = localStorage.getItem('biolink_current');
-if(store.currentUser){
+if(store.currentUser && store.users[store.currentUser]){
   showDashboard();
 } else {
+  store.currentUser = null;
   showPage('auth-page');
 }
 </script>
