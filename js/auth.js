@@ -117,6 +117,7 @@ function createFreshProfile(username) {
 }
 
 function switchAuthTab(tab) {
+  // tab is either 'login' or 'register'
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
   document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
