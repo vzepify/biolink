@@ -1,38 +1,101 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeoLink</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BioLink</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="auth-container">
-    <div class="auth-card">
-      <h1>NeoLink</h1>
-      <p>Create your custom bio page</p>
 
-      <div class="tabs">
-        <button id="loginTab" class="active">Login</button>
-        <button id="registerTab">Register</button>
-      </div>
+  <div class="background-glow glow-left"></div>
+  <div class="background-glow glow-right"></div>
 
-      <div id="loginForm">
-        <input type="text" id="loginUser" placeholder="Username">
-        <input type="password" id="loginPass" placeholder="Password">
-        <button onclick="login()">Login</button>
-      </div>
+  <a class="top-button left-btn" href="dashboard.html">
+    ← Dashboard
+  </a>
 
-      <div id="registerForm" class="hidden">
-        <input type="text" id="registerUser" placeholder="Username">
-        <input type="email" id="registerEmail" placeholder="Email">
-        <input type="password" id="registerPass" placeholder="Password">
-        <button onclick="register()">Create Account</button>
-      </div>
-    </div>
+  <div class="top-button right-btn">
+    👁 Views
   </div>
 
-  <script src="js/auth.js"></script>
+  <div class="login-container">
+
+    <div class="login-card">
+
+      <div class="logo">
+        ✦ BioLink
+      </div>
+
+      <p class="subtitle">
+        Your beautiful link-in-bio, totally free
+      </p>
+
+      <div class="tab-container">
+        <button class="tab active" id="loginTab">
+          Sign In
+        </button>
+
+        <button class="tab" id="registerTab">
+          Sign Up
+        </button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="loginForm">
+
+        <div class="input-group">
+          <label>Username</label>
+          <input type="text" id="loginUser" placeholder="demo">
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••">
+        </div>
+
+        <button class="main-button" onclick="login()">
+          Sign In →
+        </button>
+
+      </div>
+
+      <!-- REGISTER -->
+      <div id="registerForm" class="hidden">
+
+        <div class="input-group">
+          <label>Username</label>
+          <input type="text" id="registerUser" placeholder="username">
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" id="registerEmail" placeholder="email@example.com">
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="registerPass" placeholder="••••••••">
+        </div>
+
+        <button class="main-button" onclick="register()">
+          Create Account →
+        </button>
+
+      </div>
+
+      <div class="demo-text">
+        Demo: username <b>demo</b> / password <b>demo123</b>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+
 </body>
 </html>
