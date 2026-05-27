@@ -899,6 +899,8 @@ async function loadUserProfile() {
     };
   }
   isAdmin = userDoc.admin;
+  // *** THIS WAS THE MISSING LINE ***
+  populateEditForm();
 }
 
 function populateEditForm() {
