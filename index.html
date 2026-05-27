@@ -1071,11 +1071,19 @@ function updateLinkPreview(i) {
 }
 
 function addLink() {
-  const def = userDoc.defaultBtn || { bg:'#7c6af7', textColor:'#ffffff', radius:12, shadow:'none', hoverBg:'#8b7af7', border:'none', padding:14 };
+  // Read current defaults directly from the form to avoid any undefined
+  const btnBg = document.getElementById('default-btn-bg').value || '#7c6af7';
+  const btnTextColor = document.getElementById('default-btn-text').value || '#ffffff';
+  const btnRadius = parseInt(document.getElementById('default-btn-radius').value) || 12;
+  const btnShadow = document.getElementById('default-btn-shadow').value || 'none';
+  const hoverBg = document.getElementById('default-btn-hover-bg').value || '#8b7af7';
+  const border = document.getElementById('default-btn-border').value || 'none';
+  const padding = parseInt(document.getElementById('default-btn-padding').value) || 14;
+
   editingLinks.push({
     title:'', url:'', type:'link', icon:'', embedUrl:'',
-    btnBg: def.bg, btnTextColor: def.textColor, btnRadius: def.radius, btnShadow: def.shadow,
-    hoverBg: def.hoverBg, border: def.border, padding: def.padding, animation:'none'
+    btnBg, btnTextColor, btnRadius, btnShadow,
+    hoverBg, border, padding, animation:'none'
   });
   renderLinksEditor();
   setTimeout(() => {
@@ -1148,6 +1156,23 @@ async function saveProfile() {
     padding: parseInt(document.getElementById('default-btn-padding').value) || 14
   };
 
+  // Extra safety: each link field gets a fallback
+  const safeLinks = editingLinks.filter(l=>l.title&&l.url).map(l=>({
+    title: l.title,
+    url: makeAbsoluteUrl(l.url),
+    type: l.type || 'link',
+    embedUrl: l.embedUrl || '',
+    icon: l.icon || '',
+    btnBg: l.btnBg || '#7c6af7',
+    btnTextColor: l.btnTextColor || '#ffffff',
+    btnRadius: l.btnRadius ?? 12,
+    btnShadow: l.btnShadow || 'none',
+    hoverBg: l.hoverBg || '#8b7af7',
+    border: l.border || 'none',
+    padding: l.padding ?? 14,
+    animation: l.animation || 'none'
+  }));
+
   const profileData = {
     username: newUsername,
     displayName: document.getElementById('edit-displayname').value.trim(),
@@ -1163,21 +1188,7 @@ async function saveProfile() {
     particles: document.getElementById('edit-particles').checked,
     showDiscordPresence: document.getElementById('edit-discord-presence').checked,
     defaultBtn,
-    links: editingLinks.filter(l=>l.title&&l.url).map(l=>({
-      title: l.title,
-      url: makeAbsoluteUrl(l.url),
-      type: l.type || 'link',
-      embedUrl: l.embedUrl || '',
-      icon: l.icon || '',
-      btnBg: l.btnBg,
-      btnTextColor: l.btnTextColor,
-      btnRadius: l.btnRadius,
-      btnShadow: l.btnShadow,
-      hoverBg: l.hoverBg,
-      border: l.border,
-      padding: l.padding,
-      animation: l.animation
-    })),
+    links: safeLinks,
     socials: editingSocials.filter(s=>s.platform&&s.url).map(s=>({
       platform: s.platform,
       url: makeAbsoluteUrl(s.url),
