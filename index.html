@@ -1566,7 +1566,7 @@ async function saveProfile() {
     particles: document.getElementById('edit-particles').checked,
     showDiscordPresence: document.getElementById('edit-discord-presence').checked,
     links: editingLinks.filter(l => l.title && l.url).map(l => ({
-      title: l.title, url: l.url, type: l.type || 'link',
+      title: l.title, url: makeAbsoluteUrl(l.url), type: l.type || 'link',
       embedUrl: l.embedUrl || '', icon: l.icon || '',
       btnBg: l.btnBg || '#7c6af7', btnTextColor: l.btnTextColor || '#ffffff',
       btnRadius: l.btnRadius ?? 12, btnShadow: l.btnShadow || 'none'
