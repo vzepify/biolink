@@ -8,11 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
-  <!-- Firebase Storage -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
   <style>
     :root {
       --bg: #0d0d14;
@@ -178,7 +173,6 @@
     textarea { resize: vertical; min-height: 80px; }
     select option { background: var(--surface2); }
 
-    /* Drop zone styling */
     .drop-zone {
       display: flex; align-items: center; justify-content: center;
       min-height: 42px; border: 2px dashed var(--border); border-radius: var(--radius-sm);
@@ -588,43 +582,22 @@
         <!-- Default Button Styles -->
         <div class="card-title" style="margin-top:1.5rem;"><div class="card-icon">🎛️</div> Default Button Styles</div>
         <div class="form-grid">
-          <div class="form-row">
-            <label>Default Bg</label>
-            <input type="color" id="default-btn-bg" value="#7c6af7">
-          </div>
-          <div class="form-row">
-            <label>Default Text Color</label>
-            <input type="color" id="default-btn-text" value="#ffffff">
-          </div>
+          <div class="form-row"><label>Default Bg</label><input type="color" id="default-btn-bg" value="#7c6af7"></div>
+          <div class="form-row"><label>Default Text Color</label><input type="color" id="default-btn-text" value="#ffffff"></div>
         </div>
         <div class="form-grid">
-          <div class="form-row">
-            <label>Default Radius</label>
-            <input type="number" id="default-btn-radius" value="12" min="0" max="50">
-          </div>
-          <div class="form-row">
-            <label>Default Shadow</label>
-            <select id="default-btn-shadow">
-              <option value="none">None</option>
-              <option value="0 4px 15px rgba(0,0,0,0.3)">Soft</option>
-              <option value="0 8px 25px rgba(0,0,0,0.5)" selected>Heavy</option>
-            </select>
-          </div>
+          <div class="form-row"><label>Default Radius</label><input type="number" id="default-btn-radius" value="12" min="0" max="50"></div>
+          <div class="form-row"><label>Default Shadow</label><select id="default-btn-shadow">
+            <option value="none">None</option>
+            <option value="0 4px 15px rgba(0,0,0,0.3)">Soft</option>
+            <option value="0 8px 25px rgba(0,0,0,0.5)" selected>Heavy</option>
+          </select></div>
         </div>
         <div class="form-grid">
-          <div class="form-row">
-            <label>Default Hover Bg</label>
-            <input type="color" id="default-btn-hover-bg" value="#8b7af7">
-          </div>
-          <div class="form-row">
-            <label>Default Border</label>
-            <input type="text" id="default-btn-border" placeholder="e.g. 1px solid #fff" value="none">
-          </div>
+          <div class="form-row"><label>Default Hover Bg</label><input type="color" id="default-btn-hover-bg" value="#8b7af7"></div>
+          <div class="form-row"><label>Default Border</label><input type="text" id="default-btn-border" placeholder="e.g. 1px solid #fff" value="none"></div>
         </div>
-        <div class="form-row">
-          <label>Default Padding (px)</label>
-          <input type="number" id="default-btn-padding" value="14" min="0" max="50">
-        </div>
+        <div class="form-row"><label>Default Padding (px)</label><input type="number" id="default-btn-padding" value="14" min="0" max="50"></div>
       </div>
 
       <!-- LINKS CARD -->
@@ -703,7 +676,7 @@
 
 <script>
 // ============================================================
-// FIREBASE CONFIG
+// FIREBASE CONFIG (YOUR KEYS)
 // ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDwxucvIFlsIUVdL69ZmUm2JHaH-09c6GM",
@@ -908,10 +881,21 @@ function populateEditForm() {
   document.getElementById('default-btn-border').value = dbn.border || 'none';
   document.getElementById('default-btn-padding').value = dbn.padding ?? 14;
 
+  // Fill editingLinks with safe defaults for every field
   editingLinks = (userDoc.links || []).map(l => ({
-    btnBg: l.btnBg, btnTextColor: l.btnTextColor, btnRadius: l.btnRadius, btnShadow: l.btnShadow,
-    hoverBg: l.hoverBg, border: l.border, padding: l.padding, animation: l.animation,
-    ...l
+    title: l.title || '',
+    url: l.url || '',
+    type: l.type || 'link',
+    embedUrl: l.embedUrl || '',
+    icon: l.icon || '',
+    btnBg: l.btnBg || '#7c6af7',
+    btnTextColor: l.btnTextColor || '#ffffff',
+    btnRadius: l.btnRadius ?? 12,
+    btnShadow: l.btnShadow || 'none',
+    hoverBg: l.hoverBg || '#8b7af7',
+    border: l.border || 'none',
+    padding: l.padding ?? 14,
+    animation: l.animation || 'none'
   }));
   editingSocials = (userDoc.socials || []).map(s => ({...s}));
   renderLinksEditor();
@@ -985,7 +969,7 @@ function renderLinksEditor() {
       <div class="link-card-header">
         <span class="drag-handle">⠿</span>
         <div class="link-preview-btn">
-          <div class="link-preview-dot" style="background:${link.btnBg||'#7c6af7'}"></div>
+          <div class="link-preview-dot" style="background:${link.btnBg}"></div>
           <div>
             <div class="link-preview-title">${escapeHtml(link.title||'Untitled')}</div>
             <div class="link-preview-url">${escapeHtml(link.url||'No URL')}</div>
@@ -996,13 +980,13 @@ function renderLinksEditor() {
       </div>
       <div class="link-card-body collapsed" id="link-body-${i}">
         <div class="form-grid">
-          <div class="form-row"><label>Title</label><input type="text" value="${escapeHtml(link.title||'')}" oninput="editingLinks[${i}].title=this.value;updateLinkPreview(${i})"></div>
+          <div class="form-row"><label>Title</label><input type="text" value="${escapeHtml(link.title)}" oninput="editingLinks[${i}].title=this.value;updateLinkPreview(${i})"></div>
           <div class="form-row"><label>Type</label><select onchange="editingLinks[${i}].type=this.value;renderLinksEditor()">
             <option value="link" ${link.type!=='music'?'selected':''}>Link</option>
             <option value="music" ${link.type==='music'?'selected':''}>Music Embed</option>
           </select></div>
         </div>
-        <div class="form-row"><label>URL</label><input type="url" value="${escapeHtml(link.url||'')}" oninput="editingLinks[${i}].url=this.value;updateLinkPreview(${i})"></div>
+        <div class="form-row"><label>URL</label><input type="url" value="${escapeHtml(link.url)}" oninput="editingLinks[${i}].url=this.value;updateLinkPreview(${i})"></div>
         ${link.type==='music'?`<div class="form-row"><label>Embed URL</label><input type="url" value="${escapeHtml(link.embedUrl||'')}" oninput="editingLinks[${i}].embedUrl=this.value"></div>`:''}
         <div class="form-row"><label>Icon</label>
           <div class="drop-zone" id="icon-drop-${i}">
@@ -1012,9 +996,9 @@ function renderLinksEditor() {
           <input type="text" id="icon-input-${i}" placeholder="or paste URL" value="${escapeHtml(link.icon||'')}" oninput="editingLinks[${i}].icon=this.value;updateIconPreview(${i})" style="margin-top:0.5rem;">
         </div>
         <div class="link-style-row">
-          <div class="style-group"><label>Bg</label><input type="color" value="${link.btnBg||'#7c6af7'}" oninput="editingLinks[${i}].btnBg=this.value;updateLinkPreview(${i})"></div>
-          <div class="style-group"><label>Text</label><input type="color" value="${link.btnTextColor||'#fff'}" oninput="editingLinks[${i}].btnTextColor=this.value"></div>
-          <div class="style-group"><label>Radius</label><input type="number" value="${link.btnRadius??12}" min="0" max="50" oninput="editingLinks[${i}].btnRadius=parseInt(this.value)" style="width:70px;"></div>
+          <div class="style-group"><label>Bg</label><input type="color" value="${link.btnBg}" oninput="editingLinks[${i}].btnBg=this.value;updateLinkPreview(${i})"></div>
+          <div class="style-group"><label>Text</label><input type="color" value="${link.btnTextColor}" oninput="editingLinks[${i}].btnTextColor=this.value"></div>
+          <div class="style-group"><label>Radius</label><input type="number" value="${link.btnRadius}" min="0" max="50" oninput="editingLinks[${i}].btnRadius=parseInt(this.value)" style="width:70px;"></div>
           <div class="style-group"><label>Shadow</label><select onchange="editingLinks[${i}].btnShadow=this.value" style="width:100px;">
             <option value="none" ${link.btnShadow==='none'?'selected':''}>None</option>
             <option value="0 4px 15px rgba(0,0,0,0.3)" ${link.btnShadow==='0 4px 15px rgba(0,0,0,0.3)'?'selected':''}>Soft</option>
@@ -1022,11 +1006,11 @@ function renderLinksEditor() {
           </select></div>
         </div>
         <div class="link-style-row">
-          <div class="style-group"><label>Hover Bg</label><input type="color" value="${link.hoverBg||'#8b7af7'}" oninput="editingLinks[${i}].hoverBg=this.value"></div>
-          <div class="style-group"><label>Border</label><input type="text" value="${link.border||'none'}" oninput="editingLinks[${i}].border=this.value" style="width:120px;"></div>
-          <div class="style-group"><label>Padding</label><input type="number" value="${link.padding??14}" min="0" max="50" oninput="editingLinks[${i}].padding=parseInt(this.value)" style="width:70px;"></div>
+          <div class="style-group"><label>Hover Bg</label><input type="color" value="${link.hoverBg}" oninput="editingLinks[${i}].hoverBg=this.value"></div>
+          <div class="style-group"><label>Border</label><input type="text" value="${link.border}" oninput="editingLinks[${i}].border=this.value" style="width:120px;"></div>
+          <div class="style-group"><label>Padding</label><input type="number" value="${link.padding}" min="0" max="50" oninput="editingLinks[${i}].padding=parseInt(this.value)" style="width:70px;"></div>
           <div class="style-group"><label>Animation</label><select onchange="editingLinks[${i}].animation=this.value" style="width:100px;">
-            <option value="none" ${!link.animation||link.animation==='none'?'selected':''}>None</option>
+            <option value="none" ${link.animation==='none'?'selected':''}>None</option>
             <option value="pulse" ${link.animation==='pulse'?'selected':''}>Pulse</option>
             <option value="shake" ${link.animation==='shake'?'selected':''}>Shake</option>
           </select></div>
@@ -1081,7 +1065,7 @@ function updateLinkPreview(i) {
   const dot = card.querySelector('.link-preview-dot');
   const title = card.querySelector('.link-preview-title');
   const url = card.querySelector('.link-preview-url');
-  if (dot) dot.style.background = editingLinks[i].btnBg || '#7c6af7';
+  if (dot) dot.style.background = editingLinks[i].btnBg;
   if (title) title.textContent = editingLinks[i].title || 'Untitled';
   if (url) url.textContent = editingLinks[i].url || 'No URL';
 }
@@ -1130,7 +1114,7 @@ function addSocial() { editingSocials.push({platform:'',url:'',icon:'🔗'}); re
 function removeSocial(i) { editingSocials.splice(i,1); renderSocialsEditor(); }
 
 // ============================================================
-// SAVE
+// SAVE (all values guaranteed non-undefined)
 // ============================================================
 function makeAbsoluteUrl(url) {
   if (!url) return '';
@@ -1155,13 +1139,13 @@ async function saveProfile() {
   }
 
   const defaultBtn = {
-    bg: document.getElementById('default-btn-bg').value,
-    textColor: document.getElementById('default-btn-text').value,
-    radius: parseInt(document.getElementById('default-btn-radius').value),
-    shadow: document.getElementById('default-btn-shadow').value,
-    hoverBg: document.getElementById('default-btn-hover-bg').value,
-    border: document.getElementById('default-btn-border').value,
-    padding: parseInt(document.getElementById('default-btn-padding').value)
+    bg: document.getElementById('default-btn-bg').value || '#7c6af7',
+    textColor: document.getElementById('default-btn-text').value || '#ffffff',
+    radius: parseInt(document.getElementById('default-btn-radius').value) || 12,
+    shadow: document.getElementById('default-btn-shadow').value || 'none',
+    hoverBg: document.getElementById('default-btn-hover-bg').value || '#8b7af7',
+    border: document.getElementById('default-btn-border').value || 'none',
+    padding: parseInt(document.getElementById('default-btn-padding').value) || 14
   };
 
   const profileData = {
@@ -1180,15 +1164,30 @@ async function saveProfile() {
     showDiscordPresence: document.getElementById('edit-discord-presence').checked,
     defaultBtn,
     links: editingLinks.filter(l=>l.title&&l.url).map(l=>({
-      title:l.title, url:makeAbsoluteUrl(l.url), type:l.type||'link',
-      embedUrl:l.embedUrl||'', icon:l.icon||'',
-      btnBg:l.btnBg, btnTextColor:l.btnTextColor, btnRadius:l.btnRadius, btnShadow:l.btnShadow,
-      hoverBg:l.hoverBg, border:l.border, padding:l.padding, animation:l.animation
+      title: l.title,
+      url: makeAbsoluteUrl(l.url),
+      type: l.type || 'link',
+      embedUrl: l.embedUrl || '',
+      icon: l.icon || '',
+      btnBg: l.btnBg,
+      btnTextColor: l.btnTextColor,
+      btnRadius: l.btnRadius,
+      btnShadow: l.btnShadow,
+      hoverBg: l.hoverBg,
+      border: l.border,
+      padding: l.padding,
+      animation: l.animation
     })),
-    socials: editingSocials.filter(s=>s.platform&&s.url).map(s=>({platform:s.platform, url:makeAbsoluteUrl(s.url), icon:s.icon||'🔗'})),
-    uid:currentUser.uid, email:currentUser.email,
-    verified:userDoc.verified||false, verificationRequested:userDoc.verificationRequested||false,
-    admin:userDoc.admin||false
+    socials: editingSocials.filter(s=>s.platform&&s.url).map(s=>({
+      platform: s.platform,
+      url: makeAbsoluteUrl(s.url),
+      icon: s.icon || '🔗'
+    })),
+    uid: currentUser.uid,
+    email: currentUser.email,
+    verified: userDoc.verified || false,
+    verificationRequested: userDoc.verificationRequested || false,
+    admin: userDoc.admin || false
   };
 
   try {
@@ -1270,7 +1269,7 @@ async function renderProfile(data, container) {
     html += '<div class="pub-links">';
     regular.forEach((link,idx) => {
       const url = makeAbsoluteUrl(link.url);
-      const style = `background:${link.btnBg};color:${link.btnTextColor};border-radius:${link.btnRadius}px;box-shadow:${link.btnShadow};border:${link.border||'none'};padding:${link.padding}px 1.25rem;`;
+      const style = `background:${link.btnBg};color:${link.btnTextColor};border-radius:${link.btnRadius}px;box-shadow:${link.btnShadow};border:${link.border};padding:${link.padding}px 1.25rem;`;
       const animClass = link.animation && link.animation!=='none' ? ` anim-${link.animation}` : '';
       let iconHtml = '';
       if (link.icon) {
