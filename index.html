@@ -1672,18 +1672,26 @@ async function renderProfile(data, container) {
   });
 
   // Regular links
-  const regularLinks = (data.links || []).filter(l => l.type !== 'music');
-  if (regularLinks.length > 0) {
-    html += '<div class="pub-links">';
-    regularLinks.forEach((link, idx) => {
-      const btnStyle = `background:${escapeHtml(link.btnBg||'#7c6af7')};color:${escapeHtml(link.btnTextColor||'#fff')};border-radius:${link.btnRadius ?? 12}px;box-shadow:${escapeHtml(link.btnShadow||'none')};`;
-      html += `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="pub-link-btn" style="${btnStyle}" onclick="trackClick('${escapeHtml(data.uid)}',${idx})">
-        ${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''}
-        <span>${escapeHtml(link.title)}</span>
-      </a>`;
-    });
-    html += '</div>';
-  }
+const regularLinks = (data.links || []).filter(l => l.type !== 'music');
+if (regularLinks.length > 0) {
+  html += '<div class="pub-links">';
+  regularLinks.forEach((link, idx) => {
+    const btnStyle = `background:${escapeHtml(link.btnBg||'#7c6af7')};color:${escapeHtml(link.btnTextColor||'#fff')};border-radius:${link.btnRadius ?? 12}px;box-shadow:${escapeHtml(link.btnShadow||'none')};`;
+    html += `<a href="${escapeHtml(makeAbsoluteUrl(link.url))}" target="_blank" rel="noopener noreferrer" class="pub-link-btn" style="${btnStyle}" onclick="trackClick('${escapeHtml(data.uid)}',${idx})">
+      ${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''}
+      <span>${escapeHtml(link.title)}</span>
+    </a>`;
+  });
+  html += '</div>';
+}
+
+  function makeAbsoluteUrl(url) {
+  if (!url) return '';
+  url = url.trim();
+  if (/^https?:\/\//i.test(url)) return url;            // already has protocol
+  if (url.startsWith('//')) return 'https:' + url;      // protocol-relative
+  return 'https://' + url;                               // missing protocol – add https://
+}
 
   // Socials
   if (data.socials?.length > 0) {
