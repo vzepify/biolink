@@ -347,7 +347,7 @@
     .admin-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
     .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
 
-    /* ===== NEW FEATURE STYLES (added, not changed) ===== */
+    /* ===== NEW FEATURE STYLES ===== */
     .upload-zone {
       display: flex; align-items: center; justify-content: center;
       min-height: 100px; border: 2px dashed var(--border); border-radius: var(--radius-sm);
@@ -404,7 +404,6 @@
 
 <a id="floating-edit-btn" class="floating-edit-btn hidden" title="Edit Profile" href="#">✏️</a>
 
-<!-- SIDEBAR (unchanged) -->
 <aside id="sidebar" class="sidebar hidden">
   <div class="sidebar-logo">
     <div class="logo-icon">🔗</div>
@@ -435,7 +434,6 @@
 
 <div id="main-content" class="main-content">
 
-  <!-- AUTH FORMS (unchanged) -->
   <div id="auth-wrapper" class="auth-wrapper">
     <div class="auth-card" id="auth-card">
       <div class="auth-logo">
@@ -473,7 +471,6 @@
     </div>
   </div>
 
-  <!-- DASHBOARD -->
   <div id="dashboard" class="hidden" style="width:100%; display:flex; flex-direction:column; align-items:center;">
 
     <div class="profile-url-bar" id="profile-url-bar">
@@ -485,7 +482,6 @@
 
     <div id="edit-section" style="width:100%; display:flex; flex-direction:column; align-items:center;">
 
-      <!-- PROFILE INFO CARD (extended with new fields) -->
       <div class="card">
         <div class="card-title"><div class="card-icon">👤</div> Profile Info</div>
         <div class="form-grid">
@@ -494,7 +490,6 @@
         </div>
         <div class="form-row"><label>Bio</label><textarea id="edit-bio" placeholder="Tell the world about yourself..."></textarea></div>
 
-        <!-- NEW: Pronouns, Location, Birthday, Status Text -->
         <div class="form-grid">
           <div class="form-row"><label>Pronouns</label><input type="text" id="edit-pronouns" placeholder="e.g. they/them"></div>
           <div class="form-row"><label>Location</label><input type="text" id="edit-location" placeholder="e.g. New York, USA"></div>
@@ -508,7 +503,6 @@
           <input type="checkbox" class="toggle-input" id="edit-status-animated"><span class="toggle-slider"></span> Typing animation
         </label>
 
-        <!-- AVATAR UPLOAD (replaces old avatar URL input, hidden input keeps id="edit-avatar") -->
         <div class="form-row">
           <label>Avatar</label>
           <div class="upload-zone" id="avatar-upload-zone">
@@ -518,12 +512,11 @@
           <input type="hidden" id="edit-avatar">
         </div>
 
-        <div class="form-row"><label>Discord User ID</label><input type="text" id="edit-discordid" placeholder="1234567890..." oninput="updateDiscordPreview()"></div>
+        <div class="form-row"><label>Discord User ID</label><input type="text" id="edit-discordid" placeholder="1234567890..."></div>
         <div id="discord-id-hint" class="text-sm text-muted" style="margin-top:-0.5rem; margin-bottom:0.75rem;"></div>
         <button class="btn btn-warning btn-sm" onclick="requestVerification()">⭐ Request Verification</button>
       </div>
 
-      <!-- FEATURED VIDEO CARD -->
       <div class="card">
         <div class="card-title"><div class="card-icon">🎬</div> Featured Video</div>
         <label class="toggle-label" style="margin-bottom:0.5rem;">
@@ -534,7 +527,6 @@
         <p class="text-muted text-sm">Paste a YouTube or Vimeo URL.</p>
       </div>
 
-      <!-- APPEARANCE CARD (original + new sections) -->
       <div class="card">
         <div class="card-title"><div class="card-icon">🎨</div> Appearance</div>
         <div class="form-grid">
@@ -581,7 +573,6 @@
           <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-discord-presence"><span class="toggle-slider"></span> Show Discord Presence</label>
         </div>
 
-        <!-- AVATAR STYLE -->
         <div class="card-title" style="margin-top:1.5rem;"><div class="card-icon">🖼️</div> Avatar Style</div>
         <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-avatar-glow"><span class="toggle-slider"></span> Rainbow Glow Border</label>
         <div class="form-grid">
@@ -589,11 +580,9 @@
           <div class="form-row"><label>Border Width (px)</label><input type="number" id="edit-avatar-border-width" value="3" min="0" max="10"></div>
         </div>
 
-        <!-- CUSTOM CURSOR -->
         <div class="card-title" style="margin-top:1.5rem;"><div class="card-icon">🖱️</div> Custom Cursor</div>
         <div class="form-row"><label>Cursor Image URL (leave empty for default)</label><input type="url" id="edit-cursor-url" placeholder="https://i.imgur.com/...png"></div>
 
-        <!-- MOUSE TRAIL -->
         <div class="card-title" style="margin-top:1.5rem;"><div class="card-icon">✨</div> Mouse Trail</div>
         <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-mouse-trail-enabled"><span class="toggle-slider"></span> Enable Mouse Trail</label>
         <div class="form-grid">
@@ -601,26 +590,22 @@
           <div class="form-row"><label>Particle Count</label><input type="number" id="edit-mouse-trail-count" value="20" min="5" max="100"></div>
         </div>
 
-        <!-- CUSTOM FAVICON -->
         <div class="card-title" style="margin-top:1.5rem;"><div class="card-icon">🌟</div> Custom Favicon</div>
         <div class="form-row"><label>Favicon URL (32×32 recommended)</label><input type="url" id="edit-favicon-url" placeholder="https://i.imgur.com/...png"></div>
       </div>
 
-      <!-- LINKS CARD -->
       <div class="card">
         <div class="card-title"><div class="card-icon">🔗</div> Links</div>
         <div id="links-container" class="links-list"></div>
         <button class="btn btn-success btn-sm" onclick="addLink()">+ Add Link</button>
       </div>
 
-      <!-- SOCIALS CARD -->
       <div class="card">
         <div class="card-title"><div class="card-icon">🌐</div> Social Icons</div>
         <div id="socials-container" style="margin-bottom:0.75rem;"></div>
         <button class="btn btn-success btn-sm" onclick="addSocial()">+ Add Social</button>
       </div>
 
-      <!-- SAVE BUTTONS -->
       <div class="card">
         <div id="save-error" class="msg error hidden"></div>
         <div id="save-success" class="msg success hidden"></div>
@@ -631,7 +616,6 @@
       </div>
     </div>
 
-    <!-- PREVIEW, ANALYTICS, ADMIN sections (unchanged) -->
     <div id="preview-section" class="hidden" style="width:100%; max-width:780px;">
       <div class="card">
         <div class="card-title"><div class="card-icon">👁️</div> Live Preview</div>
@@ -922,7 +906,7 @@ function populateEditForm() {
 }
 
 // ============================================================
-// AVATAR UPLOAD (DRAG & DROP)
+// AVATAR UPLOAD
 // ============================================================
 function setupAvatarUpload() {
   const zone = document.getElementById('avatar-upload-zone');
@@ -995,7 +979,7 @@ function stopMouseTrail() {
 }
 
 // ============================================================
-// LINKS EDITOR (global addLink/removeLink)
+// LINKS EDITOR
 // ============================================================
 function renderLinksEditor() {
   const container = document.getElementById('links-container');
@@ -1153,7 +1137,7 @@ function updateDiscordPreview() {
 }
 
 // ============================================================
-// SAVE PROFILE (with new fields)
+// SAVE PROFILE
 // ============================================================
 function makeAbsoluteUrl(url) {
   if (!url) return '';
@@ -1281,7 +1265,7 @@ function getVideoEmbedUrl(url) {
 }
 
 // ============================================================
-// RENDER PUBLIC PROFILE (background image works perfectly)
+// RENDER PUBLIC PROFILE
 // ============================================================
 async function renderProfile(data, container) {
   const themes = {
@@ -1305,15 +1289,12 @@ async function renderProfile(data, container) {
     container.style.border = '1px solid rgba(124,106,247,0.5)';
   }
 
-  // Apply custom cursor & mouse trail
   document.body.style.cursor = data.cursorUrl ? `url(${data.cursorUrl}), auto` : '';
   if (data.mouseTrailEnabled) initMouseTrail(data.mouseTrailColor, data.mouseTrailCount);
   else stopMouseTrail();
   applyFavicon(data.faviconUrl);
 
   let html = '<div class="pub-header">';
-
-  // Avatar with glow + border (no onerror that affects background)
   const avatarGlowClass = data.avatarGlow ? 'avatar-glow' : '';
   const avatarStyle = `border:${data.avatarBorderWidth}px solid ${data.avatarBorderColor}; box-shadow: 0 0 10px ${data.avatarBorderColor};`;
   if (data.avatar) {
@@ -1346,7 +1327,6 @@ async function renderProfile(data, container) {
   if (data.bio) html += `<div class="pub-bio">${escapeHtml(data.bio)}</div>`;
   html += '</div>';
 
-  // Featured video
   if (data.featuredVideoEnabled && data.featuredVideoUrl) {
     const embed = getVideoEmbedUrl(data.featuredVideoUrl);
     if (embed) html += `<div class="featured-video"><iframe src="${embed}" allowfullscreen></iframe></div>`;
@@ -1516,9 +1496,6 @@ async function adminToggleVerify(userId, verify) {
   } catch(e) { toast('Error: '+e.message, 'error'); }
 }
 
-// ============================================================
-// UTILS
-// ============================================================
 function escapeHtml(str) {
   if (str == null) return '';
   return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
@@ -1528,7 +1505,6 @@ function applyFavicon(url) {
   if (link && url) link.href = url;
 }
 
-// INITIALIZATION
 window.addEventListener('DOMContentLoaded', () => {
   setupAvatarUpload();
 });
