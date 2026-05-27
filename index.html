@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Links</title>
+  <title>LinkHub</title>
+  <!-- SortableJS -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <!-- tsParticles for background effects -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   <style>
     :root {
       --bg: #f0f2f5;
@@ -21,18 +25,38 @@
       min-height: 100vh;
       justify-content: center;
       align-items: center;
+      transition: background 0.3s;
     }
     .container {
       background: var(--card);
       border-radius: var(--radius);
       padding: 2rem;
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       margin: 2rem 1rem;
+      position: relative;
+      z-index: 10;
     }
-    .profile-preview {
-      max-width: 600px;
+    .glow-border {
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      position: relative;
+    }
+    .glow-border::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-radius: calc(var(--radius) + 2px);
+      background: linear-gradient(45deg, #f06, #9f6, #06f);
+      z-index: -1;
+      animation: rotate 2s linear infinite;
+      background-size: 300% 300%;
+    }
+    @keyframes rotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     h1, h2 { text-align: center; margin-bottom: 1rem; }
     input, textarea, select, button {
@@ -53,56 +77,51 @@
     }
     button:hover { opacity: 0.9; }
     .link-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
-    .link-row input { flex: 1; margin-bottom: 0; }
+    .link-row input, .link-row select { flex: 1; margin-bottom: 0; }
+    .drag-handle { cursor: grab; font-size: 1.2rem; padding: 0 5px; }
     .delete-link { background: #dc3545; width: auto; padding: 0.5rem 1rem; }
     .error { color: red; text-align: center; margin-bottom: 1rem; }
     .success { color: green; text-align: center; margin-bottom: 1rem; }
     .hidden { display: none !important; }
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-    .tabs button { background: #ddd; color: #333; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tabs button { background: #ddd; color: #333; flex: 1; min-width: 60px; }
     .tabs button.active { background: var(--primary); color: white; }
     .profile-view {
       text-align: center;
-      background: inherit;
       padding: 2rem;
       border-radius: var(--radius);
+      background: inherit;
+      color: inherit;
+      transition: all 0.3s;
     }
     .profile-view img.avatar {
-      width: 120px;
-      height: 120px;
+      width: 120px; height: 120px;
       border-radius: 50%;
       object-fit: cover;
       margin-bottom: 1rem;
       border: 3px solid var(--primary);
     }
-    .profile-view .links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
+    .profile-view .links { display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0; }
     .profile-view .link-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--primary);
-      color: white;
-      text-decoration: none;
-      padding: 0.8rem;
-      border-radius: 8px;
-      justify-content: center;
-      font-size: 1.1rem;
-      transition: opacity 0.2s;
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--primary); color: white;
+      text-decoration: none; padding: 0.8rem;
+      border-radius: 8px; justify-content: center;
+      font-size: 1.1rem; transition: opacity 0.2s;
     }
     .profile-view .link-btn:hover { opacity: 0.9; }
     .social-icons { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
     .social-icons a { color: inherit; font-size: 1.5rem; text-decoration: none; }
-    #logout-btn { background: #6c757d; }
+    .verified-badge { color: #1da1f2; font-size: 1.2rem; }
+    .admin-badge { background: gold; color: black; padding: 2px 8px; border-radius: 4px; }
+    iframe.music-embed { width: 100%; height: 80px; border: none; margin: 0.5rem 0; }
+    #particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
   </style>
 </head>
 <body>
+  <div id="particles-container"></div>
   <div id="app" class="container">
-    <!-- AUTH FORMS (Login / Signup) -->
+    <!-- AUTH FORMS -->
     <div id="auth-forms">
       <div id="login-form">
         <h2>Login</h2>
@@ -137,107 +156,136 @@
       </div>
     </div>
 
-    <!-- DASHBOARD (only when logged in) -->
+    <!-- DASHBOARD -->
     <div id="dashboard" class="hidden">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2>Your Dashboard</h2>
+        <h2>Dashboard</h2>
         <button id="logout-btn" onclick="logout()" style="width:auto;">Logout</button>
       </div>
-      <div class="tabs">
-        <button id="tab-edit" class="active" onclick="switchTab('edit')">Edit Profile</button>
-        <button id="tab-preview" onclick="switchTab('preview')">Preview</button>
+      <div class="tabs" id="tabs">
+        <button class="active" data-tab="edit">Edit Profile</button>
+        <button data-tab="preview">Preview</button>
+        <button data-tab="analytics">Analytics</button>
+        <button data-tab="admin" id="tab-admin" class="hidden">Admin</button>
       </div>
 
+      <!-- Edit Section -->
       <div id="edit-section">
         <h3>Profile Details</h3>
-        <label>Username (unique)</label>
+        <label>Username</label>
         <input type="text" id="edit-username" placeholder="yourname">
         <label>Display Name</label>
-        <input type="text" id="edit-displayname" placeholder="John Doe">
+        <input type="text" id="edit-displayname">
         <label>Bio</label>
-        <textarea id="edit-bio" rows="3" placeholder="Write something..."></textarea>
+        <textarea id="edit-bio" rows="3"></textarea>
         <label>Avatar URL</label>
-        <input type="url" id="edit-avatar" placeholder="https://...">
+        <input type="url" id="edit-avatar">
+        <label>Discord User ID (for presence)</label>
+        <input type="text" id="edit-discordid" placeholder="123456789012345678">
+        <label>Theme</label>
+        <select id="edit-theme">
+          <option value="default">Default</option>
+          <option value="neon">Neon Glow</option>
+          <option value="galaxy">Galaxy Particles</option>
+        </select>
         <label>Background Color</label>
         <input type="color" id="edit-bgcolor" value="#f0f2f5">
-        <label>Background Image URL (optional)</label>
+        <label>Background Image URL</label>
         <input type="url" id="edit-bgimage" placeholder="https://...">
         <label>Text Color</label>
         <input type="color" id="edit-textcolor" value="#333333">
         <label>Font Family</label>
         <select id="edit-font">
-          <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Default</option>
+          <option value="'Segoe UI', sans-serif">Default</option>
           <option value="'Courier New', monospace">Monospace</option>
           <option value="Georgia, serif">Serif</option>
-          <option value="'Comic Sans MS', cursive">Comic Sans</option>
         </select>
+        <label><input type="checkbox" id="edit-glowingborder"> Glowing Border</label><br>
+        <label><input type="checkbox" id="edit-particles"> Particle Background</label><br>
 
-        <h3>Links</h3>
+        <h3>Links <small>(drag to reorder)</small></h3>
         <div id="links-container"></div>
         <button onclick="addLink()" style="background:#28a745;">+ Add Link</button>
 
-        <h3>Social Icons (optional)</h3>
+        <h3>Social Icons</h3>
         <div id="socials-container"></div>
         <button onclick="addSocial()" style="background:#17a2b8;">+ Add Social Icon</button>
 
+        <button onclick="requestVerification()" style="background:#ffc107; color:black;">Request Verification</button>
         <p id="save-error" class="error hidden"></p>
         <p id="save-success" class="success hidden"></p>
         <button onclick="saveProfile()" style="margin-top:1rem;">Save Profile</button>
       </div>
 
+      <!-- Preview Section -->
       <div id="preview-section" class="hidden">
-        <p style="text-align:center; margin-bottom:1rem;">Your public profile:</p>
+        <p style="text-align:center;">Your public profile:</p>
         <div id="profile-preview-container" class="profile-view"></div>
+      </div>
+
+      <!-- Analytics Section -->
+      <div id="analytics-section" class="hidden">
+        <h3>Profile Views & Link Clicks</h3>
+        <p id="analytics-loading">Loading...</p>
+        <div id="analytics-data"></div>
+      </div>
+
+      <!-- Admin Panel -->
+      <div id="admin-section" class="hidden">
+        <h3>Admin Panel</h3>
+        <div id="admin-users-list">Loading users...</div>
       </div>
     </div>
 
-    <!-- PUBLIC PROFILE VIEW (triggered by hash) -->
-    <div id="public-profile" class="hidden profile-preview container">
+    <!-- PUBLIC PROFILE -->
+    <div id="public-profile" class="hidden container">
       <div id="public-profile-content" class="profile-view"></div>
     </div>
   </div>
 
-  <!-- Firebase SDKs (compat) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
 
   <script>
     // ---------- REPLACE WITH YOUR FIREBASE CONFIG ----------
     const firebaseConfig = {
-  apiKey: "AIzaSyDwxucvIFlsIUVdL69ZmUm2JHaH-09c6GM",
-  authDomain: "biolink111.firebaseapp.com",
-  projectId: "biolink111",
-  storageBucket: "biolink111.firebasestorage.app",
-  messagingSenderId: "783454791937",
-  appId: "1:783454791937:web:866804708e4c0ab4b31300",
-  measurementId: "G-TRTD5GEX4M"
-};
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
     // -------------------------------------------------------
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const functions = firebase.functions();
 
-    // ---- State ----
     let currentUser = null;
-    let userDoc = null;          // Firestore doc data for logged-in user
+    let userDoc = null;
     let editingLinks = [];
     let editingSocials = [];
+    let isAdmin = false;
 
-    // ---- Routing: detect public profile via hash #/u/username ----
+    // ---- Routing ----
     window.addEventListener('hashchange', handleRouting);
     window.addEventListener('load', () => {
       handleRouting();
-      auth.onAuthStateChanged(user => {
+      auth.onAuthStateChanged(async user => {
         currentUser = user;
         if (user) {
-          loadUserProfile().then(() => showDashboard());
+          const token = await user.getIdTokenResult();
+          isAdmin = token.claims.admin || false;
+          await loadUserProfile();
+          showDashboard();
+          if (isAdmin) document.getElementById('tab-admin').classList.remove('hidden');
         } else {
-          // If not logged in, check if we're on a public profile, else show login
-          if (!window.location.hash.startsWith('#/u/')) {
-            showLoginForm();
-          }
+          if (!window.location.hash.startsWith('#/u/')) showLoginForm();
         }
       });
     });
@@ -245,12 +293,12 @@
     function handleRouting() {
       const hash = window.location.hash;
       if (hash.startsWith('#/u/')) {
-        const username = hash.slice(4); // remove '#/u/'
+        const username = hash.slice(4);
         loadPublicProfile(username);
       }
     }
 
-    // ---- UI Helpers ----
+    // ---- UI helpers ----
     function showElement(id) { document.getElementById(id).classList.remove('hidden'); }
     function hideElement(id) { document.getElementById(id).classList.add('hidden'); }
     function showLoginForm() {
@@ -272,20 +320,24 @@
       switchTab('edit');
     }
 
-    function switchTab(tab) {
-      if (tab === 'edit') {
-        showElement('edit-section'); hideElement('preview-section');
-        document.getElementById('tab-edit').classList.add('active');
-        document.getElementById('tab-preview').classList.remove('active');
-      } else {
-        hideElement('edit-section'); showElement('preview-section');
-        document.getElementById('tab-edit').classList.remove('active');
-        document.getElementById('tab-preview').classList.add('active');
-        renderPreview();
+    // Tab switching
+    document.getElementById('tabs').addEventListener('click', e => {
+      if (e.target.tagName === 'BUTTON') {
+        switchTab(e.target.dataset.tab);
       }
+    });
+
+    function switchTab(tab) {
+      ['edit-section','preview-section','analytics-section','admin-section'].forEach(id => hideElement(id));
+      showElement(tab + '-section');
+      document.querySelectorAll('#tabs button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`#tabs button[data-tab="${tab}"]`).classList.add('active');
+      if (tab === 'preview') renderPreview();
+      if (tab === 'analytics') loadAnalytics();
+      if (tab === 'admin') loadAdminPanel();
     }
 
-    // ---- Auth functions ----
+    // ---- Auth ----
     async function login() {
       const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
@@ -293,7 +345,6 @@
       errEl.classList.add('hidden');
       try {
         await auth.signInWithEmailAndPassword(email, password);
-        // onAuthStateChanged will handle redirect
       } catch (e) {
         errEl.textContent = e.message;
         errEl.classList.remove('hidden');
@@ -312,7 +363,6 @@
       }
       try {
         await auth.createUserWithEmailAndPassword(email, password);
-        // onAuthStateChanged will fire
       } catch (e) {
         errEl.textContent = e.message;
         errEl.classList.remove('hidden');
@@ -342,70 +392,100 @@
       showLoginForm();
     }
 
-    // ---- Firestore helpers ----
+    // ---- Firestore load / save ----
     async function loadUserProfile() {
       if (!currentUser) return;
       const docRef = db.collection('profiles').doc(currentUser.uid);
       const doc = await docRef.get();
       if (doc.exists) {
         userDoc = doc.data();
-        // ensure arrays exist
         if (!userDoc.links) userDoc.links = [];
         if (!userDoc.socials) userDoc.socials = [];
       } else {
-        // create default profile
         userDoc = {
           username: '',
           displayName: '',
           bio: '',
           avatar: '',
+          discordId: '',
+          theme: 'default',
           bgColor: '#f0f2f5',
           bgImage: '',
           textColor: '#333333',
-          font: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+          font: "'Segoe UI', sans-serif",
+          glowingBorder: false,
+          particles: false,
           links: [],
-          socials: []
+          socials: [],
+          verified: false,
+          verificationRequested: false
         };
       }
       populateEditForm();
     }
 
     function populateEditForm() {
-      if (!userDoc) return;
       document.getElementById('edit-username').value = userDoc.username || '';
       document.getElementById('edit-displayname').value = userDoc.displayName || '';
       document.getElementById('edit-bio').value = userDoc.bio || '';
       document.getElementById('edit-avatar').value = userDoc.avatar || '';
+      document.getElementById('edit-discordid').value = userDoc.discordId || '';
+      document.getElementById('edit-theme').value = userDoc.theme || 'default';
       document.getElementById('edit-bgcolor').value = userDoc.bgColor || '#f0f2f5';
       document.getElementById('edit-bgimage').value = userDoc.bgImage || '';
       document.getElementById('edit-textcolor').value = userDoc.textColor || '#333333';
-      document.getElementById('edit-font').value = userDoc.font || "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-      // Links
-      editingLinks = (userDoc.links || []).map(link => ({ title: link.title, url: link.url, icon: link.icon || '' }));
+      document.getElementById('edit-font').value = userDoc.font || "'Segoe UI', sans-serif";
+      document.getElementById('edit-glowingborder').checked = userDoc.glowingBorder || false;
+      document.getElementById('edit-particles').checked = userDoc.particles || false;
+      editingLinks = userDoc.links.map(l => ({...l}));
+      editingSocials = userDoc.socials.map(s => ({...s}));
       renderLinksEditor();
-      // Socials
-      editingSocials = (userDoc.socials || []).map(s => ({ platform: s.platform, url: s.url, icon: s.icon || '' }));
       renderSocialsEditor();
     }
 
+    // ---- Links editor with drag & drop ----
     function renderLinksEditor() {
       const container = document.getElementById('links-container');
       container.innerHTML = '';
       editingLinks.forEach((link, index) => {
         const div = document.createElement('div');
         div.className = 'link-row';
+        div.dataset.index = index;
         div.innerHTML = `
+          <span class="drag-handle">☰</span>
           <input type="text" placeholder="Title" value="${link.title}" onchange="editingLinks[${index}].title=this.value">
           <input type="url" placeholder="URL" value="${link.url}" onchange="editingLinks[${index}].url=this.value">
-          <input type="text" placeholder="Icon (emoji)" value="${link.icon}" onchange="editingLinks[${index}].icon=this.value" style="max-width:80px;">
+          <select onchange="editingLinks[${index}].type=this.value; renderLinksEditor();">
+            <option value="link" ${link.type !== 'music' ? 'selected' : ''}>Link</option>
+            <option value="music" ${link.type === 'music' ? 'selected' : ''}>Music</option>
+          </select>
+          ${link.type === 'music' ? `<input type="text" placeholder="Embed URL" value="${link.embedUrl || ''}" onchange="editingLinks[${index}].embedUrl=this.value">` : ''}
+          <input type="text" placeholder="Icon (emoji)" value="${link.icon || ''}" onchange="editingLinks[${index}].icon=this.value" style="max-width:80px;">
           <button class="delete-link" onclick="removeLink(${index})">X</button>
         `;
         container.appendChild(div);
       });
+
+      // Make sortable
+      new Sortable(container, {
+        handle: '.drag-handle',
+        animation: 150,
+        onEnd: function() {
+          const rows = container.querySelectorAll('.link-row');
+          const newLinks = [];
+          rows.forEach(row => {
+            const idx = parseInt(row.dataset.index);
+            newLinks.push(editingLinks[idx]);
+          });
+          editingLinks = newLinks;
+          // Update data-index attributes
+          rows.forEach((row, i) => row.dataset.index = i);
+        }
+      });
     }
 
     function addLink() {
-      editingLinks.push({ title: '', url: '', icon: '' });
+      editingLinks.push({ title: '', url: '', type: 'link', icon: '', embedUrl: '' });
       renderLinksEditor();
     }
 
@@ -421,8 +501,8 @@
         const div = document.createElement('div');
         div.className = 'link-row';
         div.innerHTML = `
-          <input type="text" placeholder="Platform (e.g., Twitter)" value="${social.platform}" onchange="editingSocials[${index}].platform=this.value">
-          <input type="url" placeholder="Profile URL" value="${social.url}" onchange="editingSocials[${index}].url=this.value">
+          <input type="text" placeholder="Platform" value="${social.platform}" onchange="editingSocials[${index}].platform=this.value">
+          <input type="url" placeholder="URL" value="${social.url}" onchange="editingSocials[${index}].url=this.value">
           <input type="text" placeholder="Icon emoji" value="${social.icon}" onchange="editingSocials[${index}].icon=this.value" style="max-width:80px;">
           <button class="delete-link" onclick="removeSocial(${index})">X</button>
         `;
@@ -440,11 +520,11 @@
       renderSocialsEditor();
     }
 
+    // ---- Save profile ----
     async function saveProfile() {
       const errEl = document.getElementById('save-error');
       const successEl = document.getElementById('save-success');
-      errEl.classList.add('hidden');
-      successEl.classList.add('hidden');
+      errEl.classList.add('hidden'); successEl.classList.add('hidden');
 
       const newUsername = document.getElementById('edit-username').value.trim();
       if (!newUsername) {
@@ -453,7 +533,6 @@
         return;
       }
 
-      // Check username uniqueness (if changed)
       if (userDoc.username !== newUsername) {
         const usernameDoc = await db.collection('usernames').doc(newUsername).get();
         if (usernameDoc.exists && usernameDoc.data().uid !== currentUser.uid) {
@@ -468,22 +547,30 @@
         displayName: document.getElementById('edit-displayname').value.trim(),
         bio: document.getElementById('edit-bio').value.trim(),
         avatar: document.getElementById('edit-avatar').value.trim(),
+        discordId: document.getElementById('edit-discordid').value.trim(),
+        theme: document.getElementById('edit-theme').value,
         bgColor: document.getElementById('edit-bgcolor').value,
         bgImage: document.getElementById('edit-bgimage').value.trim(),
         textColor: document.getElementById('edit-textcolor').value,
         font: document.getElementById('edit-font').value,
-        links: editingLinks.filter(l => l.title && l.url).map(l => ({ title: l.title, url: l.url, icon: l.icon })),
-        socials: editingSocials.filter(s => s.platform && s.url).map(s => ({ platform: s.platform, url: s.url, icon: s.icon })),
+        glowingBorder: document.getElementById('edit-glowingborder').checked,
+        particles: document.getElementById('edit-particles').checked,
+        links: editingLinks.filter(l => l.title && l.url).map(l => ({
+          title: l.title, url: l.url, type: l.type || 'link',
+          embedUrl: l.embedUrl || '', icon: l.icon || ''
+        })),
+        socials: editingSocials.filter(s => s.platform && s.url).map(s => ({
+          platform: s.platform, url: s.url, icon: s.icon || ''
+        })),
         uid: currentUser.uid,
-        email: currentUser.email
+        email: currentUser.email,
+        verified: userDoc.verified || false,
+        verificationRequested: userDoc.verificationRequested || false
       };
 
       try {
-        // Save profile
         await db.collection('profiles').doc(currentUser.uid).set(profileData);
-        // Save/update username mapping
         if (userDoc.username && userDoc.username !== newUsername) {
-          // delete old username mapping
           await db.collection('usernames').doc(userDoc.username).delete();
         }
         await db.collection('usernames').doc(newUsername).set({ uid: currentUser.uid });
@@ -497,44 +584,87 @@
       }
     }
 
-    // ---- Preview & Public Profile Rendering ----
+    // ---- Verification request ----
+    async function requestVerification() {
+      if (!userDoc) return;
+      if (userDoc.verified) {
+        alert('You are already verified.');
+        return;
+      }
+      await db.collection('profiles').doc(currentUser.uid).update({
+        verificationRequested: true
+      });
+      userDoc.verificationRequested = true;
+      alert('Verification requested. Admins will review your profile.');
+    }
+
+    // ---- Render profile (public or preview) ----
     function renderProfile(data, containerId) {
       const container = document.getElementById(containerId);
       if (!data) {
         container.innerHTML = '<p>User not found.</p>';
         return;
       }
-      // Apply custom styles
-      container.style.background = data.bgImage ? `url(${data.bgImage}) center/cover no-repeat, ${data.bgColor}` : data.bgColor;
+      // Theme classes
+      container.className = 'profile-view';
+      if (data.glowingBorder) container.classList.add('glow-border');
+      if (data.theme === 'neon') container.style.boxShadow = '0 0 20px #f06, 0 0 40px #06f';
+      container.style.background = data.bgImage ? `url(${data.bgImage}) center/cover, ${data.bgColor}` : data.bgColor;
       container.style.color = data.textColor;
       container.style.fontFamily = data.font;
+
+      // Particle background
+      const particlesContainer = document.getElementById('particles-container');
+      if (data.particles && window.tsParticles) {
+        tsParticles.load("particles-container", {
+          fpsLimit: 60,
+          particles: {
+            number: { value: 80 },
+            color: { value: "#ffffff" },
+            links: { enable: false },
+            move: { enable: true, speed: 1 },
+            size: { value: 3 }
+          }
+        });
+      } else {
+        particlesContainer.innerHTML = '';
+      }
 
       let html = '';
       if (data.avatar) {
         html += `<img src="${data.avatar}" alt="Avatar" class="avatar" onerror="this.style.display='none'">`;
       }
-      html += `<h1 style="color:inherit;">${escapeHtml(data.displayName || data.username)}</h1>`;
-      if (data.bio) {
-        html += `<p style="white-space:pre-wrap;">${escapeHtml(data.bio)}</p>`;
+      html += `<h1 style="color:inherit;">${escapeHtml(data.displayName || data.username)}`;
+      if (data.verified) html += ` <span class="verified-badge">✔️ Verified</span>`;
+      html += `</h1>`;
+      if (data.bio) html += `<p style="white-space:pre-wrap;">${escapeHtml(data.bio)}</p>`;
+
+      // Discord presence via Lanyard
+      if (data.discordId) {
+        html += `<img src="https://api.lanyard.rest/${data.discordId}.svg?animated=true" style="max-width:100%; margin-bottom:1rem;" alt="Discord Presence">`;
       }
-      // Links
+
+      // Links / music
       if (data.links && data.links.length > 0) {
         html += '<div class="links">';
-        data.links.forEach(link => {
-          const iconPart = link.icon ? `<span>${escapeHtml(link.icon)}</span>` : '';
-          html += `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener" class="link-btn">${iconPart} ${escapeHtml(link.title)}</a>`;
+        data.links.forEach((link, idx) => {
+          if (link.type === 'music') {
+            html += `<iframe class="music-embed" src="${escapeHtml(link.embedUrl)}" allow="autoplay; encrypted-media"></iframe>`;
+          } else {
+            html += `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener" class="link-btn" onclick="logClick('${currentUser ? currentUser.uid : ''}', ${idx})">${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''} ${escapeHtml(link.title)}</a>`;
+          }
         });
         html += '</div>';
       }
-      // Social icons
+
       if (data.socials && data.socials.length > 0) {
         html += '<div class="social-icons">';
         data.socials.forEach(s => {
-          const icon = s.icon || '🔗';
-          html += `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" title="${escapeHtml(s.platform)}">${icon}</a>`;
+          html += `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" title="${escapeHtml(s.platform)}">${s.icon || '🔗'}</a>`;
         });
         html += '</div>';
       }
+
       container.innerHTML = html;
     }
 
@@ -542,14 +672,13 @@
       renderProfile(userDoc, 'profile-preview-container');
     }
 
+    // ---- Public profile ----
     async function loadPublicProfile(username) {
-      hideElement('auth-forms');
-      hideElement('dashboard');
+      hideElement('auth-forms'); hideElement('dashboard');
       showElement('public-profile');
       const contentDiv = document.getElementById('public-profile-content');
-      contentDiv.innerHTML = '<p>Loading profile...</p>';
+      contentDiv.innerHTML = '<p>Loading...</p>';
       try {
-        // find uid from usernames collection
         const usernameDoc = await db.collection('usernames').doc(username).get();
         if (!usernameDoc.exists) {
           contentDiv.innerHTML = '<p>User not found.</p>';
@@ -563,9 +692,92 @@
         }
         const profileData = profileDoc.data();
         renderProfile(profileData, 'public-profile-content');
+        // Log analytics view
+        try {
+          const logView = functions.httpsCallable('logEvent');
+          await logView({ profileId: uid, eventType: 'view' });
+        } catch(e) { console.log('Analytics log error:', e); }
       } catch (e) {
         contentDiv.innerHTML = '<p>Error loading profile.</p>';
       }
+    }
+
+    // ---- Analytics (client callable) ----
+    async function loadAnalytics() {
+      const loadingEl = document.getElementById('analytics-loading');
+      const dataEl = document.getElementById('analytics-data');
+      loadingEl.classList.remove('hidden');
+      dataEl.innerHTML = '';
+      try {
+        const getAnalytics = functions.httpsCallable('getAnalytics');
+        const result = await getAnalytics({ profileId: currentUser.uid });
+        const stats = result.data;
+        dataEl.innerHTML = `
+          <p>Profile views: ${stats.views || 0}</p>
+          <p>Link clicks: ${stats.clicks || 0}</p>
+        `;
+      } catch (e) {
+        dataEl.innerHTML = '<p>Could not load analytics.</p>';
+      }
+      loadingEl.classList.add('hidden');
+    }
+
+    // Called from public link click
+    async function logClick(profileId, linkIndex) {
+      if (!profileId) return;
+      try {
+        const logEvent = functions.httpsCallable('logEvent');
+        await logEvent({ profileId, eventType: 'click', linkIndex });
+      } catch(e) { console.log('Click log error:', e); }
+    }
+
+    // ---- Admin panel ----
+    async function loadAdminPanel() {
+      const container = document.getElementById('admin-users-list');
+      if (!isAdmin) {
+        container.innerHTML = 'You are not an admin.';
+        return;
+      }
+      container.innerHTML = 'Loading...';
+      try {
+        const listUsers = functions.httpsCallable('adminListUsers');
+        const result = await listUsers();
+        const users = result.data;
+        let html = '<table style="width:100%"><tr><th>Email</th><th>Username</th><th>Verified</th><th>Actions</th></tr>';
+        users.forEach(u => {
+          html += `<tr>
+            <td>${escapeHtml(u.email)}</td>
+            <td>${escapeHtml(u.username)}</td>
+            <td>${u.verified ? '✔️' : '❌'}</td>
+            <td>
+              <button onclick="adminVerifyUser('${u.uid}')">Verify</button>
+              <button onclick="adminUnverifyUser('${u.uid}')">Unverify</button>
+            </td>
+          </tr>`;
+        });
+        html += '</table>';
+        container.innerHTML = html;
+      } catch(e) {
+        container.innerHTML = 'Error loading users.';
+      }
+    }
+
+    async function adminVerifyUser(uid) {
+      try {
+        const verify = functions.httpsCallable('adminVerifyUser');
+        await verify({ userId: uid });
+        alert('User verified.');
+        loadAdminPanel();
+      } catch(e) { alert('Error: ' + e.message); }
+    }
+
+    async function adminUnverifyUser(uid) {
+      try {
+        const unverify = functions.httpsCallable('adminUnverifyUser');
+        await unverify({ userId: uid });
+        alert('User unverified.');
+        loadAdminPanel();
+      } catch(e) { alert('Error: ' + e.message); }
     }
 
     function escapeHtml(text) {
