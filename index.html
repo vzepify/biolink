@@ -139,7 +139,6 @@
       flex: 1; padding: 2rem; display: flex; flex-direction: column; align-items: center;
       position: relative; z-index: 1;
     }
-    /* When sidebar is hidden (public profile), main content should take full width */
     body.no-sidebar .main-content { margin-left: 0; }
 
     .card {
@@ -361,7 +360,6 @@
       border-top: 1px solid rgba(255,255,255,0.04);
     }
 
-    /* Floating edit button (only when viewing own profile) */
     .floating-edit-btn {
       position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -444,10 +442,8 @@
 <div id="particles-js"></div>
 <div class="toast-container" id="toast-container"></div>
 
-<!-- FLOATING EDIT BUTTON (hidden by default) -->
 <a id="floating-edit-btn" class="floating-edit-btn hidden" title="Edit Profile" href="#">✏️</a>
 
-<!-- SIDEBAR (only for dashboard) -->
 <aside id="sidebar" class="sidebar hidden">
   <div class="sidebar-logo">
     <div class="logo-icon">🔗</div>
@@ -476,10 +472,8 @@
   </div>
 </aside>
 
-<!-- MAIN CONTENT -->
 <div id="main-content" class="main-content">
 
-  <!-- AUTH -->
   <div id="auth-wrapper" class="auth-wrapper">
     <div class="auth-card" id="auth-card">
       <div class="auth-logo">
@@ -517,7 +511,6 @@
     </div>
   </div>
 
-  <!-- DASHBOARD (only when logged in and no hash) -->
   <div id="dashboard" class="hidden" style="width:100%; display:flex; flex-direction:column; align-items:center;">
 
     <div class="profile-url-bar" id="profile-url-bar">
@@ -527,7 +520,6 @@
       <button class="btn btn-secondary btn-sm" onclick="openPublicProfile()">Visit</button>
     </div>
 
-    <!-- EDIT SECTION -->
     <div id="edit-section" style="width:100%; display:flex; flex-direction:column; align-items:center;">
 
       <div class="card">
@@ -614,7 +606,6 @@
       </div>
     </div>
 
-    <!-- PREVIEW SECTION -->
     <div id="preview-section" class="hidden" style="width:100%; max-width:780px;">
       <div class="card">
         <div class="card-title"><div class="card-icon">👁️</div> Live Preview</div>
@@ -624,7 +615,6 @@
       </div>
     </div>
 
-    <!-- ANALYTICS SECTION -->
     <div id="analytics-section" class="hidden" style="width:100%; max-width:780px;">
       <div class="card">
         <div class="card-title"><div class="card-icon">📊</div> Analytics</div>
@@ -642,7 +632,6 @@
       </div>
     </div>
 
-    <!-- ADMIN SECTION -->
     <div id="admin-section" class="hidden" style="width:100%; max-width:780px;">
       <div class="card">
         <div id="admin-login-block">
@@ -661,7 +650,6 @@
 
   </div>
 
-  <!-- PUBLIC PROFILE (shown when visiting any /u/username) -->
   <div id="public-profile" class="hidden pub-wrapper">
     <div id="pub-card-root" class="pub-card"></div>
   </div>
@@ -675,7 +663,7 @@
 
 <script>
 // ============================================================
-// FIREBASE CONFIG
+// FIREBASE CONFIG (REPLACE WITH YOUR OWN)
 // ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDwxucvIFlsIUVdL69ZmUm2JHaH-09c6GM",
@@ -753,12 +741,10 @@ function switchTab(tab) {
 // ROUTING (auth-first, then decide view)
 // ============================================================
 window.addEventListener('hashchange', () => {
-  // On hash change, re-run routing logic using the already known auth state
   handleRoutingAfterAuth();
 });
 
 window.addEventListener('load', () => {
-  // Wait for auth state to be ready, then route
   auth.onAuthStateChanged(async user => {
     currentUser = user;
     if (user) {
@@ -780,7 +766,6 @@ function handleRoutingAfterAuth() {
     showPublicProfileView();
     loadPublicProfile(username);
   } else {
-    // No hash
     if (currentUser) {
       showDashboardView();
     } else {
@@ -790,11 +775,10 @@ function handleRoutingAfterAuth() {
 }
 
 function showPublicProfileView() {
-  // Hide auth, dashboard, sidebar
   document.getElementById('auth-wrapper').classList.add('hidden');
   document.getElementById('dashboard').classList.add('hidden');
   document.getElementById('sidebar').classList.add('hidden');
-  document.body.classList.add('no-sidebar'); // remove sidebar margin
+  document.body.classList.add('no-sidebar');
   document.getElementById('public-profile').classList.remove('hidden');
 }
 
@@ -823,7 +807,6 @@ function showLoginView() {
   document.getElementById('forgot-form').classList.add('hidden');
 }
 
-// Legacy UI helpers kept for auth sub-forms
 function show(id) { document.getElementById(id)?.classList.remove('hidden'); }
 function hide(id) { document.getElementById(id)?.classList.add('hidden'); }
 function showLoginForm() { showLoginView(); }
@@ -893,7 +876,7 @@ async function resetPassword() {
 async function logout() {
   await auth.signOut();
   currentUser = null; userDoc = null;
-  window.location.hash = ''; // go to login
+  window.location.hash = '';
 }
 
 // ============================================================
@@ -991,7 +974,7 @@ function renderLinksEditor() {
         <div class="link-style-row">
           <div class="style-group">
             <label>Icon</label>
-            <input type="text" placeholder="🔗" value="${escapeHtml(link.icon || '')}" oninput="editingLinks[${i}].icon=this.value" style="width:70px; text-align:center; font-size:1.1rem;">
+            <input type="text" placeholder="🔗 or https://..." value="${escapeHtml(link.icon || '')}" oninput="editingLinks[${i}].icon=this.value" style="width:120px;">
           </div>
           <div class="style-group">
             <label>Button Bg</label>
@@ -1101,7 +1084,7 @@ function updateDiscordPreview() {
 }
 
 // ============================================================
-// SAVE PROFILE (with absolute URL enforcement)
+// SAVE PROFILE
 // ============================================================
 function makeAbsoluteUrl(url) {
   if (!url) return '';
@@ -1183,8 +1166,13 @@ async function requestVerification() {
 }
 
 // ============================================================
-// RENDER PUBLIC PROFILE
+// RENDER PUBLIC PROFILE (with image icon support)
 // ============================================================
+function isImageUrl(str) {
+  if (!str) return false;
+  return /\.(png|jpe?g|gif|svg|webp)(\?.*)?$/i.test(str.trim());
+}
+
 async function renderProfile(data, container) {
   const themes = {
     neon:    { bg: '#0a0010', text: '#fff', accent: '#f0f' },
@@ -1235,8 +1223,16 @@ async function renderProfile(data, container) {
     regularLinks.forEach((link, idx) => {
       const absoluteUrl = makeAbsoluteUrl(link.url);
       const btnStyle = `background:${escapeHtml(link.btnBg||'#7c6af7')};color:${escapeHtml(link.btnTextColor||'#fff')};border-radius:${link.btnRadius ?? 12}px;box-shadow:${escapeHtml(link.btnShadow||'none')};`;
+      let iconHtml = '';
+      if (link.icon) {
+        if (isImageUrl(link.icon)) {
+          iconHtml = `<img src="${escapeHtml(link.icon)}" style="width:20px;height:20px;object-fit:contain;border-radius:2px;vertical-align:middle;">`;
+        } else {
+          iconHtml = `<span>${escapeHtml(link.icon)}</span>`;
+        }
+      }
       html += `<a href="${escapeHtml(absoluteUrl)}" target="_blank" rel="noopener noreferrer" class="pub-link-btn" style="${btnStyle}" onclick="trackClick('${escapeHtml(data.uid)}',${idx})">
-        ${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''}
+        ${iconHtml}
         <span>${escapeHtml(link.title)}</span>
       </a>`;
     });
@@ -1279,7 +1275,6 @@ async function fetchDiscordPresenceWithFallback(discordId, uid) {
   const container = document.getElementById(`pub-discord-${uid}`);
   if (!container) return;
   container.innerHTML = `<div class="discord-presence"><span class="discord-logo">🎮</span><div class="discord-info"><div class="discord-name">Loading…</div><div class="discord-activity">Connecting to Lanyard…</div></div><div class="discord-status-dot offline"></div></div>`;
-
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
@@ -1288,7 +1283,6 @@ async function fetchDiscordPresenceWithFallback(discordId, uid) {
     if (!res.ok) throw new Error('API error');
     const json = await res.json();
     if (!json.success || !json.data) throw new Error('No data');
-
     const d = json.data;
     const discord_user = d.discord_user;
     const discord_status = d.discord_status;
@@ -1296,16 +1290,13 @@ async function fetchDiscordPresenceWithFallback(discordId, uid) {
     const spotify = d.listening_to_spotify ? d.spotify : null;
     const statusLabels = { online: 'Online', idle: 'Away', dnd: 'Do Not Disturb', offline: 'Offline' };
     const statusColors = { online: '#23d160', idle: '#fee75c', dnd: '#ed4245', offline: '#747f8d' };
-
     let activityText = statusLabels[discord_status] || 'Offline';
     if (spotify) activityText = `🎵 ${spotify.song} — ${spotify.artist}`;
     else if (activity) activityText = `🎮 Playing ${activity.name}`;
-
     const avatarHash = discord_user.avatar;
     const avatarUrl = avatarHash
       ? `https://cdn.discordapp.com/avatars/${discordId}/${avatarHash}.${avatarHash.startsWith('a_') ? 'gif' : 'png'}?size=64`
       : `https://cdn.discordapp.com/embed/avatars/0.png`;
-
     let html = `<div class="discord-presence"><img src="${avatarUrl}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'"><div class="discord-info"><div class="discord-name">${escapeHtml(discord_user.global_name || discord_user.username)}</div><div class="discord-activity">${escapeHtml(activityText)}</div></div><div class="discord-status-dot ${discord_status}" style="background:${statusColors[discord_status]};"></div></div>`;
     if (spotify?.album_art_url) html = html.replace(`<img src="${avatarUrl}"`, `<img src="${escapeHtml(spotify.album_art_url)}"`);
     container.innerHTML = html;
@@ -1319,13 +1310,13 @@ function renderPreview() {
 }
 
 // ============================================================
-// PUBLIC PROFILE LOADER (now used by routing)
+// PUBLIC PROFILE LOADER
 // ============================================================
 async function loadPublicProfile(username) {
   const root = document.getElementById('pub-card-root');
   root.innerHTML = '<div style="text-align:center; padding:3rem; color:rgba(255,255,255,0.4);">Loading profile…</div>';
   const floatingBtn = document.getElementById('floating-edit-btn');
-  floatingBtn.classList.add('hidden'); // hide initially
+  floatingBtn.classList.add('hidden');
 
   try {
     const usernameDoc = await db.collection('usernames').doc(username).get();
@@ -1339,7 +1330,6 @@ async function loadPublicProfile(username) {
     const data = { ...profileDoc.data(), uid };
     await renderProfile(data, root);
 
-    // If viewing own profile, show the edit button
     if (currentUser && currentUser.uid === uid) {
       floatingBtn.classList.remove('hidden');
       floatingBtn.onclick = () => {
@@ -1348,7 +1338,6 @@ async function loadPublicProfile(username) {
       };
     }
 
-    // Track view
     try {
       await db.collection('analytics').add({
         profileId: uid, eventType: 'view',
@@ -1361,7 +1350,7 @@ async function loadPublicProfile(username) {
 }
 
 // ============================================================
-// ANALYTICS (only accessible from dashboard)
+// ANALYTICS
 // ============================================================
 async function loadAnalytics() {
   try {
