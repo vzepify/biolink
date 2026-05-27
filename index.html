@@ -6,7 +6,7 @@
   <title>LinkHub</title>
   <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-  <!-- tsParticles for background effects -->
+  <!-- tsParticles -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   <style>
     :root {
@@ -166,7 +166,7 @@
         <button class="active" data-tab="edit">Edit Profile</button>
         <button data-tab="preview">Preview</button>
         <button data-tab="analytics">Analytics</button>
-        <button data-tab="admin" id="tab-admin" class="hidden">Admin</button>
+        <button data-tab="admin" id="tab-admin">Admin</button>
       </div>
 
       <!-- Edit Section -->
@@ -232,8 +232,17 @@
 
       <!-- Admin Panel -->
       <div id="admin-section" class="hidden">
-        <h3>Admin Panel</h3>
-        <div id="admin-users-list">Loading users...</div>
+        <div id="admin-login" style="margin-bottom:1rem;">
+          <h3>Admin Access</h3>
+          <input type="password" id="admin-password" placeholder="Enter admin password">
+          <button onclick="becomeAdmin()">Unlock Admin</button>
+          <p id="admin-error" class="error hidden"></p>
+        </div>
+        <div id="admin-panel" class="hidden">
+          <h3>Admin Panel</h3>
+          <button onclick="loadAdminUsers()">Refresh Users</button>
+          <div id="admin-users-list">Click "Refresh Users" to load.</div>
+        </div>
       </div>
     </div>
 
@@ -247,31 +256,31 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
 
   <script>
     // ---------- REPLACE WITH YOUR FIREBASE CONFIG ----------
     const firebaseConfig = {
-  apiKey: "AIzaSyDwxucvIFlsIUVdL69ZmUm2JHaH-09c6GM",
-  authDomain: "biolink111.firebaseapp.com",
-  projectId: "biolink111",
-  storageBucket: "biolink111.firebasestorage.app",
-  messagingSenderId: "783454791937",
-  appId: "1:783454791937:web:866804708e4c0ab4b31300",
-  measurementId: "G-TRTD5GEX4M"
-};
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
     // -------------------------------------------------------
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const functions = firebase.functions();
 
     let currentUser = null;
     let userDoc = null;
     let editingLinks = [];
     let editingSocials = [];
-    let isAdmin = false;
+    let isAdmin = false;   // will be set from userDoc.admin
+
+    // Hard-coded admin password (change this to something secure!)
+    const ADMIN_PASSWORD = "SuperSecret123";
 
     // ---- Routing ----
     window.addEventListener('hashchange', handleRouting);
@@ -280,11 +289,10 @@
       auth.onAuthStateChanged(async user => {
         currentUser = user;
         if (user) {
-          const token = await user.getIdTokenResult();
-          isAdmin = token.claims.admin || false;
           await loadUserProfile();
+          isAdmin = userDoc && userDoc.admin === true;
           showDashboard();
-          if (isAdmin) document.getElementById('tab-admin').classList.remove('hidden');
+          document.getElementById('tab-admin').classList.toggle('hidden', !isAdmin);
         } else {
           if (!window.location.hash.startsWith('#/u/')) showLoginForm();
         }
@@ -321,7 +329,6 @@
       switchTab('edit');
     }
 
-    // Tab switching
     document.getElementById('tabs').addEventListener('click', e => {
       if (e.target.tagName === 'BUTTON') {
         switchTab(e.target.dataset.tab);
@@ -332,10 +339,11 @@
       ['edit-section','preview-section','analytics-section','admin-section'].forEach(id => hideElement(id));
       showElement(tab + '-section');
       document.querySelectorAll('#tabs button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`#tabs button[data-tab="${tab}"]`).classList.add('active');
+      const activeBtn = document.querySelector(`#tabs button[data-tab="${tab}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
       if (tab === 'preview') renderPreview();
       if (tab === 'analytics') loadAnalytics();
-      if (tab === 'admin') loadAdminPanel();
+      if (tab === 'admin') showAdminSection();
     }
 
     // ---- Auth ----
@@ -374,8 +382,7 @@
       const email = document.getElementById('reset-email').value.trim();
       const errEl = document.getElementById('reset-error');
       const successEl = document.getElementById('reset-success');
-      errEl.classList.add('hidden');
-      successEl.classList.add('hidden');
+      errEl.classList.add('hidden'); successEl.classList.add('hidden');
       try {
         await auth.sendPasswordResetEmail(email);
         successEl.textContent = 'Password reset email sent!';
@@ -393,7 +400,7 @@
       showLoginForm();
     }
 
-    // ---- Firestore load / save ----
+    // ---- Firestore ----
     async function loadUserProfile() {
       if (!currentUser) return;
       const docRef = db.collection('profiles').doc(currentUser.uid);
@@ -402,6 +409,7 @@
         userDoc = doc.data();
         if (!userDoc.links) userDoc.links = [];
         if (!userDoc.socials) userDoc.socials = [];
+        if (userDoc.admin === undefined) userDoc.admin = false;
       } else {
         userDoc = {
           username: '',
@@ -419,9 +427,11 @@
           links: [],
           socials: [],
           verified: false,
-          verificationRequested: false
+          verificationRequested: false,
+          admin: false
         };
       }
+      isAdmin = userDoc.admin;
       populateEditForm();
     }
 
@@ -467,7 +477,6 @@
         container.appendChild(div);
       });
 
-      // Make sortable
       new Sortable(container, {
         handle: '.drag-handle',
         animation: 150,
@@ -479,7 +488,6 @@
             newLinks.push(editingLinks[idx]);
           });
           editingLinks = newLinks;
-          // Update data-index attributes
           rows.forEach((row, i) => row.dataset.index = i);
         }
       });
@@ -566,7 +574,8 @@
         uid: currentUser.uid,
         email: currentUser.email,
         verified: userDoc.verified || false,
-        verificationRequested: userDoc.verificationRequested || false
+        verificationRequested: userDoc.verificationRequested || false,
+        admin: userDoc.admin || false  // preserve admin status
       };
 
       try {
@@ -606,7 +615,6 @@
         container.innerHTML = '<p>User not found.</p>';
         return;
       }
-      // Theme classes
       container.className = 'profile-view';
       if (data.glowingBorder) container.classList.add('glow-border');
       if (data.theme === 'neon') container.style.boxShadow = '0 0 20px #f06, 0 0 40px #06f';
@@ -614,7 +622,6 @@
       container.style.color = data.textColor;
       container.style.fontFamily = data.font;
 
-      // Particle background
       const particlesContainer = document.getElementById('particles-container');
       if (data.particles && window.tsParticles) {
         tsParticles.load("particles-container", {
@@ -640,19 +647,17 @@
       html += `</h1>`;
       if (data.bio) html += `<p style="white-space:pre-wrap;">${escapeHtml(data.bio)}</p>`;
 
-      // Discord presence via Lanyard
       if (data.discordId) {
         html += `<img src="https://api.lanyard.rest/${data.discordId}.svg?animated=true" style="max-width:100%; margin-bottom:1rem;" alt="Discord Presence">`;
       }
 
-      // Links / music
       if (data.links && data.links.length > 0) {
         html += '<div class="links">';
         data.links.forEach((link, idx) => {
           if (link.type === 'music') {
             html += `<iframe class="music-embed" src="${escapeHtml(link.embedUrl)}" allow="autoplay; encrypted-media"></iframe>`;
           } else {
-            html += `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener" class="link-btn" onclick="logClick('${currentUser ? currentUser.uid : ''}', ${idx})">${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''} ${escapeHtml(link.title)}</a>`;
+            html += `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener" class="link-btn" onclick="trackClick('${data.uid}', ${idx})">${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''} ${escapeHtml(link.title)}</a>`;
           }
         });
         html += '</div>';
@@ -673,7 +678,7 @@
       renderProfile(userDoc, 'profile-preview-container');
     }
 
-    // ---- Public profile ----
+    // ---- Public profile & analytics logging ----
     async function loadPublicProfile(username) {
       hideElement('auth-forms'); hideElement('dashboard');
       showElement('public-profile');
@@ -692,93 +697,138 @@
           return;
         }
         const profileData = profileDoc.data();
+        profileData.uid = uid; // for tracking
         renderProfile(profileData, 'public-profile-content');
-        // Log analytics view
+
+        // Log a view
         try {
-          const logView = functions.httpsCallable('logEvent');
-          await logView({ profileId: uid, eventType: 'view' });
-        } catch(e) { console.log('Analytics log error:', e); }
+          await db.collection('analytics').add({
+            profileId: uid,
+            eventType: 'view',
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        } catch(e) { console.log('View log error:', e); }
       } catch (e) {
         contentDiv.innerHTML = '<p>Error loading profile.</p>';
       }
     }
 
-    // ---- Analytics (client callable) ----
+    // Called from link click on public profile
+    async function trackClick(profileId, linkIndex) {
+      if (!profileId) return;
+      try {
+        await db.collection('analytics').add({
+          profileId,
+          eventType: 'click',
+          linkIndex,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch(e) { console.log('Click log error:', e); }
+    }
+
+    // ---- Analytics (client-side Firestore queries) ----
     async function loadAnalytics() {
       const loadingEl = document.getElementById('analytics-loading');
       const dataEl = document.getElementById('analytics-data');
       loadingEl.classList.remove('hidden');
       dataEl.innerHTML = '';
       try {
-        const getAnalytics = functions.httpsCallable('getAnalytics');
-        const result = await getAnalytics({ profileId: currentUser.uid });
-        const stats = result.data;
+        const analyticsRef = db.collection('analytics');
+        const viewsSnapshot = await analyticsRef
+          .where('profileId', '==', currentUser.uid)
+          .where('eventType', '==', 'view')
+          .get();
+        const clicksSnapshot = await analyticsRef
+          .where('profileId', '==', currentUser.uid)
+          .where('eventType', '==', 'click')
+          .get();
         dataEl.innerHTML = `
-          <p>Profile views: ${stats.views || 0}</p>
-          <p>Link clicks: ${stats.clicks || 0}</p>
+          <p>Profile views: ${viewsSnapshot.size}</p>
+          <p>Link clicks: ${clicksSnapshot.size}</p>
         `;
       } catch (e) {
-        dataEl.innerHTML = '<p>Could not load analytics.</p>';
+        dataEl.innerHTML = '<p>Could not load analytics. You may not have permission.</p>';
       }
       loadingEl.classList.add('hidden');
     }
 
-    // Called from public link click
-    async function logClick(profileId, linkIndex) {
-      if (!profileId) return;
-      try {
-        const logEvent = functions.httpsCallable('logEvent');
-        await logEvent({ profileId, eventType: 'click', linkIndex });
-      } catch(e) { console.log('Click log error:', e); }
+    // ---- Admin Panel ----
+    function showAdminSection() {
+      const adminLoginDiv = document.getElementById('admin-login');
+      const adminPanelDiv = document.getElementById('admin-panel');
+      if (isAdmin) {
+        adminLoginDiv.classList.add('hidden');
+        adminPanelDiv.classList.remove('hidden');
+        loadAdminUsers();
+      } else {
+        adminLoginDiv.classList.remove('hidden');
+        adminPanelDiv.classList.add('hidden');
+      }
     }
 
-    // ---- Admin panel ----
-    async function loadAdminPanel() {
-      const container = document.getElementById('admin-users-list');
-      if (!isAdmin) {
-        container.innerHTML = 'You are not an admin.';
+    async function becomeAdmin() {
+      const password = document.getElementById('admin-password').value;
+      const errEl = document.getElementById('admin-error');
+      errEl.classList.add('hidden');
+      if (password !== ADMIN_PASSWORD) {
+        errEl.textContent = 'Incorrect password.';
+        errEl.classList.remove('hidden');
         return;
       }
-      container.innerHTML = 'Loading...';
       try {
-        const listUsers = functions.httpsCallable('adminListUsers');
-        const result = await listUsers();
-        const users = result.data;
+        await db.collection('profiles').doc(currentUser.uid).update({ admin: true });
+        userDoc.admin = true;
+        isAdmin = true;
+        document.getElementById('tab-admin').classList.remove('hidden');
+        showAdminSection();
+        alert('You are now an admin.');
+      } catch (e) {
+        errEl.textContent = 'Error: ' + e.message;
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    async function loadAdminUsers() {
+      const container = document.getElementById('admin-users-list');
+      container.innerHTML = 'Loading...';
+      if (!isAdmin) {
+        container.innerHTML = 'Access denied.';
+        return;
+      }
+      try {
+        const snapshot = await db.collection('profiles').get();
         let html = '<table style="width:100%"><tr><th>Email</th><th>Username</th><th>Verified</th><th>Actions</th></tr>';
-        users.forEach(u => {
+        snapshot.forEach(doc => {
+          const u = doc.data();
           html += `<tr>
             <td>${escapeHtml(u.email)}</td>
             <td>${escapeHtml(u.username)}</td>
             <td>${u.verified ? '✔️' : '❌'}</td>
             <td>
-              <button onclick="adminVerifyUser('${u.uid}')">Verify</button>
-              <button onclick="adminUnverifyUser('${u.uid}')">Unverify</button>
+              <button onclick="adminToggleVerify('${doc.id}', true)">Verify</button>
+              <button onclick="adminToggleVerify('${doc.id}', false)">Unverify</button>
             </td>
           </tr>`;
         });
         html += '</table>';
         container.innerHTML = html;
-      } catch(e) {
-        container.innerHTML = 'Error loading users.';
+      } catch (e) {
+        container.innerHTML = 'Error loading users. You may not be an admin.';
       }
     }
 
-    async function adminVerifyUser(uid) {
+    async function adminToggleVerify(userId, verify) {
+      if (!isAdmin) return;
       try {
-        const verify = functions.httpsCallable('adminVerifyUser');
-        await verify({ userId: uid });
-        alert('User verified.');
-        loadAdminPanel();
-      } catch(e) { alert('Error: ' + e.message); }
-    }
-
-    async function adminUnverifyUser(uid) {
-      try {
-        const unverify = functions.httpsCallable('adminUnverifyUser');
-        await unverify({ userId: uid });
-        alert('User unverified.');
-        loadAdminPanel();
-      } catch(e) { alert('Error: ' + e.message); }
+        await db.collection('profiles').doc(userId).update({
+          verified: verify,
+          verificationRequested: false
+        });
+        alert(`User ${verify ? 'verified' : 'unverified'}.`);
+        loadAdminUsers();
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
     }
 
     function escapeHtml(text) {
