@@ -41,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* Animated background mesh */
     body::before {
       content: '';
       position: fixed;
@@ -53,7 +52,6 @@
       z-index: 0;
     }
 
-    /* ============ SIDEBAR ============ */
     .sidebar {
       width: var(--sidebar-w);
       background: var(--surface);
@@ -181,7 +179,6 @@
     }
     .icon-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border-hover); }
 
-    /* ============ MAIN ============ */
     .main-content {
       margin-left: var(--sidebar-w);
       flex: 1;
@@ -233,7 +230,6 @@
       background: rgba(124,106,247,0.15);
     }
 
-    /* ============ FORM ELEMENTS ============ */
     .form-row { margin-bottom: 1rem; }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
     label {
@@ -265,7 +261,6 @@
     textarea { resize: vertical; min-height: 80px; }
     select option { background: var(--surface2); }
 
-    /* Checkbox toggle */
     .toggle-label {
       display: flex;
       align-items: center;
@@ -306,7 +301,6 @@
       background: white;
     }
 
-    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -345,7 +339,6 @@
     .btn-full { width: 100%; }
     .btn-icon { padding: 0.5rem; border-radius: 7px; }
 
-    /* Color input */
     .color-row {
       display: flex;
       align-items: center;
@@ -368,7 +361,6 @@
     .color-hex { flex: 1; background: none; border: none; font-size: 0.85rem; color: var(--text); padding: 0 0.25rem; }
     .color-hex:focus { border: none; box-shadow: none; }
 
-    /* ============ LINK ROWS ============ */
     .links-list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
 
     .link-card {
@@ -457,7 +449,6 @@
       font-size: 0.78rem;
     }
 
-    /* ============ NOTIFICATIONS ============ */
     .toast-container {
       position: fixed;
       bottom: 1.5rem;
@@ -487,12 +478,10 @@
     @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-    /* ============ STATUS ============ */
     .msg { font-size: 0.85rem; text-align: center; margin-bottom: 0.75rem; padding: 0.6rem 1rem; border-radius: 8px; }
     .msg.error { background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); }
     .msg.success { background: rgba(34,197,94,0.1); color: var(--success); border: 1px solid rgba(34,197,94,0.2); }
 
-    /* ============ AUTH PAGE ============ */
     .auth-wrapper {
       display: flex;
       flex-direction: column;
@@ -550,7 +539,6 @@
     }
     .auth-switch a:hover { text-decoration: underline; }
 
-    /* ============ PUBLIC PROFILE ============ */
     .pub-wrapper {
       min-height: 100vh;
       display: flex;
@@ -712,7 +700,6 @@
     }
     .pub-footer a { color: var(--accent); text-decoration: none; opacity: 0.7; }
 
-    /* ============ ANALYTICS CARDS ============ */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -755,7 +742,6 @@
       outline: none;
     }
 
-    /* ============ UTILITIES ============ */
     .hidden { display: none !important; }
     .flex { display: flex; }
     .flex-center { display: flex; align-items: center; justify-content: center; }
@@ -765,7 +751,6 @@
     .text-muted { color: var(--text-muted); }
     .text-sm { font-size: 0.875rem; }
 
-    /* ============ PREVIEW SECTION ============ */
     .preview-frame {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -775,7 +760,6 @@
       justify-content: center;
     }
 
-    /* ============ PROFILE LINK BAR ============ */
     .profile-url-bar {
       background: linear-gradient(135deg, rgba(124,106,247,0.12), rgba(224,86,176,0.08));
       border: 1px solid rgba(124,106,247,0.2);
@@ -795,7 +779,6 @@
       color: var(--accent);
     }
 
-    /* Socials compact row */
     .social-row {
       display: flex;
       gap: 0.5rem;
@@ -809,15 +792,12 @@
     .social-row input { flex: 1; background: none; border: none; padding: 0.2rem 0.4rem; font-size: 0.875rem; margin-bottom: 0; }
     .social-row input:focus { box-shadow: none; border: none; }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 10px; }
 
-    /* Particles container */
     #particles-js { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* Admin table */
     .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .admin-table th { text-align: left; padding: 0.6rem 0.75rem; color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); font-weight: 600; }
     .admin-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
@@ -836,8 +816,6 @@
 <body>
 
 <div id="particles-js"></div>
-
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 
 <!-- SIDEBAR -->
@@ -846,24 +824,14 @@
     <div class="logo-icon">🔗</div>
     <span class="logo-text">LinkHub</span>
   </div>
-
   <nav class="nav-section">
     <div class="nav-label">Workspace</div>
-    <a class="nav-link active" data-tab="edit" href="#">
-      <span class="nav-icon">✏️</span> Edit Profile
-    </a>
-    <a class="nav-link" data-tab="preview" href="#">
-      <span class="nav-icon">👁️</span> Preview
-    </a>
-    <a class="nav-link" data-tab="analytics" href="#">
-      <span class="nav-icon">📊</span> Analytics
-    </a>
+    <a class="nav-link active" data-tab="edit" href="#"><span class="nav-icon">✏️</span> Edit Profile</a>
+    <a class="nav-link" data-tab="preview" href="#"><span class="nav-icon">👁️</span> Preview</a>
+    <a class="nav-link" data-tab="analytics" href="#"><span class="nav-icon">📊</span> Analytics</a>
     <div class="nav-label">System</div>
-    <a class="nav-link hidden" data-tab="admin" id="sidebar-admin" href="#">
-      <span class="nav-icon">🛡️</span> Admin
-    </a>
+    <a class="nav-link hidden" data-tab="admin" id="sidebar-admin" href="#"><span class="nav-icon">🛡️</span> Admin</a>
   </nav>
-
   <div class="sidebar-footer">
     <div class="user-chip" id="user-chip">
       <div class="user-avatar" id="user-initial">?</div>
@@ -892,14 +860,8 @@
       </div>
 
       <div id="login-form">
-        <div class="form-row">
-          <label>Email</label>
-          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
-        </div>
-        <div class="form-row">
-          <label>Password</label>
-          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-        </div>
+        <div class="form-row"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"></div>
+        <div class="form-row"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
         <div id="login-error" class="msg error hidden"></div>
         <button class="btn btn-primary btn-full" onclick="login()">Sign In →</button>
         <div class="auth-switch">
@@ -909,24 +871,15 @@
       </div>
 
       <div id="signup-form" class="hidden">
-        <div class="form-row">
-          <label>Email</label>
-          <input type="email" id="signup-email" placeholder="you@example.com">
-        </div>
-        <div class="form-row">
-          <label>Password</label>
-          <input type="password" id="signup-password" placeholder="Min. 6 characters">
-        </div>
+        <div class="form-row"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Password</label><input type="password" id="signup-password" placeholder="Min. 6 characters"></div>
         <div id="signup-error" class="msg error hidden"></div>
         <button class="btn btn-primary btn-full" onclick="signup()">Create Account →</button>
         <div class="auth-switch"><a href="#" onclick="showLogin()">Already have an account? Sign in</a></div>
       </div>
 
       <div id="forgot-form" class="hidden">
-        <div class="form-row">
-          <label>Email</label>
-          <input type="email" id="reset-email" placeholder="you@example.com">
-        </div>
+        <div class="form-row"><label>Email</label><input type="email" id="reset-email" placeholder="you@example.com"></div>
         <div id="reset-error" class="msg error hidden"></div>
         <div id="reset-success" class="msg success hidden"></div>
         <button class="btn btn-primary btn-full" onclick="resetPassword()">Send Reset Email</button>
@@ -938,7 +891,6 @@
   <!-- DASHBOARD -->
   <div id="dashboard" class="hidden" style="width:100%; display:flex; flex-direction:column; align-items:center;">
 
-    <!-- Profile URL bar -->
     <div class="profile-url-bar" id="profile-url-bar">
       <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600; white-space:nowrap;">🔗 Your page:</span>
       <span class="url-text" id="profile-url-text">Set a username to get your link</span>
@@ -952,28 +904,13 @@
       <div class="card">
         <div class="card-title"><div class="card-icon">👤</div> Profile Info</div>
         <div class="form-grid">
-          <div class="form-row">
-            <label>Username</label>
-            <input type="text" id="edit-username" placeholder="yourname">
-          </div>
-          <div class="form-row">
-            <label>Display Name</label>
-            <input type="text" id="edit-displayname" placeholder="Your Name">
-          </div>
+          <div class="form-row"><label>Username</label><input type="text" id="edit-username" placeholder="yourname"></div>
+          <div class="form-row"><label>Display Name</label><input type="text" id="edit-displayname" placeholder="Your Name"></div>
         </div>
-        <div class="form-row">
-          <label>Bio</label>
-          <textarea id="edit-bio" placeholder="Tell the world about yourself..."></textarea>
-        </div>
+        <div class="form-row"><label>Bio</label><textarea id="edit-bio" placeholder="Tell the world about yourself..."></textarea></div>
         <div class="form-grid">
-          <div class="form-row">
-            <label>Avatar URL</label>
-            <input type="url" id="edit-avatar" placeholder="https://...">
-          </div>
-          <div class="form-row">
-            <label>Discord User ID</label>
-            <input type="text" id="edit-discordid" placeholder="1234567890..." oninput="updateDiscordPreview()">
-          </div>
+          <div class="form-row"><label>Avatar URL</label><input type="url" id="edit-avatar" placeholder="https://..."></div>
+          <div class="form-row"><label>Discord User ID</label><input type="text" id="edit-discordid" placeholder="1234567890..." oninput="updateDiscordPreview()"></div>
         </div>
         <div id="discord-id-hint" class="text-sm text-muted" style="margin-top:-0.5rem; margin-bottom:0.75rem;"></div>
         <button class="btn btn-warning btn-sm" onclick="requestVerification()">⭐ Request Verification</button>
@@ -1018,26 +955,11 @@
             </div>
           </div>
         </div>
-        <div class="form-row">
-          <label>Background Image URL</label>
-          <input type="url" id="edit-bgimage" placeholder="https://...">
-        </div>
+        <div class="form-row"><label>Background Image URL</label><input type="url" id="edit-bgimage" placeholder="https://..."></div>
         <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
-          <label class="toggle-label">
-            <input type="checkbox" class="toggle-input" id="edit-glowingborder">
-            <span class="toggle-slider"></span>
-            Glowing Border
-          </label>
-          <label class="toggle-label">
-            <input type="checkbox" class="toggle-input" id="edit-particles">
-            <span class="toggle-slider"></span>
-            Particle Background
-          </label>
-          <label class="toggle-label">
-            <input type="checkbox" class="toggle-input" id="edit-discord-presence">
-            <span class="toggle-slider"></span>
-            Show Discord Presence
-          </label>
+          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-glowingborder"><span class="toggle-slider"></span> Glowing Border</label>
+          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-particles"><span class="toggle-slider"></span> Particle Background</label>
+          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-discord-presence"><span class="toggle-slider"></span> Show Discord Presence</label>
         </div>
       </div>
 
@@ -1096,10 +1018,7 @@
       <div class="card">
         <div id="admin-login-block">
           <div class="card-title"><div class="card-icon">🛡️</div> Admin Access</div>
-          <div class="form-row">
-            <label>Admin Password</label>
-            <input type="password" id="admin-password" placeholder="Enter password">
-          </div>
+          <div class="form-row"><label>Admin Password</label><input type="password" id="admin-password" placeholder="Enter password"></div>
           <div id="admin-error" class="msg error hidden"></div>
           <button class="btn btn-primary" onclick="becomeAdmin()">Unlock Admin Panel</button>
         </div>
@@ -1127,7 +1046,7 @@
 
 <script>
 // ============================================================
-// FIREBASE CONFIG
+// FIREBASE CONFIG (YOUR KEYS)
 // ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDwxucvIFlsIUVdL69ZmUm2JHaH-09c6GM",
@@ -1164,11 +1083,10 @@ function toast(message, type = 'info') {
 }
 
 // ============================================================
-// DARK MODE
+// DARK MODE (legacy toggle preserved)
 // ============================================================
 const darkToggle = document.getElementById('darkModeToggle');
 darkToggle.addEventListener('click', () => {
-  // Already dark by default; toggle light mode
   document.documentElement.style.setProperty('--bg', document.body.classList.toggle('light-mode') ? '#f5f7fa' : '#0d0d14');
   localStorage.setItem('lightMode', document.body.classList.contains('light-mode'));
 });
@@ -1248,7 +1166,6 @@ function showDashboard() {
   hide('auth-wrapper'); hide('public-profile');
   document.getElementById('sidebar').classList.remove('hidden');
   show('dashboard');
-  // Update user chip
   const email = currentUser?.email || '';
   document.getElementById('user-email-display').textContent = email;
   document.getElementById('user-initial').textContent = email[0]?.toUpperCase() || '?';
@@ -1481,7 +1398,6 @@ function updateLinkPreview(i) {
 function addLink() {
   editingLinks.push({ title: '', url: '', type: 'link', icon: '', embedUrl: '', btnBg: '#7c6af7', btnTextColor: '#ffffff', btnRadius: 12, btnShadow: 'none' });
   renderLinksEditor();
-  // Auto-open the new link card
   setTimeout(() => {
     const cards = document.querySelectorAll('.link-card');
     const last = cards[cards.length - 1];
@@ -1518,9 +1434,6 @@ function renderSocialsEditor() {
 function addSocial() { editingSocials.push({ platform: '', url: '', icon: '🔗' }); renderSocialsEditor(); }
 function removeSocial(i) { editingSocials.splice(i, 1); renderSocialsEditor(); }
 
-// ============================================================
-// DISCORD ID HINT
-// ============================================================
 function updateDiscordPreview() {
   const id = document.getElementById('edit-discordid').value.trim();
   const hint = document.getElementById('discord-id-hint');
@@ -1534,8 +1447,16 @@ function updateDiscordPreview() {
 }
 
 // ============================================================
-// SAVE PROFILE
+// SAVE PROFILE (with absolute URL enforcement)
 // ============================================================
+function makeAbsoluteUrl(url) {
+  if (!url) return '';
+  url = url.trim();
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith('//')) return 'https:' + url;
+  return 'https://' + url;
+}
+
 async function saveProfile() {
   const err = document.getElementById('save-error');
   const suc = document.getElementById('save-success');
@@ -1566,12 +1487,19 @@ async function saveProfile() {
     particles: document.getElementById('edit-particles').checked,
     showDiscordPresence: document.getElementById('edit-discord-presence').checked,
     links: editingLinks.filter(l => l.title && l.url).map(l => ({
-      title: l.title, url: makeAbsoluteUrl(l.url), type: l.type || 'link',
-      embedUrl: l.embedUrl || '', icon: l.icon || '',
-      btnBg: l.btnBg || '#7c6af7', btnTextColor: l.btnTextColor || '#ffffff',
-      btnRadius: l.btnRadius ?? 12, btnShadow: l.btnShadow || 'none'
+      title: l.title,
+      url: makeAbsoluteUrl(l.url),           // enforce https://
+      type: l.type || 'link',
+      embedUrl: l.embedUrl || '',
+      icon: l.icon || '',
+      btnBg: l.btnBg || '#7c6af7',
+      btnTextColor: l.btnTextColor || '#ffffff',
+      btnRadius: l.btnRadius ?? 12,
+      btnShadow: l.btnShadow || 'none'
     })),
-    socials: editingSocials.filter(s => s.platform && s.url).map(s => ({ platform: s.platform, url: s.url, icon: s.icon || '🔗' })),
+    socials: editingSocials.filter(s => s.platform && s.url).map(s => ({
+      platform: s.platform, url: makeAbsoluteUrl(s.url), icon: s.icon || '🔗'
+    })),
     uid: currentUser.uid, email: currentUser.email,
     verified: userDoc.verified || false,
     verificationRequested: userDoc.verificationRequested || false,
@@ -1606,7 +1534,7 @@ async function requestVerification() {
 }
 
 // ============================================================
-// RENDER PUBLIC PROFILE
+// RENDER PUBLIC PROFILE (with absolute URL fix & Discord presence fallback)
 // ============================================================
 async function renderProfile(data, container) {
   // Apply background/theme
@@ -1632,7 +1560,6 @@ async function renderProfile(data, container) {
     container.style.border = '1px solid rgba(124,106,247,0.5)';
   }
 
-  // Build HTML
   let html = '<div class="pub-header">';
 
   // Avatar
@@ -1651,18 +1578,9 @@ async function renderProfile(data, container) {
   if (data.bio) html += `<div class="pub-bio">${escapeHtml(data.bio)}</div>`;
   html += '</div>';
 
-  // Discord presence
+  // Discord presence block (will be populated by fetchDiscordPresence)
   if (data.discordId && data.showDiscordPresence !== false) {
-    html += `<div class="pub-discord" id="pub-discord-${data.uid}">
-      <div class="discord-presence">
-        <span class="discord-logo">🎮</span>
-        <div class="discord-info">
-          <div class="discord-name">Loading Discord status…</div>
-          <div class="discord-activity" style="color:rgba(255,255,255,0.4);">Connecting to Lanyard…</div>
-        </div>
-        <div class="discord-status-dot offline" id="discord-dot-${data.uid}"></div>
-      </div>
-    </div>`;
+    html += `<div class="pub-discord" id="pub-discord-${data.uid}"></div>`;
   }
 
   // Music embeds
@@ -1671,45 +1589,37 @@ async function renderProfile(data, container) {
     html += `<div class="pub-music-embed"><iframe src="${escapeHtml(link.embedUrl || link.url)}" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></div>`;
   });
 
-  // Regular links
-const regularLinks = (data.links || []).filter(l => l.type !== 'music');
-if (regularLinks.length > 0) {
-  html += '<div class="pub-links">';
-  regularLinks.forEach((link, idx) => {
-    const btnStyle = `background:${escapeHtml(link.btnBg||'#7c6af7')};color:${escapeHtml(link.btnTextColor||'#fff')};border-radius:${link.btnRadius ?? 12}px;box-shadow:${escapeHtml(link.btnShadow||'none')};`;
-    html += `<a href="${escapeHtml(makeAbsoluteUrl(link.url))}" target="_blank" rel="noopener noreferrer" class="pub-link-btn" style="${btnStyle}" onclick="trackClick('${escapeHtml(data.uid)}',${idx})">
-      ${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''}
-      <span>${escapeHtml(link.title)}</span>
-    </a>`;
-  });
-  html += '</div>';
-}
-
-  function makeAbsoluteUrl(url) {
-  if (!url) return '';
-  url = url.trim();
-  if (/^https?:\/\//i.test(url)) return url;            // already has protocol
-  if (url.startsWith('//')) return 'https:' + url;      // protocol-relative
-  return 'https://' + url;                               // missing protocol – add https://
-}
+  // Regular links (with absolute URLs)
+  const regularLinks = (data.links || []).filter(l => l.type !== 'music');
+  if (regularLinks.length > 0) {
+    html += '<div class="pub-links">';
+    regularLinks.forEach((link, idx) => {
+      const absoluteUrl = makeAbsoluteUrl(link.url);
+      const btnStyle = `background:${escapeHtml(link.btnBg||'#7c6af7')};color:${escapeHtml(link.btnTextColor||'#fff')};border-radius:${link.btnRadius ?? 12}px;box-shadow:${escapeHtml(link.btnShadow||'none')};`;
+      html += `<a href="${escapeHtml(absoluteUrl)}" target="_blank" rel="noopener noreferrer" class="pub-link-btn" style="${btnStyle}" onclick="trackClick('${escapeHtml(data.uid)}',${idx})">
+        ${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''}
+        <span>${escapeHtml(link.title)}</span>
+      </a>`;
+    });
+    html += '</div>';
+  }
 
   // Socials
   if (data.socials?.length > 0) {
     html += '<div class="pub-socials">';
     data.socials.forEach(s => {
-      html += `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer" class="pub-social-icon" title="${escapeHtml(s.platform)}">${escapeHtml(s.icon||'🔗')}</a>`;
+      html += `<a href="${escapeHtml(makeAbsoluteUrl(s.url))}" target="_blank" rel="noopener noreferrer" class="pub-social-icon" title="${escapeHtml(s.platform)}">${escapeHtml(s.icon||'🔗')}</a>`;
     });
     html += '</div>';
   }
 
-  // Footer
   html += `<div class="pub-footer">Made with <a href="#">LinkHub</a></div>`;
 
   container.innerHTML = html;
 
-  // Fetch Discord presence via Lanyard
+  // Fetch Discord presence (with timeout & fallback)
   if (data.discordId && data.showDiscordPresence !== false) {
-    fetchDiscordPresence(data.discordId, data.uid);
+    fetchDiscordPresenceWithFallback(data.discordId, data.uid);
   }
 
   // Particles
@@ -1733,26 +1643,40 @@ if (regularLinks.length > 0) {
 }
 
 // ============================================================
-// DISCORD PRESENCE via Lanyard
+// DISCORD PRESENCE WITH TIMEOUT & FALLBACK
 // ============================================================
-async function fetchDiscordPresence(discordId, uid) {
-  const containerId = `pub-discord-${uid}`;
-  const container = document.getElementById(containerId);
+async function fetchDiscordPresenceWithFallback(discordId, uid) {
+  const container = document.getElementById(`pub-discord-${uid}`);
   if (!container) return;
 
-  try {
-    const res = await fetch(`https://api.lanyard.rest/v1/users/${discordId}`);
-    const json = await res.json();
+  // Show loading state
+  container.innerHTML = `<div class="discord-presence">
+    <span class="discord-logo">🎮</span>
+    <div class="discord-info">
+      <div class="discord-name">Loading Discord status…</div>
+      <div class="discord-activity">Connecting to Lanyard…</div>
+    </div>
+    <div class="discord-status-dot offline"></div>
+  </div>`;
 
-    if (!json.success) {
-      container.innerHTML = '';
-      return;
-    }
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    const res = await fetch(`https://api.lanyard.rest/v1/users/${discordId}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) throw new Error('API error');
+
+    const json = await res.json();
+    if (!json.success || !json.data) throw new Error('No data');
 
     const d = json.data;
     const discord_user = d.discord_user;
     const discord_status = d.discord_status; // online, idle, dnd, offline
-    const activity = d.activities?.find(a => a.type === 0); // type 0 = playing
+    const activity = d.activities?.find(a => a.type === 0);
     const spotify = d.listening_to_spotify ? d.spotify : null;
 
     const statusLabels = { online: 'Online', idle: 'Away', dnd: 'Do Not Disturb', offline: 'Offline' };
@@ -1770,7 +1694,7 @@ async function fetchDiscordPresence(discordId, uid) {
       ? `https://cdn.discordapp.com/avatars/${discordId}/${avatarHash}.${avatarHash.startsWith('a_') ? 'gif' : 'png'}?size=64`
       : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-    container.innerHTML = `
+    let presenceHtml = `
       <div class="discord-presence">
         <img src="${avatarUrl}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">
         <div class="discord-info">
@@ -1778,22 +1702,20 @@ async function fetchDiscordPresence(discordId, uid) {
           <div class="discord-activity">${escapeHtml(activityText)}</div>
         </div>
         <div class="discord-status-dot ${discord_status}" style="background:${statusColors[discord_status]};"></div>
-      </div>
-    `;
+      </div>`;
 
-    // If listening to Spotify, add album art
+    // If listening to Spotify, show album art
     if (spotify && spotify.album_art_url) {
-      const presence = container.querySelector('.discord-presence');
-      const img = presence?.querySelector('img');
-      if (img) {
-        img.src = spotify.album_art_url;
-        img.style.borderRadius = '6px';
-      }
+      presenceHtml = presenceHtml.replace(
+        `<img src="${avatarUrl}"`,
+        `<img src="${escapeHtml(spotify.album_art_url)}"`
+      );
     }
 
+    container.innerHTML = presenceHtml;
   } catch (e) {
-    // Silently fail - Discord presence is optional
-    if (container) container.innerHTML = '';
+    // Silently fail and remove the block (or show minimal status)
+    container.innerHTML = ''; // remove entirely if we can't fetch
   }
 }
 
