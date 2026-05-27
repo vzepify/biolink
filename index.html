@@ -859,7 +859,6 @@ async function loadUserProfile() {
       theme:'default', bgColor:'#0d0d14', bgImage:'', textColor:'#f0f0ff',
       font:"'Plus Jakarta Sans', sans-serif", glowingBorder:false, particles:false,
       showDiscordPresence:true, links:[], socials:[],
-      // NEW DEFAULTS
       pronouns:'', location:'', birthday:'',
       statusText:'', statusAnimated:false,
       featuredVideoEnabled:false, featuredVideoUrl:'',
@@ -898,7 +897,6 @@ function populateEditForm() {
   document.getElementById('edit-particles').checked = userDoc.particles || false;
   document.getElementById('edit-discord-presence').checked = userDoc.showDiscordPresence !== false;
 
-  // NEW FIELDS
   document.getElementById('edit-pronouns').value = userDoc.pronouns || '';
   document.getElementById('edit-location').value = userDoc.location || '';
   document.getElementById('edit-birthday').value = userDoc.birthday || '';
@@ -997,7 +995,7 @@ function stopMouseTrail() {
 }
 
 // ============================================================
-// LINKS EDITOR (unchanged, but ensure global addLink/removeLink)
+// LINKS EDITOR (global addLink/removeLink)
 // ============================================================
 function renderLinksEditor() {
   const container = document.getElementById('links-container');
@@ -1142,7 +1140,17 @@ function renderSocialsEditor() {
 function addSocial() { editingSocials.push({ platform: '', url: '', icon: '🔗' }); renderSocialsEditor(); }
 function removeSocial(i) { editingSocials.splice(i, 1); renderSocialsEditor(); }
 
-function updateDiscordPreview() { /* ... (unchanged) */ }
+function updateDiscordPreview() {
+  const id = document.getElementById('edit-discordid').value.trim();
+  const hint = document.getElementById('discord-id-hint');
+  if (id && /^\d{17,19}$/.test(id)) {
+    hint.innerHTML = `<span style="color:var(--success);">✓ Valid Discord ID — presence will show on your profile</span>`;
+  } else if (id) {
+    hint.innerHTML = `<span style="color:var(--warning);">⚠ Discord IDs are 17-19 digits.</span>`;
+  } else {
+    hint.innerHTML = '';
+  }
+}
 
 // ============================================================
 // SAVE PROFILE (with new fields)
@@ -1184,7 +1192,6 @@ async function saveProfile() {
     glowingBorder: document.getElementById('edit-glowingborder').checked,
     particles: document.getElementById('edit-particles').checked,
     showDiscordPresence: document.getElementById('edit-discord-presence').checked,
-    // NEW FIELDS
     pronouns: document.getElementById('edit-pronouns').value.trim(),
     location: document.getElementById('edit-location').value.trim(),
     birthday: document.getElementById('edit-birthday').value,
@@ -1306,11 +1313,11 @@ async function renderProfile(data, container) {
 
   let html = '<div class="pub-header">';
 
-  // Avatar with glow + border
+  // Avatar with glow + border (no onerror that affects background)
   const avatarGlowClass = data.avatarGlow ? 'avatar-glow' : '';
   const avatarStyle = `border:${data.avatarBorderWidth}px solid ${data.avatarBorderColor}; box-shadow: 0 0 10px ${data.avatarBorderColor};`;
   if (data.avatar) {
-    html += `<img src="${escapeHtml(data.avatar)}" class="pub-avatar ${avatarGlowClass}" style="${avatarStyle}" onerror="this.style.display='none'; this.nextElementSibling?.style.removeProperty('display')">`;
+    html += `<img src="${escapeHtml(data.avatar)}" class="pub-avatar ${avatarGlowClass}" style="${avatarStyle}" onerror="this.style.display='none'; this.nextElementSibling.style.display='';">`;
     html += `<div class="pub-avatar-fallback" style="display:none;">${escapeHtml((data.displayName||data.username||'?')[0].toUpperCase())}</div>`;
   } else {
     html += `<div class="pub-avatar-fallback ${avatarGlowClass}" style="${avatarStyle}">${escapeHtml((data.displayName||data.username||'?')[0].toUpperCase())}</div>`;
@@ -1325,7 +1332,6 @@ async function renderProfile(data, container) {
   if (data.pronouns) html += `<p style="font-size:0.8rem;color:var(--text-muted);">${escapeHtml(data.pronouns)}</p>`;
   if (data.location) html += `<p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">📍 ${escapeHtml(data.location)}</p>`;
 
-  // Online / last active
   const lastActive = data.lastActive?.toDate ? data.lastActive.toDate() : null;
   if (lastActive) {
     const isOnline = (Date.now() - lastActive.getTime() < 5 * 60 * 1000);
@@ -1379,7 +1385,6 @@ async function renderProfile(data, container) {
     html += '</div>';
   }
 
-  // Join date + view count
   if (data.joinDate?.toDate) {
     const join = data.joinDate.toDate();
     html += `<p style="text-align:center;font-size:0.7rem;color:var(--text-dim);margin-top:1rem;">Joined ${join.toLocaleDateString('en-US',{month:'long', year:'numeric'})}</p>`;
@@ -1441,12 +1446,75 @@ async function loadPublicProfile(username) {
   } catch(e) { root.innerHTML='<p style="color:var(--danger);">Error</p>'; }
 }
 
-async function loadAnalytics() { /* ... (unchanged) ... */ }
-async function trackClick(profileId, linkIndex) { /* ... */ }
-function showAdminSection() { /* ... */ }
-async function becomeAdmin() { /* ... */ }
-async function loadAdminUsers() { /* ... */ }
-async function adminToggleVerify(userId, verify) { /* ... */ }
+async function loadAnalytics() {
+  try {
+    const [v,c] = await Promise.all([
+      db.collection('analytics').where('profileId','==',currentUser.uid).where('eventType','==','view').get(),
+      db.collection('analytics').where('profileId','==',currentUser.uid).where('eventType','==','click').get()
+    ]);
+    document.getElementById('stat-views').textContent = v.size;
+    document.getElementById('stat-clicks').textContent = c.size;
+    document.getElementById('stat-links').textContent = (userDoc?.links||[]).filter(l=>l.type!=='music').length;
+    const username = userDoc?.username;
+    const url = username ? `${location.origin}${location.pathname}#/u/${username}` : 'Set a username first';
+    document.getElementById('share-url-input').value = url;
+  } catch(e) { toast('Could not load analytics', 'error'); }
+}
+async function trackClick(profileId, linkIndex) {
+  if (!profileId) return;
+  try { await db.collection('analytics').add({profileId, eventType:'click', linkIndex, timestamp:firebase.firestore.FieldValue.serverTimestamp()}); } catch(e){}
+}
+
+function showAdminSection() {
+  const loginBlock = document.getElementById('admin-login-block');
+  const panel = document.getElementById('admin-panel');
+  if (isAdmin) { loginBlock.classList.add('hidden'); panel.classList.remove('hidden'); loadAdminUsers(); }
+  else { loginBlock.classList.remove('hidden'); panel.classList.add('hidden'); }
+}
+async function becomeAdmin() {
+  const pw = document.getElementById('admin-password').value;
+  const err = document.getElementById('admin-error'); err.classList.add('hidden');
+  if (pw !== ADMIN_PASSWORD) { err.textContent='Incorrect password.'; err.classList.remove('hidden'); return; }
+  try {
+    await db.collection('profiles').doc(currentUser.uid).update({ admin: true });
+    userDoc.admin=true; isAdmin=true;
+    document.getElementById('sidebar-admin').classList.remove('hidden');
+    document.getElementById('user-role-display').textContent='Admin';
+    showAdminSection(); toast('Admin access granted!', 'success');
+  } catch(e) { err.textContent='Error: '+e.message; err.classList.remove('hidden'); }
+}
+async function loadAdminUsers() {
+  const container = document.getElementById('admin-users-list');
+  if (!isAdmin) { container.innerHTML='Access denied.'; return; }
+  container.innerHTML = '<p class="text-muted text-sm">Loading…</p>';
+  try {
+    const snap = await db.collection('profiles').get();
+    let html = '<table class="admin-table"><thead><tr><th>Email</th><th>Username</th><th>Verified</th><th>Requested</th><th>Actions</th></tr></thead><tbody>';
+    snap.forEach(doc => {
+      const u = doc.data();
+      html += `<tr>
+        <td>${escapeHtml(u.email||'')}</td>
+        <td>@${escapeHtml(u.username||'')}</td>
+        <td>${u.verified ? '✔️' : '—'}</td>
+        <td>${u.verificationRequested ? '⏳' : '—'}</td>
+        <td>
+          <button class="btn btn-success btn-sm" onclick="adminToggleVerify('${doc.id}', true)">Verify</button>
+          <button class="btn btn-danger btn-sm" onclick="adminToggleVerify('${doc.id}', false)">Unverify</button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  } catch(e) { container.innerHTML = '<p class="msg error">Error loading users.</p>'; }
+}
+async function adminToggleVerify(userId, verify) {
+  if (!isAdmin) return;
+  try {
+    await db.collection('profiles').doc(userId).update({ verified: verify, verificationRequested: false });
+    toast(`User ${verify ? 'verified ✔️' : 'unverified'}`, 'success');
+    loadAdminUsers();
+  } catch(e) { toast('Error: '+e.message, 'error'); }
+}
 
 // ============================================================
 // UTILS
