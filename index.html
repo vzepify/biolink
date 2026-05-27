@@ -1121,7 +1121,7 @@ function switchTab(tab) {
 }
 
 // ============================================================
-// ROUTING
+// ROUTING (fixed for logged-in public profile viewing)
 // ============================================================
 window.addEventListener('hashchange', handleRouting);
 window.addEventListener('load', () => {
@@ -1132,7 +1132,17 @@ window.addEventListener('load', () => {
       await loadUserProfile();
       isAdmin = userDoc?.admin === true;
       document.getElementById('sidebar-admin').classList.toggle('hidden', !isAdmin);
-      showDashboard();
+      // If we are already viewing a public profile, do not redirect to dashboard
+      if (window.location.hash.startsWith('#/u/')) {
+        // Keep public profile visible, show sidebar, hide auth & dashboard
+        document.getElementById('sidebar').classList.remove('hidden');
+        document.getElementById('auth-wrapper').classList.add('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('public-profile').classList.remove('hidden');
+        updateProfileUrlBar(); // still update the link bar in sidebar if needed
+      } else {
+        showDashboard();
+      }
     } else {
       if (!window.location.hash.startsWith('#/u/')) showLoginForm();
     }
@@ -1488,7 +1498,7 @@ async function saveProfile() {
     showDiscordPresence: document.getElementById('edit-discord-presence').checked,
     links: editingLinks.filter(l => l.title && l.url).map(l => ({
       title: l.title,
-      url: makeAbsoluteUrl(l.url),           // enforce https://
+      url: makeAbsoluteUrl(l.url),
       type: l.type || 'link',
       embedUrl: l.embedUrl || '',
       icon: l.icon || '',
@@ -1578,7 +1588,7 @@ async function renderProfile(data, container) {
   if (data.bio) html += `<div class="pub-bio">${escapeHtml(data.bio)}</div>`;
   html += '</div>';
 
-  // Discord presence block (will be populated by fetchDiscordPresence)
+  // Discord presence block
   if (data.discordId && data.showDiscordPresence !== false) {
     html += `<div class="pub-discord" id="pub-discord-${data.uid}"></div>`;
   }
@@ -1675,7 +1685,7 @@ async function fetchDiscordPresenceWithFallback(discordId, uid) {
 
     const d = json.data;
     const discord_user = d.discord_user;
-    const discord_status = d.discord_status; // online, idle, dnd, offline
+    const discord_status = d.discord_status;
     const activity = d.activities?.find(a => a.type === 0);
     const spotify = d.listening_to_spotify ? d.spotify : null;
 
@@ -1704,7 +1714,6 @@ async function fetchDiscordPresenceWithFallback(discordId, uid) {
         <div class="discord-status-dot ${discord_status}" style="background:${statusColors[discord_status]};"></div>
       </div>`;
 
-    // If listening to Spotify, show album art
     if (spotify && spotify.album_art_url) {
       presenceHtml = presenceHtml.replace(
         `<img src="${avatarUrl}"`,
@@ -1714,8 +1723,7 @@ async function fetchDiscordPresenceWithFallback(discordId, uid) {
 
     container.innerHTML = presenceHtml;
   } catch (e) {
-    // Silently fail and remove the block (or show minimal status)
-    container.innerHTML = ''; // remove entirely if we can't fetch
+    container.innerHTML = ''; // silently remove on failure
   }
 }
 
@@ -1729,18 +1737,30 @@ function renderPreview() {
 }
 
 // ============================================================
-// PUBLIC PROFILE LOADER
+// PUBLIC PROFILE LOADER (now keeps sidebar visible if logged in)
 // ============================================================
 async function loadPublicProfile(username) {
-  hide('auth-wrapper'); hide('dashboard');
-  document.getElementById('sidebar').classList.add('hidden');
-  show('public-profile');
+  // Hide auth and dashboard, but keep sidebar if already logged in
+  document.getElementById('auth-wrapper').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('public-profile').classList.remove('hidden');
+
+  // Sidebar: only hide if not logged in
+  if (currentUser) {
+    document.getElementById('sidebar').classList.remove('hidden');
+  } else {
+    document.getElementById('sidebar').classList.add('hidden');
+  }
+
   const root = document.getElementById('pub-card-root');
   root.innerHTML = '<div style="text-align:center; padding:3rem; color:rgba(255,255,255,0.4);">Loading profile…</div>';
 
   try {
     const usernameDoc = await db.collection('usernames').doc(username).get();
-    if (!usernameDoc.exists) { root.innerHTML = `<div style="text-align:center; padding:3rem;"><div style="font-size:3rem;margin-bottom:1rem;">🔍</div><h2>Profile not found</h2><p style="color:var(--text-muted);margin-top:0.5rem;">The username "${escapeHtml(username)}" doesn't exist.</p></div>`; return; }
+    if (!usernameDoc.exists) {
+      root.innerHTML = `<div style="text-align:center; padding:3rem;"><div style="font-size:3rem;margin-bottom:1rem;">🔍</div><h2>Profile not found</h2><p style="color:var(--text-muted);margin-top:0.5rem;">The username "${escapeHtml(username)}" doesn't exist.</p></div>`;
+      return;
+    }
     const uid = usernameDoc.data().uid;
     const profileDoc = await db.collection('profiles').doc(uid).get();
     if (!profileDoc.exists) { root.innerHTML = '<p>User not found.</p>'; return; }
