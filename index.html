@@ -5,17 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LinkHub</title>
   <!-- SortableJS -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
+  </script>
   <!-- tsParticles -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js">
+  </script>
   <style>
+    /* ---------- CUSTOM PROPERTIES (LIGHT/DARK) ---------- */
     :root {
-      --bg: #f0f2f5;
-      --card: white;
+      --bg: #f5f7fa;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
       --text: #333;
+      --text-secondary: #666;
+      --border: #e0e0e0;
       --primary: #6c63ff;
+      --primary-hover: #5a52d5;
+      --danger: #dc3545;
+      --success: #28a745;
+      --shadow: 0 8px 30px rgba(0,0,0,0.08);
       --radius: 12px;
     }
+
+    body.dark {
+      --bg: #1e1e2f;
+      --sidebar-bg: #2a2a3c;
+      --card-bg: #2a2a3c;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --border: #40405a;
+      --shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,106 +44,201 @@
       color: var(--text);
       display: flex;
       min-height: 100vh;
-      justify-content: center;
-      align-items: center;
-      transition: background 0.3s;
+      transition: background 0.3s, color 0.3s;
     }
-    .container {
-      background: var(--card);
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+      width: 250px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      box-shadow: var(--shadow);
+      transition: background 0.3s;
+      z-index: 100;
+    }
+    .sidebar .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 0.3rem;
+      transition: background 0.2s, color 0.2s;
+      font-weight: 500;
+    }
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: var(--primary);
+      color: white;
+    }
+    .sidebar nav a .icon { font-size: 1.3rem; }
+    .dark-toggle {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.6rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    .main-content {
+      margin-left: 250px;
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: var(--card-bg);
       border-radius: var(--radius);
+      box-shadow: var(--shadow);
       padding: 2rem;
       width: 100%;
-      max-width: 600px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      margin: 2rem 1rem;
-      position: relative;
-      z-index: 10;
+      max-width: 800px;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      transition: background 0.3s;
     }
-    .glow-border {
-      border: 2px solid transparent;
-      background-clip: padding-box;
-      position: relative;
-    }
-    .glow-border::before {
-      content: '';
-      position: absolute;
-      top: -2px; left: -2px; right: -2px; bottom: -2px;
-      border-radius: calc(var(--radius) + 2px);
-      background: linear-gradient(45deg, #f06, #9f6, #06f);
-      z-index: -1;
-      animation: rotate 2s linear infinite;
-      background-size: 300% 300%;
-    }
-    @keyframes rotate {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    h1, h2 { text-align: center; margin-bottom: 1rem; }
+
+    h2, h3 { margin-bottom: 1.5rem; color: var(--text); }
+    label { display: block; margin-bottom: 0.3rem; font-weight: 500; color: var(--text); }
     input, textarea, select, button {
       width: 100%;
-      padding: 0.8rem;
+      padding: 0.8rem 1rem;
       margin-bottom: 1rem;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border);
       border-radius: 8px;
       font-size: 1rem;
+      background: var(--card-bg);
+      color: var(--text);
+      transition: border 0.2s;
     }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; }
     button {
       background: var(--primary);
       color: white;
       border: none;
       cursor: pointer;
-      font-weight: bold;
-      transition: opacity 0.2s;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
-    button:hover { opacity: 0.9; }
-    .link-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
-    .link-row input, .link-row select { flex: 1; margin-bottom: 0; }
-    .drag-handle { cursor: grab; font-size: 1.2rem; padding: 0 5px; }
-    .delete-link { background: #dc3545; width: auto; padding: 0.5rem 1rem; }
-    .error { color: red; text-align: center; margin-bottom: 1rem; }
-    .success { color: green; text-align: center; margin-bottom: 1rem; }
-    .hidden { display: none !important; }
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    .tabs button { background: #ddd; color: #333; flex: 1; min-width: 60px; }
-    .tabs button.active { background: var(--primary); color: white; }
-    .profile-view {
-      text-align: center;
-      padding: 2rem;
+    button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    button.danger { background: var(--danger); }
+    button.success { background: var(--success); }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .inline-flex { display: flex; gap: 0.5rem; align-items: center; }
+    .flex-row { display: flex; gap: 1rem; align-items: center; }
+    .color-input { width: 60px; height: 40px; padding: 0; border: 1px solid var(--border); border-radius: 6px; }
+
+    .link-row {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .link-row .row-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .link-row .drag-handle { cursor: grab; font-size: 1.2rem; color: var(--text-secondary); }
+    .link-row .delete-link { margin-left: auto; background: transparent; color: var(--danger); border: none; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; }
+    .link-styles { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+
+    .profile-preview-card {
+      background: var(--card-bg);
       border-radius: var(--radius);
-      background: inherit;
-      color: inherit;
-      transition: all 0.3s;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
     }
-    .profile-view img.avatar {
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 1rem;
-      border: 3px solid var(--primary);
+    .profile-preview-card img.avatar {
+      width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 3px solid var(--primary);
     }
-    .profile-view .links { display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0; }
-    .profile-view .link-btn {
+    .profile-preview-card .links { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+    .profile-preview-card .link-btn {
       display: flex; align-items: center; gap: 0.5rem;
-      background: var(--primary); color: white;
-      text-decoration: none; padding: 0.8rem;
-      border-radius: 8px; justify-content: center;
-      font-size: 1.1rem; transition: opacity 0.2s;
+      padding: 0.8rem; border-radius: 8px;
+      text-decoration: none; color: white;
+      justify-content: center; font-weight: 600;
+      transition: opacity 0.2s, transform 0.1s;
     }
-    .profile-view .link-btn:hover { opacity: 0.9; }
-    .social-icons { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
-    .social-icons a { color: inherit; font-size: 1.5rem; text-decoration: none; }
-    .verified-badge { color: #1da1f2; font-size: 1.2rem; }
-    .admin-badge { background: gold; color: black; padding: 2px 8px; border-radius: 4px; }
-    iframe.music-embed { width: 100%; height: 80px; border: none; margin: 0.5rem 0; }
-    #particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+
+    .hidden { display: none !important; }
+    .error { color: var(--danger); text-align: center; margin-bottom: 1rem; }
+    .success { color: var(--success); text-align: center; margin-bottom: 1rem; }
+
+    /* public profile view */
+    #public-profile {
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+    #particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 200px; }
+      .main-content { margin-left: 200px; }
+    }
   </style>
 </head>
 <body>
   <div id="particles-container"></div>
-  <div id="app" class="container">
-    <!-- AUTH FORMS -->
-    <div id="auth-forms">
+
+  <!-- SIDEBAR (hidden unless logged in) -->
+  <div id="sidebar" class="sidebar hidden">
+    <div class="logo">LinkHub</div>
+    <nav>
+      <a href="#" data-tab="edit" class="active"><span class="icon">✏️</span> Edit Profile</a>
+      <a href="#" data-tab="preview"><span class="icon">👁️</span> Preview</a>
+      <a href="#" data-tab="analytics"><span class="icon">📊</span> Analytics</a>
+      <a href="#" data-tab="admin" id="sidebar-admin"><span class="icon">🛡️</span> Admin</a>
+    </nav>
+    <div class="dark-toggle" id="darkModeToggle">
+      <span>🌙</span> Dark Mode
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="main-content" class="main-content">
+    <!-- AUTH FORMS (shown when logged out) -->
+    <div id="auth-forms" class="card">
       <div id="login-form">
         <h2>Login</h2>
         <input type="email" id="login-email" placeholder="Email" autocomplete="email">
@@ -156,106 +272,125 @@
       </div>
     </div>
 
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2>Dashboard</h2>
-        <button id="logout-btn" onclick="logout()" style="width:auto;">Logout</button>
-      </div>
-      <div class="tabs" id="tabs">
-        <button class="active" data-tab="edit">Edit Profile</button>
-        <button data-tab="preview">Preview</button>
-        <button data-tab="analytics">Analytics</button>
-        <button data-tab="admin" id="tab-admin">Admin</button>
-      </div>
+    <!-- DASHBOARD SECTIONS (hidden unless logged in) -->
+    <div id="dashboard-sections" class="hidden" style="width:100%; max-width:800px;">
 
-      <!-- Edit Section -->
-      <div id="edit-section">
-        <h3>Profile Details</h3>
-        <label>Username</label>
-        <input type="text" id="edit-username" placeholder="yourname">
-        <label>Display Name</label>
-        <input type="text" id="edit-displayname">
+      <!-- EDIT PROFILE TAB -->
+      <div id="edit-section" class="card">
+        <h2>Edit Profile</h2>
+        <div class="grid-2">
+          <div>
+            <label>Username</label>
+            <input type="text" id="edit-username" placeholder="yourname">
+          </div>
+          <div>
+            <label>Display Name</label>
+            <input type="text" id="edit-displayname">
+          </div>
+        </div>
         <label>Bio</label>
         <textarea id="edit-bio" rows="3"></textarea>
-        <label>Avatar URL</label>
-        <input type="url" id="edit-avatar">
-        <label>Discord User ID (for presence)</label>
-        <input type="text" id="edit-discordid" placeholder="123456789012345678">
-        <label>Theme</label>
-        <select id="edit-theme">
-          <option value="default">Default</option>
-          <option value="neon">Neon Glow</option>
-          <option value="galaxy">Galaxy Particles</option>
-        </select>
-        <label>Background Color</label>
-        <input type="color" id="edit-bgcolor" value="#f0f2f5">
+        <div class="grid-2">
+          <div>
+            <label>Avatar URL</label>
+            <input type="url" id="edit-avatar">
+          </div>
+          <div>
+            <label>Discord User ID</label>
+            <input type="text" id="edit-discordid" placeholder="123456789012345678">
+          </div>
+        </div>
+        <label>Verification</label>
+        <button class="secondary" onclick="requestVerification()" style="background:#ffc107; color:black;">Request Verification</button>
+
+        <h3>Appearance</h3>
+        <div class="grid-2">
+          <div>
+            <label>Theme</label>
+            <select id="edit-theme">
+              <option value="default">Default</option>
+              <option value="neon">Neon Glow</option>
+              <option value="galaxy">Galaxy Particles</option>
+            </select>
+          </div>
+          <div>
+            <label>Font Family</label>
+            <select id="edit-font">
+              <option value="'Segoe UI', sans-serif">Default</option>
+              <option value="'Courier New', monospace">Monospace</option>
+              <option value="Georgia, serif">Serif</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex-row">
+          <label>Background Color</label>
+          <input type="color" id="edit-bgcolor" value="#f0f2f5" class="color-input">
+          <label>Text Color</label>
+          <input type="color" id="edit-textcolor" value="#333333" class="color-input">
+        </div>
         <label>Background Image URL</label>
         <input type="url" id="edit-bgimage" placeholder="https://...">
-        <label>Text Color</label>
-        <input type="color" id="edit-textcolor" value="#333333">
-        <label>Font Family</label>
-        <select id="edit-font">
-          <option value="'Segoe UI', sans-serif">Default</option>
-          <option value="'Courier New', monospace">Monospace</option>
-          <option value="Georgia, serif">Serif</option>
-        </select>
-        <label><input type="checkbox" id="edit-glowingborder"> Glowing Border</label><br>
-        <label><input type="checkbox" id="edit-particles"> Particle Background</label><br>
+        <div class="flex-row">
+          <label><input type="checkbox" id="edit-glowingborder"> Glowing Border</label>
+          <label><input type="checkbox" id="edit-particles"> Particle Background</label>
+        </div>
 
-        <h3>Links <small>(drag to reorder)</small></h3>
+        <h3>Links</h3>
         <div id="links-container"></div>
-        <button onclick="addLink()" style="background:#28a745;">+ Add Link</button>
+        <button class="success" onclick="addLink()">+ Add Link</button>
 
         <h3>Social Icons</h3>
         <div id="socials-container"></div>
-        <button onclick="addSocial()" style="background:#17a2b8;">+ Add Social Icon</button>
+        <button class="success" onclick="addSocial()">+ Add Social Icon</button>
 
-        <button onclick="requestVerification()" style="background:#ffc107; color:black;">Request Verification</button>
         <p id="save-error" class="error hidden"></p>
         <p id="save-success" class="success hidden"></p>
-        <button onclick="saveProfile()" style="margin-top:1rem;">Save Profile</button>
+        <button onclick="saveProfile()" style="margin-top:1.5rem;">💾 Save Profile</button>
+        <button class="secondary" onclick="logout()" style="margin-top:0.5rem;">🚪 Logout</button>
       </div>
 
-      <!-- Preview Section -->
-      <div id="preview-section" class="hidden">
-        <p style="text-align:center;">Your public profile:</p>
-        <div id="profile-preview-container" class="profile-view"></div>
+      <!-- PREVIEW TAB -->
+      <div id="preview-section" class="card hidden">
+        <h2>Your Public Preview</h2>
+        <div id="profile-preview-container" class="profile-preview-card"></div>
       </div>
 
-      <!-- Analytics Section -->
-      <div id="analytics-section" class="hidden">
-        <h3>Profile Views & Link Clicks</h3>
+      <!-- ANALYTICS TAB -->
+      <div id="analytics-section" class="card hidden">
+        <h2>Analytics</h2>
         <p id="analytics-loading">Loading...</p>
         <div id="analytics-data"></div>
       </div>
 
-      <!-- Admin Panel -->
-      <div id="admin-section" class="hidden">
-        <div id="admin-login" style="margin-bottom:1rem;">
-          <h3>Admin Access</h3>
+      <!-- ADMIN TAB -->
+      <div id="admin-section" class="card hidden">
+        <div id="admin-login">
+          <h2>Admin Access</h2>
           <input type="password" id="admin-password" placeholder="Enter admin password">
           <button onclick="becomeAdmin()">Unlock Admin</button>
           <p id="admin-error" class="error hidden"></p>
         </div>
         <div id="admin-panel" class="hidden">
-          <h3>Admin Panel</h3>
+          <h2>Admin Panel</h2>
           <button onclick="loadAdminUsers()">Refresh Users</button>
-          <div id="admin-users-list">Click "Refresh Users" to load.</div>
+          <div id="admin-users-list" style="margin-top:1rem;">Click "Refresh Users" to load.</div>
         </div>
       </div>
     </div>
 
-    <!-- PUBLIC PROFILE -->
-    <div id="public-profile" class="hidden container">
-      <div id="public-profile-content" class="profile-view"></div>
+    <!-- PUBLIC PROFILE (no sidebar, shown for public view) -->
+    <div id="public-profile" class="card hidden">
+      <div id="public-profile-content" class="profile-preview-card"></div>
     </div>
   </div>
 
   <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
+  </script>
 
   <script>
     // ---------- REPLACE WITH YOUR FIREBASE CONFIG ----------
@@ -278,10 +413,45 @@
     let userDoc = null;
     let editingLinks = [];
     let editingSocials = [];
-    let isAdmin = false;   // will be set from userDoc.admin
+    let isAdmin = false;
 
-    // Hard-coded admin password (change this to something secure!)
     const ADMIN_PASSWORD = "sharktamer16";
+
+    // ---- Dark Mode ----
+    const darkToggle = document.getElementById('darkModeToggle');
+    darkToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+    });
+    if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
+
+    // ---- Sidebar navigation ----
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const dashboardSections = document.getElementById('dashboard-sections');
+
+    sidebar.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = link.dataset.tab;
+        switchTab(tab);
+        sidebar.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    function switchTab(tab) {
+      ['edit-section','preview-section','analytics-section','admin-section'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      const active = document.getElementById(tab + '-section');
+      if (active) active.classList.remove('hidden');
+
+      if (tab === 'preview') renderPreview();
+      if (tab === 'analytics') loadAnalytics();
+      if (tab === 'admin') showAdminSection();
+    }
 
     // ---- Routing ----
     window.addEventListener('hashchange', handleRouting);
@@ -292,8 +462,8 @@
         if (user) {
           await loadUserProfile();
           isAdmin = userDoc && userDoc.admin === true;
+          document.getElementById('sidebar-admin').classList.toggle('hidden', !isAdmin);
           showDashboard();
-          document.getElementById('tab-admin').classList.toggle('hidden', !isAdmin);
         } else {
           if (!window.location.hash.startsWith('#/u/')) showLoginForm();
         }
@@ -311,40 +481,30 @@
     // ---- UI helpers ----
     function showElement(id) { document.getElementById(id).classList.remove('hidden'); }
     function hideElement(id) { document.getElementById(id).classList.add('hidden'); }
+
     function showLoginForm() {
-      hideElement('signup-form'); hideElement('forgot-form'); hideElement('dashboard'); hideElement('public-profile');
+      hideElement('signup-form'); hideElement('forgot-form'); 
+      hideElement('dashboard-sections'); hideElement('public-profile');
       showElement('auth-forms'); showElement('login-form');
+      sidebar.classList.add('hidden');
     }
     function showSignup() {
-      hideElement('login-form'); hideElement('forgot-form'); hideElement('dashboard'); hideElement('public-profile');
+      hideElement('login-form'); hideElement('forgot-form'); 
+      hideElement('dashboard-sections'); hideElement('public-profile');
       showElement('auth-forms'); showElement('signup-form');
     }
     function showLogin() { showLoginForm(); }
     function showForgotPassword() {
-      hideElement('login-form'); hideElement('signup-form'); hideElement('dashboard'); hideElement('public-profile');
+      hideElement('login-form'); hideElement('signup-form'); 
+      hideElement('dashboard-sections'); hideElement('public-profile');
       showElement('auth-forms'); showElement('forgot-form');
     }
     function showDashboard() {
       hideElement('auth-forms'); hideElement('public-profile');
-      showElement('dashboard');
+      sidebar.classList.remove('hidden');
+      showElement('dashboard-sections');
       switchTab('edit');
-    }
-
-    document.getElementById('tabs').addEventListener('click', e => {
-      if (e.target.tagName === 'BUTTON') {
-        switchTab(e.target.dataset.tab);
-      }
-    });
-
-    function switchTab(tab) {
-      ['edit-section','preview-section','analytics-section','admin-section'].forEach(id => hideElement(id));
-      showElement(tab + '-section');
-      document.querySelectorAll('#tabs button').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.querySelector(`#tabs button[data-tab="${tab}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-      if (tab === 'preview') renderPreview();
-      if (tab === 'analytics') loadAnalytics();
-      if (tab === 'admin') showAdminSection();
+      sidebar.querySelector('nav a[data-tab="edit"]').classList.add('active');
     }
 
     // ---- Auth ----
@@ -353,12 +513,8 @@
       const password = document.getElementById('login-password').value;
       const errEl = document.getElementById('login-error');
       errEl.classList.add('hidden');
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-      } catch (e) {
-        errEl.textContent = e.message;
-        errEl.classList.remove('hidden');
-      }
+      try { await auth.signInWithEmailAndPassword(email, password); }
+      catch (e) { errEl.textContent = e.message; errEl.classList.remove('hidden'); }
     }
 
     async function signup() {
@@ -368,15 +524,10 @@
       errEl.classList.add('hidden');
       if (password.length < 6) {
         errEl.textContent = 'Password must be at least 6 characters.';
-        errEl.classList.remove('hidden');
-        return;
+        errEl.classList.remove('hidden'); return;
       }
-      try {
-        await auth.createUserWithEmailAndPassword(email, password);
-      } catch (e) {
-        errEl.textContent = e.message;
-        errEl.classList.remove('hidden');
-      }
+      try { await auth.createUserWithEmailAndPassword(email, password); }
+      catch (e) { errEl.textContent = e.message; errEl.classList.remove('hidden'); }
     }
 
     async function resetPassword() {
@@ -388,16 +539,12 @@
         await auth.sendPasswordResetEmail(email);
         successEl.textContent = 'Password reset email sent!';
         successEl.classList.remove('hidden');
-      } catch (e) {
-        errEl.textContent = e.message;
-        errEl.classList.remove('hidden');
-      }
+      } catch (e) { errEl.textContent = e.message; errEl.classList.remove('hidden'); }
     }
 
     async function logout() {
       await auth.signOut();
-      currentUser = null;
-      userDoc = null;
+      currentUser = null; userDoc = null;
       showLoginForm();
     }
 
@@ -413,23 +560,10 @@
         if (userDoc.admin === undefined) userDoc.admin = false;
       } else {
         userDoc = {
-          username: '',
-          displayName: '',
-          bio: '',
-          avatar: '',
-          discordId: '',
-          theme: 'default',
-          bgColor: '#f0f2f5',
-          bgImage: '',
-          textColor: '#333333',
-          font: "'Segoe UI', sans-serif",
-          glowingBorder: false,
-          particles: false,
-          links: [],
-          socials: [],
-          verified: false,
-          verificationRequested: false,
-          admin: false
+          username: '', displayName: '', bio: '', avatar: '', discordId: '',
+          theme: 'default', bgColor: '#f0f2f5', bgImage: '', textColor: '#333333',
+          font: "'Segoe UI', sans-serif", glowingBorder: false, particles: false,
+          links: [], socials: [], verified: false, verificationRequested: false, admin: false
         };
       }
       isAdmin = userDoc.admin;
@@ -449,13 +583,19 @@
       document.getElementById('edit-font').value = userDoc.font || "'Segoe UI', sans-serif";
       document.getElementById('edit-glowingborder').checked = userDoc.glowingBorder || false;
       document.getElementById('edit-particles').checked = userDoc.particles || false;
-      editingLinks = userDoc.links.map(l => ({...l}));
+      editingLinks = userDoc.links.map(l => ({
+        ...l,
+        btnBg: l.btnBg || '#6c63ff',
+        btnTextColor: l.btnTextColor || '#ffffff',
+        btnRadius: l.btnRadius || 8,
+        btnShadow: l.btnShadow || 'none'
+      }));
       editingSocials = userDoc.socials.map(s => ({...s}));
       renderLinksEditor();
       renderSocialsEditor();
     }
 
-    // ---- Links editor with drag & drop ----
+    // ---- Links editor with full style customization ----
     function renderLinksEditor() {
       const container = document.getElementById('links-container');
       container.innerHTML = '';
@@ -464,16 +604,32 @@
         div.className = 'link-row';
         div.dataset.index = index;
         div.innerHTML = `
-          <span class="drag-handle">☰</span>
-          <input type="text" placeholder="Title" value="${link.title}" onchange="editingLinks[${index}].title=this.value">
+          <div class="row-header">
+            <span class="drag-handle">☰</span>
+            <input type="text" placeholder="Title" value="${link.title}" style="flex:1;" onchange="editingLinks[${index}].title=this.value">
+            <select onchange="editingLinks[${index}].type=this.value; renderLinksEditor();" style="width:auto;">
+              <option value="link" ${link.type !== 'music' ? 'selected' : ''}>Link</option>
+              <option value="music" ${link.type === 'music' ? 'selected' : ''}>Music</option>
+            </select>
+            <button class="delete-link" onclick="removeLink(${index})">✕</button>
+          </div>
           <input type="url" placeholder="URL" value="${link.url}" onchange="editingLinks[${index}].url=this.value">
-          <select onchange="editingLinks[${index}].type=this.value; renderLinksEditor();">
-            <option value="link" ${link.type !== 'music' ? 'selected' : ''}>Link</option>
-            <option value="music" ${link.type === 'music' ? 'selected' : ''}>Music</option>
-          </select>
           ${link.type === 'music' ? `<input type="text" placeholder="Embed URL" value="${link.embedUrl || ''}" onchange="editingLinks[${index}].embedUrl=this.value">` : ''}
-          <input type="text" placeholder="Icon (emoji)" value="${link.icon || ''}" onchange="editingLinks[${index}].icon=this.value" style="max-width:80px;">
-          <button class="delete-link" onclick="removeLink(${index})">X</button>
+          <div class="link-styles">
+            <input type="text" placeholder="Icon (emoji)" value="${link.icon || ''}" onchange="editingLinks[${index}].icon=this.value" style="width:100px;">
+            <label>Bg:</label>
+            <input type="color" value="${link.btnBg || '#6c63ff'}" onchange="editingLinks[${index}].btnBg=this.value" class="color-input">
+            <label>Text:</label>
+            <input type="color" value="${link.btnTextColor || '#ffffff'}" onchange="editingLinks[${index}].btnTextColor=this.value" class="color-input">
+            <label>Radius:</label>
+            <input type="number" value="${link.btnRadius || 8}" min="0" max="50" onchange="editingLinks[${index}].btnRadius=parseInt(this.value)" style="width:70px;">
+            <label>Shadow:</label>
+            <select onchange="editingLinks[${index}].btnShadow=this.value" style="width:auto;">
+              <option value="none" ${link.btnShadow === 'none' ? 'selected' : ''}>None</option>
+              <option value="0 4px 10px rgba(0,0,0,0.2)" ${link.btnShadow === '0 4px 10px rgba(0,0,0,0.2)' ? 'selected' : ''}>Soft</option>
+              <option value="0 8px 20px rgba(0,0,0,0.3)" ${link.btnShadow === '0 8px 20px rgba(0,0,0,0.3)' ? 'selected' : ''}>Heavy</option>
+            </select>
+          </div>
         `;
         container.appendChild(div);
       });
@@ -495,14 +651,14 @@
     }
 
     function addLink() {
-      editingLinks.push({ title: '', url: '', type: 'link', icon: '', embedUrl: '' });
+      editingLinks.push({ 
+        title: '', url: '', type: 'link', icon: '', embedUrl: '',
+        btnBg: '#6c63ff', btnTextColor: '#ffffff', btnRadius: 8, btnShadow: 'none'
+      });
       renderLinksEditor();
     }
 
-    function removeLink(index) {
-      editingLinks.splice(index, 1);
-      renderLinksEditor();
-    }
+    function removeLink(index) { editingLinks.splice(index, 1); renderLinksEditor(); }
 
     function renderSocialsEditor() {
       const container = document.getElementById('socials-container');
@@ -511,26 +667,21 @@
         const div = document.createElement('div');
         div.className = 'link-row';
         div.innerHTML = `
-          <input type="text" placeholder="Platform" value="${social.platform}" onchange="editingSocials[${index}].platform=this.value">
-          <input type="url" placeholder="URL" value="${social.url}" onchange="editingSocials[${index}].url=this.value">
-          <input type="text" placeholder="Icon emoji" value="${social.icon}" onchange="editingSocials[${index}].icon=this.value" style="max-width:80px;">
-          <button class="delete-link" onclick="removeSocial(${index})">X</button>
+          <div class="row-header">
+            <input type="text" placeholder="Platform" value="${social.platform}" onchange="editingSocials[${index}].platform=this.value">
+            <input type="url" placeholder="URL" value="${social.url}" onchange="editingSocials[${index}].url=this.value">
+            <input type="text" placeholder="Icon emoji" value="${social.icon}" onchange="editingSocials[${index}].icon=this.value" style="width:80px;">
+            <button class="delete-link" onclick="removeSocial(${index})">✕</button>
+          </div>
         `;
         container.appendChild(div);
       });
     }
 
-    function addSocial() {
-      editingSocials.push({ platform: '', url: '', icon: '' });
-      renderSocialsEditor();
-    }
+    function addSocial() { editingSocials.push({ platform: '', url: '', icon: '' }); renderSocialsEditor(); }
+    function removeSocial(index) { editingSocials.splice(index, 1); renderSocialsEditor(); }
 
-    function removeSocial(index) {
-      editingSocials.splice(index, 1);
-      renderSocialsEditor();
-    }
-
-    // ---- Save profile ----
+    // ---- Save profile (with username update handling) ----
     async function saveProfile() {
       const errEl = document.getElementById('save-error');
       const successEl = document.getElementById('save-success');
@@ -539,16 +690,14 @@
       const newUsername = document.getElementById('edit-username').value.trim();
       if (!newUsername) {
         errEl.textContent = 'Username is required.';
-        errEl.classList.remove('hidden');
-        return;
+        errEl.classList.remove('hidden'); return;
       }
 
       if (userDoc.username !== newUsername) {
         const usernameDoc = await db.collection('usernames').doc(newUsername).get();
         if (usernameDoc.exists && usernameDoc.data().uid !== currentUser.uid) {
           errEl.textContent = 'Username already taken.';
-          errEl.classList.remove('hidden');
-          return;
+          errEl.classList.remove('hidden'); return;
         }
       }
 
@@ -567,16 +716,17 @@
         particles: document.getElementById('edit-particles').checked,
         links: editingLinks.filter(l => l.title && l.url).map(l => ({
           title: l.title, url: l.url, type: l.type || 'link',
-          embedUrl: l.embedUrl || '', icon: l.icon || ''
+          embedUrl: l.embedUrl || '', icon: l.icon || '',
+          btnBg: l.btnBg || '#6c63ff', btnTextColor: l.btnTextColor || '#ffffff',
+          btnRadius: l.btnRadius || 8, btnShadow: l.btnShadow || 'none'
         })),
         socials: editingSocials.filter(s => s.platform && s.url).map(s => ({
           platform: s.platform, url: s.url, icon: s.icon || ''
         })),
-        uid: currentUser.uid,
-        email: currentUser.email,
+        uid: currentUser.uid, email: currentUser.email,
         verified: userDoc.verified || false,
         verificationRequested: userDoc.verificationRequested || false,
-        admin: userDoc.admin || false  // preserve admin status
+        admin: userDoc.admin || false
       };
 
       try {
@@ -590,84 +740,67 @@
         successEl.classList.remove('hidden');
         setTimeout(() => successEl.classList.add('hidden'), 3000);
       } catch (e) {
+        console.error('Save error:', e);
         errEl.textContent = 'Error: ' + e.message;
         errEl.classList.remove('hidden');
       }
     }
 
-    // ---- Verification request ----
     async function requestVerification() {
       if (!userDoc) return;
-      if (userDoc.verified) {
-        alert('You are already verified.');
-        return;
-      }
-      await db.collection('profiles').doc(currentUser.uid).update({
-        verificationRequested: true
-      });
+      if (userDoc.verified) { alert('You are already verified.'); return; }
+      await db.collection('profiles').doc(currentUser.uid).update({ verificationRequested: true });
       userDoc.verificationRequested = true;
-      alert('Verification requested. Admins will review your profile.');
+      alert('Verification requested.');
     }
 
-    // ---- Render profile (public or preview) ----
+    // ---- Rendering profile (applies custom button styles) ----
     function renderProfile(data, containerId) {
       const container = document.getElementById(containerId);
-      if (!data) {
-        container.innerHTML = '<p>User not found.</p>';
-        return;
-      }
-      container.className = 'profile-view';
+      if (!data) { container.innerHTML = '<p>User not found.</p>'; return; }
+      container.className = 'profile-preview-card';
       if (data.glowingBorder) container.classList.add('glow-border');
-      if (data.theme === 'neon') container.style.boxShadow = '0 0 20px #f06, 0 0 40px #06f';
       container.style.background = data.bgImage ? `url(${data.bgImage}) center/cover, ${data.bgColor}` : data.bgColor;
       container.style.color = data.textColor;
       container.style.fontFamily = data.font;
+      if (data.theme === 'neon') container.style.boxShadow = '0 0 20px #f06, 0 0 40px #06f';
 
+      // Particles
       const particlesContainer = document.getElementById('particles-container');
       if (data.particles && window.tsParticles) {
         tsParticles.load("particles-container", {
-          fpsLimit: 60,
-          particles: {
-            number: { value: 80 },
-            color: { value: "#ffffff" },
-            links: { enable: false },
-            move: { enable: true, speed: 1 },
-            size: { value: 3 }
-          }
+          fpsLimit: 60, particles: { number: { value: 80 }, color: { value: "#ffffff" }, links: { enable: false }, move: { enable: true, speed: 1 }, size: { value: 3 } }
         });
-      } else {
-        particlesContainer.innerHTML = '';
-      }
+      } else particlesContainer.innerHTML = '';
 
       let html = '';
-      if (data.avatar) {
-        html += `<img src="${data.avatar}" alt="Avatar" class="avatar" onerror="this.style.display='none'">`;
-      }
-      html += `<h1 style="color:inherit;">${escapeHtml(data.displayName || data.username)}`;
-      if (data.verified) html += ` <span class="verified-badge">✔️ Verified</span>`;
-      html += `</h1>`;
+      if (data.avatar) html += `<img src="${data.avatar}" class="avatar" onerror="this.style.display='none'">`;
+      html += `<h2 style="color:inherit;">${escapeHtml(data.displayName || data.username)}`;
+      if (data.verified) html += ` <span style="color:#1da1f2;">✔️ Verified</span>`;
+      html += `</h2>`;
       if (data.bio) html += `<p style="white-space:pre-wrap;">${escapeHtml(data.bio)}</p>`;
 
       if (data.discordId) {
-        html += `<img src="https://api.lanyard.rest/${data.discordId}.svg?animated=true" style="max-width:100%; margin-bottom:1rem;" alt="Discord Presence">`;
+        html += `<img src="https://api.lanyard.rest/${data.discordId}.svg?animated=true" style="max-width:100%; margin-bottom:1rem;" alt="Discord">`;
       }
 
       if (data.links && data.links.length > 0) {
         html += '<div class="links">';
         data.links.forEach((link, idx) => {
           if (link.type === 'music') {
-            html += `<iframe class="music-embed" src="${escapeHtml(link.embedUrl)}" allow="autoplay; encrypted-media"></iframe>`;
+            html += `<iframe class="music-embed" src="${escapeHtml(link.embedUrl)}" style="width:100%; height:80px; border:none; margin:0.5rem 0;"></iframe>`;
           } else {
-            html += `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener" class="link-btn" onclick="trackClick('${data.uid}', ${idx})">${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''} ${escapeHtml(link.title)}</a>`;
+            const btnStyle = `background:${link.btnBg || '#6c63ff'};color:${link.btnTextColor || '#fff'};border-radius:${link.btnRadius || 8}px;box-shadow:${link.btnShadow || 'none'};`;
+            html += `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener" class="link-btn" style="${btnStyle}" onclick="trackClick('${data.uid}', ${idx})">${link.icon ? `<span>${escapeHtml(link.icon)}</span>` : ''} ${escapeHtml(link.title)}</a>`;
           }
         });
         html += '</div>';
       }
 
       if (data.socials && data.socials.length > 0) {
-        html += '<div class="social-icons">';
+        html += '<div style="display:flex; gap:1rem; justify-content:center; margin-top:1rem;">';
         data.socials.forEach(s => {
-          html += `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" title="${escapeHtml(s.platform)}">${s.icon || '🔗'}</a>`;
+          html += `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" title="${escapeHtml(s.platform)}" style="font-size:1.5rem;">${s.icon || '🔗'}</a>`;
         });
         html += '</div>';
       }
@@ -675,161 +808,102 @@
       container.innerHTML = html;
     }
 
-    function renderPreview() {
-      renderProfile(userDoc, 'profile-preview-container');
-    }
+    function renderPreview() { renderProfile(userDoc, 'profile-preview-container'); }
 
-    // ---- Public profile & analytics logging ----
+    // ---- Public profile and analytics ----
     async function loadPublicProfile(username) {
-      hideElement('auth-forms'); hideElement('dashboard');
+      hideElement('auth-forms'); hideElement('dashboard-sections');
+      sidebar.classList.add('hidden');
       showElement('public-profile');
       const contentDiv = document.getElementById('public-profile-content');
       contentDiv.innerHTML = '<p>Loading...</p>';
       try {
         const usernameDoc = await db.collection('usernames').doc(username).get();
-        if (!usernameDoc.exists) {
-          contentDiv.innerHTML = '<p>User not found.</p>';
-          return;
-        }
+        if (!usernameDoc.exists) { contentDiv.innerHTML = '<p>User not found.</p>'; return; }
         const uid = usernameDoc.data().uid;
         const profileDoc = await db.collection('profiles').doc(uid).get();
-        if (!profileDoc.exists) {
-          contentDiv.innerHTML = '<p>User not found.</p>';
-          return;
-        }
-        const profileData = profileDoc.data();
-        profileData.uid = uid; // for tracking
-        renderProfile(profileData, 'public-profile-content');
-
-        // Log a view
+        if (!profileDoc.exists) { contentDiv.innerHTML = '<p>User not found.</p>'; return; }
+        const data = profileDoc.data();
+        data.uid = uid;
+        renderProfile(data, 'public-profile-content');
         try {
           await db.collection('analytics').add({
-            profileId: uid,
-            eventType: 'view',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            profileId: uid, eventType: 'view', timestamp: firebase.firestore.FieldValue.serverTimestamp()
           });
-        } catch(e) { console.log('View log error:', e); }
-      } catch (e) {
-        contentDiv.innerHTML = '<p>Error loading profile.</p>';
-      }
+        } catch(e) {}
+      } catch (e) { contentDiv.innerHTML = '<p>Error loading profile.</p>'; }
     }
 
-    // Called from link click on public profile
     async function trackClick(profileId, linkIndex) {
       if (!profileId) return;
       try {
         await db.collection('analytics').add({
-          profileId,
-          eventType: 'click',
-          linkIndex,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          profileId, eventType: 'click', linkIndex, timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-      } catch(e) { console.log('Click log error:', e); }
+      } catch(e) {}
     }
 
-    // ---- Analytics (client-side Firestore queries) ----
     async function loadAnalytics() {
       const loadingEl = document.getElementById('analytics-loading');
       const dataEl = document.getElementById('analytics-data');
-      loadingEl.classList.remove('hidden');
-      dataEl.innerHTML = '';
+      loadingEl.classList.remove('hidden'); dataEl.innerHTML = '';
       try {
-        const analyticsRef = db.collection('analytics');
-        const viewsSnapshot = await analyticsRef
-          .where('profileId', '==', currentUser.uid)
-          .where('eventType', '==', 'view')
-          .get();
-        const clicksSnapshot = await analyticsRef
-          .where('profileId', '==', currentUser.uid)
-          .where('eventType', '==', 'click')
-          .get();
-        dataEl.innerHTML = `
-          <p>Profile views: ${viewsSnapshot.size}</p>
-          <p>Link clicks: ${clicksSnapshot.size}</p>
-        `;
-      } catch (e) {
-        dataEl.innerHTML = '<p>Could not load analytics. You may not have permission.</p>';
-      }
+        const viewsSnapshot = await db.collection('analytics')
+          .where('profileId', '==', currentUser.uid).where('eventType', '==', 'view').get();
+        const clicksSnapshot = await db.collection('analytics')
+          .where('profileId', '==', currentUser.uid).where('eventType', '==', 'click').get();
+        dataEl.innerHTML = `<p>👁️ Profile views: ${viewsSnapshot.size}</p><p>🔗 Link clicks: ${clicksSnapshot.size}</p>`;
+      } catch(e) { dataEl.innerHTML = '<p>Could not load analytics.</p>'; }
       loadingEl.classList.add('hidden');
     }
 
-    // ---- Admin Panel ----
+    // ---- Admin ----
     function showAdminSection() {
-      const adminLoginDiv = document.getElementById('admin-login');
-      const adminPanelDiv = document.getElementById('admin-panel');
-      if (isAdmin) {
-        adminLoginDiv.classList.add('hidden');
-        adminPanelDiv.classList.remove('hidden');
-        loadAdminUsers();
-      } else {
-        adminLoginDiv.classList.remove('hidden');
-        adminPanelDiv.classList.add('hidden');
-      }
+      const loginDiv = document.getElementById('admin-login');
+      const panelDiv = document.getElementById('admin-panel');
+      if (isAdmin) { loginDiv.classList.add('hidden'); panelDiv.classList.remove('hidden'); loadAdminUsers(); }
+      else { loginDiv.classList.remove('hidden'); panelDiv.classList.add('hidden'); }
     }
 
     async function becomeAdmin() {
       const password = document.getElementById('admin-password').value;
-      const errEl = document.getElementById('admin-error');
-      errEl.classList.add('hidden');
-      if (password !== ADMIN_PASSWORD) {
-        errEl.textContent = 'Incorrect password.';
-        errEl.classList.remove('hidden');
-        return;
-      }
+      const errEl = document.getElementById('admin-error'); errEl.classList.add('hidden');
+      if (password !== ADMIN_PASSWORD) { errEl.textContent = 'Incorrect password.'; errEl.classList.remove('hidden'); return; }
       try {
         await db.collection('profiles').doc(currentUser.uid).update({ admin: true });
-        userDoc.admin = true;
-        isAdmin = true;
-        document.getElementById('tab-admin').classList.remove('hidden');
-        showAdminSection();
-        alert('You are now an admin.');
-      } catch (e) {
-        errEl.textContent = 'Error: ' + e.message;
-        errEl.classList.remove('hidden');
-      }
+        userDoc.admin = true; isAdmin = true;
+        document.getElementById('sidebar-admin').classList.remove('hidden');
+        showAdminSection(); alert('You are now admin.');
+      } catch(e) { errEl.textContent = 'Error: ' + e.message; errEl.classList.remove('hidden'); }
     }
 
     async function loadAdminUsers() {
       const container = document.getElementById('admin-users-list');
+      if (!isAdmin) { container.innerHTML = 'Access denied.'; return; }
       container.innerHTML = 'Loading...';
-      if (!isAdmin) {
-        container.innerHTML = 'Access denied.';
-        return;
-      }
       try {
         const snapshot = await db.collection('profiles').get();
         let html = '<table style="width:100%"><tr><th>Email</th><th>Username</th><th>Verified</th><th>Actions</th></tr>';
         snapshot.forEach(doc => {
           const u = doc.data();
           html += `<tr>
-            <td>${escapeHtml(u.email)}</td>
-            <td>${escapeHtml(u.username)}</td>
-            <td>${u.verified ? '✔️' : '❌'}</td>
-            <td>
-              <button onclick="adminToggleVerify('${doc.id}', true)">Verify</button>
-              <button onclick="adminToggleVerify('${doc.id}', false)">Unverify</button>
-            </td>
+            <td>${escapeHtml(u.email)}</td><td>${escapeHtml(u.username)}</td><td>${u.verified ? '✔️' : '❌'}</td>
+            <td><button onclick="adminToggleVerify('${doc.id}', true)">Verify</button>
+            <button onclick="adminToggleVerify('${doc.id}', false)">Unverify</button></td>
           </tr>`;
         });
         html += '</table>';
         container.innerHTML = html;
-      } catch (e) {
-        container.innerHTML = 'Error loading users. You may not be an admin.';
-      }
+      } catch(e) { container.innerHTML = 'Error loading users.'; }
     }
 
     async function adminToggleVerify(userId, verify) {
       if (!isAdmin) return;
       try {
-        await db.collection('profiles').doc(userId).update({
-          verified: verify,
-          verificationRequested: false
-        });
+        await db.collection('profiles').doc(userId).update({ verified: verify, verificationRequested: false });
         alert(`User ${verify ? 'verified' : 'unverified'}.`);
         loadAdminUsers();
-      } catch (e) {
-        alert('Error: ' + e.message);
-      }
+      } catch(e) { alert('Error: ' + e.message); }
     }
 
     function escapeHtml(text) {
