@@ -268,6 +268,68 @@
       .form-grid,.form-grid-3{grid-template-columns:1fr;}
       .stats-grid{grid-template-columns:1fr 1fr;}
     }
+
+    /* ===== GRADIENT BG ===== */
+    .pub-bg-gradient { background-size: 400% 400% !important; animation: gradientShift 8s ease infinite; }
+    @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+    /* ===== VIDEO BG ===== */
+    .pub-video-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.35; pointer-events:none; }
+    .pub-card { position:relative; overflow:hidden; }
+    .pub-card > *:not(.pub-video-bg):not(#pub-overlay) { position:relative; z-index:1; }
+    #pub-overlay { position:absolute; inset:0; z-index:0; pointer-events:none; }
+
+    /* ===== GLASSMORPHISM ===== */
+    .glass-card { backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); background: rgba(255,255,255,0.07) !important; border: 1px solid rgba(255,255,255,0.18) !important; }
+
+    /* ===== NEON GLOW LINKS ===== */
+    .neon-links .pub-link-btn { box-shadow: 0 0 10px currentColor, 0 0 20px currentColor !important; transition: box-shadow 0.3s, transform 0.18s !important; }
+    .neon-links .pub-link-btn:hover { box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor !important; }
+
+    /* ===== RGB CYCLE ===== */
+    .rgb-cycle { animation: rgbCycle 3s linear infinite; }
+    @keyframes rgbCycle { 0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(360deg)} }
+    .rgb-border { animation: rgbBorder 3s linear infinite; }
+    @keyframes rgbBorder { 0%{box-shadow:0 0 20px #ff0000,0 0 40px #ff0000} 16%{box-shadow:0 0 20px #ff7700,0 0 40px #ff7700} 33%{box-shadow:0 0 20px #ffff00,0 0 40px #ffff00} 50%{box-shadow:0 0 20px #00ff00,0 0 40px #00ff00} 66%{box-shadow:0 0 20px #0000ff,0 0 40px #0000ff} 83%{box-shadow:0 0 20px #8b00ff,0 0 40px #8b00ff} 100%{box-shadow:0 0 20px #ff0000,0 0 40px #ff0000} }
+
+    /* ===== ANIMATED BUTTONS ===== */
+    .btn-anim-bounce .pub-link-btn { transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1) !important; }
+    .btn-anim-bounce .pub-link-btn:hover { transform: translateY(-4px) scale(1.04) !important; }
+    .btn-anim-shake .pub-link-btn:hover { animation: btnShake 0.4s ease !important; }
+    @keyframes btnShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+    .btn-anim-glow .pub-link-btn:hover { animation: btnGlowPulse 0.6s ease infinite alternate !important; }
+    @keyframes btnGlowPulse { from{filter:brightness(1)} to{filter:brightness(1.35) drop-shadow(0 0 8px currentColor)} }
+    .btn-anim-float .pub-link-btn { animation: floatBtn 3s ease-in-out infinite; }
+    @keyframes floatBtn { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+    /* ===== SNOW / RAIN / FIRE canvas ===== */
+    #fx-canvas { position:fixed; inset:0; pointer-events:none; z-index:2; }
+
+    /* ===== MUSIC BAR ===== */
+    .music-bar { margin: 0 1.5rem 1rem; border-radius: 12px; overflow: hidden; }
+    .music-bar iframe { width:100%; border:none; display:block; border-radius: 12px; }
+    .music-viz { display:flex; align-items:flex-end; justify-content:center; gap:3px; height:32px; padding: 0 1.5rem 0.75rem; }
+    .music-viz-bar { width:4px; background:var(--accent); border-radius:2px; animation:vizBounce 0.8s ease-in-out infinite; }
+    @keyframes vizBounce { 0%,100%{height:4px} 50%{height:28px} }
+
+    /* ===== FLOATING UI ===== */
+    .pub-card.float-anim { animation: floatCard 6s ease-in-out infinite; }
+    @keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    /* ===== THEME PRESET PICKER (editor) ===== */
+    .preset-grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:0.5rem; margin-bottom:1rem; }
+    .preset-swatch { height:48px; border-radius:10px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; position:relative; overflow:hidden; }
+    .preset-swatch:hover { transform:scale(1.06); }
+    .preset-swatch.active { border-color:white; box-shadow:0 0 0 1px rgba(255,255,255,0.4); }
+    .preset-swatch span { position:absolute; bottom:3px; left:0; right:0; text-align:center; font-size:0.58rem; font-weight:700; color:rgba(255,255,255,0.9); text-shadow:0 1px 3px rgba(0,0,0,0.8); }
+
+    /* Sub-section tabs */
+    .app-tabs { display:flex; gap:0.3rem; background:var(--surface2); padding:0.3rem; border-radius:var(--radius-sm); margin-bottom:1.25rem; flex-wrap:wrap; }
+    .app-tab { flex:1; min-width:80px; text-align:center; padding:0.45rem 0.3rem; font-size:0.75rem; font-weight:600; color:var(--text-muted); border-radius:7px; cursor:pointer; transition:all var(--transition); border:none; background:none; font-family:inherit; white-space:nowrap; }
+    .app-tab.active { background:var(--surface); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+    .app-panel { display:none; }
+    .app-panel.active { display:block; }
+
   </style>
 </head>
 <body class="no-sidebar">
@@ -390,94 +452,245 @@
         <button class="btn btn-warning btn-sm" onclick="requestVerification()">&#11088; Request Verification</button>
       </div>
 
-      <!-- Appearance Card -->
+      <!-- Appearance Card — tabbed -->
       <div class="card">
         <div class="card-title"><div class="card-icon">&#127912;</div> Appearance</div>
-        <div class="form-grid">
-          <div class="form-row">
-            <label>Theme</label>
-            <select id="edit-theme">
-              <option value="default">Default Dark</option>
-              <option value="neon">Neon Glow</option>
-              <option value="galaxy">Galaxy</option>
-              <option value="minimal">Minimal Light</option>
-              <option value="aurora">Aurora</option>
-              <option value="sunset">Sunset</option>
-              <option value="ocean">Ocean</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label>Font</label>
-            <select id="edit-font">
-              <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans</option>
-              <option value="'Syne', sans-serif">Syne</option>
-              <option value="'Courier New', monospace">Monospace</option>
-              <option value="Georgia, serif">Serif</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-row">
-            <label>Background Color</label>
-            <div class="color-row">
-              <input type="color" id="edit-bgcolor" value="#0d0d14" oninput="document.getElementById('bgcolor-hex').value=this.value">
-              <input type="text" class="color-hex" id="bgcolor-hex" value="#0d0d14" oninput="document.getElementById('edit-bgcolor').value=this.value">
-            </div>
-          </div>
-          <div class="form-row">
-            <label>Text Color</label>
-            <div class="color-row">
-              <input type="color" id="edit-textcolor" value="#f0f0ff" oninput="document.getElementById('textcolor-hex').value=this.value">
-              <input type="text" class="color-hex" id="textcolor-hex" value="#f0f0ff" oninput="document.getElementById('edit-textcolor').value=this.value">
-            </div>
-          </div>
-        </div>
-        <div class="form-row"><label>Background Image URL</label><input type="url" id="edit-bgimage" placeholder="https://..."></div>
 
-        <!-- NEW: Avatar ring & decoration -->
-        <div class="form-grid">
+        <div class="app-tabs">
+          <button class="app-tab active" onclick="showAppTab('themes',this)">&#127775; Themes</button>
+          <button class="app-tab" onclick="showAppTab('colors',this)">&#127912; Colors</button>
+          <button class="app-tab" onclick="showAppTab('background',this)">&#127757; Background</button>
+          <button class="app-tab" onclick="showAppTab('effects',this)">&#10024; Effects</button>
+          <button class="app-tab" onclick="showAppTab('animations',this)">&#127798; Motion</button>
+          <button class="app-tab" onclick="showAppTab('music',this)">&#127925; Music</button>
+          <button class="app-tab" onclick="showAppTab('misc',this)">&#9881;&#65039; Misc</button>
+        </div>
+
+        <!-- THEMES TAB -->
+        <div id="app-panel-themes" class="app-panel active">
+          <label style="margin-bottom:0.6rem;">Quick Presets</label>
+          <div class="preset-grid" id="theme-preset-grid"></div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Theme Base</label>
+              <select id="edit-theme" onchange="syncPresetHighlight()">
+                <option value="default">Default Dark</option>
+                <option value="neon">Neon Glow</option>
+                <option value="galaxy">Galaxy</option>
+                <option value="minimal">Minimal Light</option>
+                <option value="aurora">Aurora</option>
+                <option value="sunset">Sunset</option>
+                <option value="ocean">Ocean</option>
+                <option value="candy">Candy</option>
+                <option value="midnight">Midnight</option>
+                <option value="forest">Forest</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Font Family</label>
+              <select id="edit-font">
+                <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans</option>
+                <option value="'Syne', sans-serif">Syne</option>
+                <option value="'Courier New', monospace">Monospace</option>
+                <option value="Georgia, serif">Serif</option>
+                <option value="system-ui, sans-serif">System UI</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLORS TAB -->
+        <div id="app-panel-colors" class="app-panel">
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Background Color</label>
+              <div class="color-row">
+                <input type="color" id="edit-bgcolor" value="#0d0d14" oninput="document.getElementById('bgcolor-hex').value=this.value">
+                <input type="text" class="color-hex" id="bgcolor-hex" value="#0d0d14" oninput="document.getElementById('edit-bgcolor').value=this.value">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Text Color</label>
+              <div class="color-row">
+                <input type="color" id="edit-textcolor" value="#f0f0ff" oninput="document.getElementById('textcolor-hex').value=this.value">
+                <input type="text" class="color-hex" id="textcolor-hex" value="#f0f0ff" oninput="document.getElementById('edit-textcolor').value=this.value">
+              </div>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Gradient Color 2 <span style="font-size:0.6rem;opacity:0.5;">(leave blank for solid)</span></label>
+              <div class="color-row">
+                <input type="color" id="edit-gradcolor2" value="#1a1a2e" oninput="document.getElementById('gradcolor2-hex').value=this.value">
+                <input type="text" class="color-hex" id="gradcolor2-hex" value="#1a1a2e" oninput="document.getElementById('edit-gradcolor2').value=this.value">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Gradient Direction</label>
+              <select id="edit-graddir">
+                <option value="135deg">Diagonal ↘</option>
+                <option value="to bottom">Top → Bottom</option>
+                <option value="to right">Left → Right</option>
+                <option value="to top left">↖ Diagonal</option>
+                <option value="animated">Animated Shift</option>
+              </select>
+            </div>
+          </div>
           <div class="form-row">
-            <label>Avatar Border Ring</label>
-            <select id="edit-avatar-ring">
+            <label>RGB Cycling Effect</label>
+            <select id="edit-rgb-cycle">
               <option value="none">None</option>
-              <option value="spin">Spinning Gradient</option>
-              <option value="pulse">Pulse</option>
-              <option value="rainbow">Rainbow</option>
-              <option value="glow">Glow</option>
+              <option value="border">RGB Border</option>
+              <option value="hue">Hue Rotate (Full Card)</option>
             </select>
+          </div>
+        </div>
+
+        <!-- BACKGROUND TAB -->
+        <div id="app-panel-background" class="app-panel">
+          <div class="form-row">
+            <label>Background Image URL</label>
+            <input type="url" id="edit-bgimage" placeholder="https://...">
+          </div>
+          <div class="form-row">
+            <label>Background Video URL <span style="font-size:0.6rem;opacity:0.5;">(mp4/webm direct link)</span></label>
+            <input type="url" id="edit-bgvideo" placeholder="https://...video.mp4">
+          </div>
+          <div class="form-row">
+            <label>Background Opacity <span id="bgopacity-val">100%</span></label>
+            <input type="range" id="edit-bgopacity" min="10" max="100" value="100" style="width:100%;accent-color:var(--accent);" oninput="document.getElementById('bgopacity-val').textContent=this.value+'%'">
+          </div>
+          <div class="form-row">
+            <label>Glassmorphism Blur <span id="glassblur-val">0px</span></label>
+            <input type="range" id="edit-glassblur" min="0" max="24" value="0" style="width:100%;accent-color:var(--accent);" oninput="document.getElementById('glassblur-val').textContent=this.value+'px'">
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-glass-card"><span class="toggle-slider"></span> Glassmorphism Card</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-float-card"><span class="toggle-slider"></span> Floating Card Animation</label>
+          </div>
+        </div>
+
+        <!-- EFFECTS TAB -->
+        <div id="app-panel-effects" class="app-panel">
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Particle Style</label>
+              <select id="edit-particle-style">
+                <option value="dots">Dots</option>
+                <option value="stars">Stars</option>
+                <option value="snow">Snow</option>
+                <option value="rain">Rain</option>
+                <option value="fire">Fire Embers</option>
+                <option value="bubbles">Bubbles</option>
+                <option value="neon-links">Neon Network</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Neon Glow Links</label>
+              <select id="edit-neon-links">
+                <option value="none">None</option>
+                <option value="neon">Neon Glow</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-glowingborder"><span class="toggle-slider"></span> Glowing Border</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-particles"><span class="toggle-slider"></span> Particles</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-snow-fx"><span class="toggle-slider"></span> Snow Effect</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-rain-fx"><span class="toggle-slider"></span> Rain Effect</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-fire-fx"><span class="toggle-slider"></span> Fire Embers</label>
+          </div>
+        </div>
+
+        <!-- MOTION TAB -->
+        <div id="app-panel-animations" class="app-panel">
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Button Animation</label>
+              <select id="edit-btn-anim">
+                <option value="none">Default</option>
+                <option value="bounce">Bounce</option>
+                <option value="shake">Shake</option>
+                <option value="glow">Glow Pulse</option>
+                <option value="float">Float</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Avatar Ring</label>
+              <select id="edit-avatar-ring">
+                <option value="none">None</option>
+                <option value="spin">Spinning Gradient</option>
+                <option value="pulse">Pulse</option>
+                <option value="rainbow">Rainbow</option>
+                <option value="glow">Glow</option>
+              </select>
+            </div>
           </div>
           <div class="form-row">
             <label>Avatar Decoration Emoji</label>
-            <input type="text" id="edit-avatar-deco" placeholder="&#127941; or leave blank" maxlength="4">
+            <input type="text" id="edit-avatar-deco" placeholder="&#127941; crown, &#128293; fire…" maxlength="4">
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-custom-cursor"><span class="toggle-slider"></span> Custom Cursor</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-mouse-trail"><span class="toggle-slider"></span> Mouse Trail</label>
+          </div>
+          <div class="form-row" style="margin-top:0.75rem;">
+            <label>Cursor &amp; Trail Color</label>
+            <div class="color-row">
+              <input type="color" id="edit-cursor-color" value="#7c6af7" oninput="document.getElementById('cursor-color-hex').value=this.value">
+              <input type="text" class="color-hex" id="cursor-color-hex" value="#7c6af7" oninput="document.getElementById('edit-cursor-color').value=this.value">
+            </div>
           </div>
         </div>
 
-        <!-- NEW: Custom cursor, mouse trail, custom favicon -->
-        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-glowingborder"><span class="toggle-slider"></span> Glowing Border</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-particles"><span class="toggle-slider"></span> Particles</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-discord-presence"><span class="toggle-slider"></span> Discord Presence</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-custom-cursor"><span class="toggle-slider"></span> Custom Cursor</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-mouse-trail"><span class="toggle-slider"></span> Mouse Trail</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-stats"><span class="toggle-slider"></span> Show View Counter</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-online"><span class="toggle-slider"></span> Show Online Status</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-dates"><span class="toggle-slider"></span> Show Join/Active Dates</label>
-          <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-typing-anim"><span class="toggle-slider"></span> Typing Animation</label>
-        </div>
-
-        <!-- NEW: Custom Favicon URL -->
-        <div class="form-row">
-          <label>Custom Favicon URL <span style="font-size:0.65rem;opacity:0.6;">(shown in browser tab when viewing your profile)</span></label>
-          <input type="url" id="edit-favicon" placeholder="https://...emoji.png">
-        </div>
-        <!-- NEW: Custom cursor color -->
-        <div class="form-row">
-          <label>Cursor &amp; Trail Color</label>
-          <div class="color-row">
-            <input type="color" id="edit-cursor-color" value="#7c6af7" oninput="document.getElementById('cursor-color-hex').value=this.value">
-            <input type="text" class="color-hex" id="cursor-color-hex" value="#7c6af7" oninput="document.getElementById('edit-cursor-color').value=this.value">
+        <!-- MUSIC TAB -->
+        <div id="app-panel-music" class="app-panel">
+          <div class="form-row">
+            <label>Music Platform</label>
+            <select id="edit-music-platform">
+              <option value="none">None</option>
+              <option value="spotify">Spotify</option>
+              <option value="soundcloud">SoundCloud</option>
+              <option value="youtube">YouTube Music</option>
+              <option value="custom">Custom Embed URL</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Embed URL / Track URL</label>
+            <input type="url" id="edit-music-url" placeholder="Paste Spotify/SoundCloud/YouTube URL or embed URL">
+          </div>
+          <div id="music-hint" class="hint-text" style="margin-top:-0.5rem;margin-bottom:0.75rem;"></div>
+          <div class="form-row">
+            <label>Player Height</label>
+            <select id="edit-music-height">
+              <option value="80">Compact (80px)</option>
+              <option value="152" selected>Medium (152px)</option>
+              <option value="232">Tall (232px)</option>
+              <option value="352">Full (352px)</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-music-autoplay"><span class="toggle-slider"></span> Autoplay <span style="font-size:0.65rem;opacity:0.5;">(browser may block)</span></label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-music-visualizer"><span class="toggle-slider"></span> Visualizer Bars</label>
           </div>
         </div>
+
+        <!-- MISC TAB -->
+        <div id="app-panel-misc" class="app-panel">
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-discord-presence"><span class="toggle-slider"></span> Discord Presence</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-stats"><span class="toggle-slider"></span> View Counter</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-online"><span class="toggle-slider"></span> Online Status</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-dates"><span class="toggle-slider"></span> Join/Active Dates</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-typing-anim"><span class="toggle-slider"></span> Typing Animation</label>
+          </div>
+          <div class="form-row">
+            <label>Custom Favicon URL</label>
+            <input type="url" id="edit-favicon" placeholder="https://...emoji.png">
+          </div>
+        </div>
+
       </div>
 
       <!-- Links Card -->
@@ -723,7 +936,7 @@ async function resetPassword(){
   try{await auth.sendPasswordResetEmail(email);suc.textContent='Reset email sent!';suc.classList.remove('hidden');}
   catch(e){err.textContent=e.message;err.classList.remove('hidden');}
 }
-async function logout(){await auth.signOut();currentUser=null;userDoc=null;window.location.hash='';}
+async function logout(){stopFx();await auth.signOut();currentUser=null;userDoc=null;window.location.hash='';}
 
 // ============ FIRESTORE ============
 async function loadUserProfile(){
@@ -733,10 +946,16 @@ async function loadUserProfile(){
     userDoc=snap.data();userDoc.links=userDoc.links||[];userDoc.socials=userDoc.socials||[];
   }else{
     userDoc={username:'',displayName:'',bio:'',avatar:'',discordId:'',pronouns:'',location:'',age:'',statusTexts:[],
-      theme:'default',bgColor:'#0d0d14',bgImage:'',textColor:'#f0f0ff',font:"'Plus Jakarta Sans', sans-serif",
-      glowingBorder:false,particles:false,showDiscordPresence:true,
+      theme:'default',bgColor:'#0d0d14',bgImage:'',bgVideo:'',textColor:'#f0f0ff',
+      font:"'Plus Jakarta Sans', sans-serif",
+      gradColor2:'#1a1a2e',gradDir:'135deg',bgOpacity:100,glassBlur:0,
+      glowingBorder:false,glassCard:false,floatCard:false,
+      particles:false,particleStyle:'dots',snowFx:false,rainFx:false,fireFx:false,
+      neonLinks:'none',rgbCycle:'none',btnAnim:'none',
+      showDiscordPresence:true,
       avatarRing:'none',avatarDeco:'',customCursor:false,mouseTrail:false,cursorColor:'#7c6af7',
       showStats:true,showOnline:true,showDates:true,typingAnim:true,favicon:'',
+      musicPlatform:'none',musicUrl:'',musicEmbedUrl:'',musicHeight:152,musicAutoplay:false,musicVisualizer:false,
       links:[],socials:[],verified:false,verificationRequested:false,admin:false,
       joinDate:new Date().toISOString(),profileViews:0};
   }
@@ -754,20 +973,96 @@ function populateEditForm(){
   s('edit-status-texts',(userDoc.statusTexts||[]).join('\n'));
   s('edit-theme',userDoc.theme||'default');s('edit-bgcolor',userDoc.bgColor||'#0d0d14');
   s('bgcolor-hex',userDoc.bgColor||'#0d0d14');s('edit-bgimage',userDoc.bgImage||'');
+  s('edit-bgvideo',userDoc.bgVideo||'');
   s('edit-textcolor',userDoc.textColor||'#f0f0ff');s('textcolor-hex',userDoc.textColor||'#f0f0ff');
   s('edit-font',userDoc.font||"'Plus Jakarta Sans', sans-serif");
   s('edit-avatar-ring',userDoc.avatarRing||'none');s('edit-avatar-deco',userDoc.avatarDeco||'');
   s('edit-favicon',userDoc.favicon||'');s('edit-cursor-color',userDoc.cursorColor||'#7c6af7');
   s('cursor-color-hex',userDoc.cursorColor||'#7c6af7');
+  s('edit-gradcolor2',userDoc.gradColor2||'#1a1a2e');s('gradcolor2-hex',userDoc.gradColor2||'#1a1a2e');
+  s('edit-graddir',userDoc.gradDir||'135deg');
+  s('edit-rgb-cycle',userDoc.rgbCycle||'none');
+  s('edit-particle-style',userDoc.particleStyle||'dots');
+  s('edit-neon-links',userDoc.neonLinks||'none');
+  s('edit-btn-anim',userDoc.btnAnim||'none');
+  s('edit-music-platform',userDoc.musicPlatform||'none');
+  s('edit-music-url',userDoc.musicUrl||'');
+  s('edit-music-height',String(userDoc.musicHeight||152));
+  // ranges
+  const sr=(id,vlid,v,u)=>{const el=document.getElementById(id);if(el)el.value=v||0;const vl=document.getElementById(vlid);if(vl)vl.textContent=(v||0)+u;};
+  sr('edit-bgopacity','bgopacity-val',userDoc.bgOpacity||100,'%');
+  sr('edit-glassblur','glassblur-val',userDoc.glassBlur||0,'px');
   sc('edit-glowingborder',userDoc.glowingBorder);sc('edit-particles',userDoc.particles);
   sc('edit-discord-presence',userDoc.showDiscordPresence!==false);
   sc('edit-custom-cursor',userDoc.customCursor);sc('edit-mouse-trail',userDoc.mouseTrail);
   sc('edit-show-stats',userDoc.showStats!==false);sc('edit-show-online',userDoc.showOnline!==false);
   sc('edit-show-dates',userDoc.showDates!==false);sc('edit-typing-anim',userDoc.typingAnim!==false);
+  sc('edit-glass-card',userDoc.glassCard);sc('edit-float-card',userDoc.floatCard);
+  sc('edit-snow-fx',userDoc.snowFx);sc('edit-rain-fx',userDoc.rainFx);sc('edit-fire-fx',userDoc.fireFx);
+  sc('edit-music-autoplay',userDoc.musicAutoplay);sc('edit-music-visualizer',userDoc.musicVisualizer);
+  buildThemePresets();
   editingLinks=(userDoc.links||[]).map(l=>({btnBg:'#7c6af7',btnTextColor:'#ffffff',btnRadius:12,btnShadow:'none',...l}));
   editingSocials=(userDoc.socials||[]).map(s=>({...s}));
   renderLinksEditor();renderSocialsEditor();
 }
+
+// ── APP TABS ──
+function showAppTab(name,btn){
+  document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('app-panel-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── THEME PRESETS ──
+const THEME_PRESETS=[
+  {id:'default', label:'Dark',    grad:'linear-gradient(135deg,#0d0d14,#1a1a2e)', bg:'#0d0d14', txt:'#f0f0ff', g2:'#1a1a2e'},
+  {id:'neon',    label:'Neon',    grad:'linear-gradient(135deg,#0a0010,#1a0030)', bg:'#0a0010', txt:'#fff',    g2:'#1a0030'},
+  {id:'galaxy',  label:'Galaxy',  grad:'linear-gradient(135deg,#060614,#1a0060)', bg:'#060614', txt:'#e8e8ff', g2:'#1a0060'},
+  {id:'minimal', label:'Light',   grad:'linear-gradient(135deg,#fafafa,#e8e8f0)', bg:'#fafafa', txt:'#1a1a1a', g2:'#e8e8f0'},
+  {id:'aurora',  label:'Aurora',  grad:'linear-gradient(135deg,#060f1a,#001a2e)', bg:'#060f1a', txt:'#e0f7fa', g2:'#001a2e'},
+  {id:'sunset',  label:'Sunset',  grad:'linear-gradient(135deg,#3d1a00,#7c2d12)', bg:'#1a0a00', txt:'#fff8f0', g2:'#7c2d12'},
+  {id:'ocean',   label:'Ocean',   grad:'linear-gradient(135deg,#001a2e,#003366)', bg:'#00111a', txt:'#e0f4ff', g2:'#003366'},
+  {id:'candy',   label:'Candy',   grad:'linear-gradient(135deg,#2d0a2d,#4a154b)', bg:'#1a0a1a', txt:'#fff0ff', g2:'#4a154b'},
+  {id:'midnight',label:'Midnight',grad:'linear-gradient(135deg,#050510,#101030)', bg:'#050510', txt:'#c8c8ff', g2:'#101030'},
+  {id:'forest',  label:'Forest',  grad:'linear-gradient(135deg,#0a1a0a,#0d3010)', bg:'#0a1a0a', txt:'#e0ffe0', g2:'#0d3010'},
+];
+function buildThemePresets(){
+  const grid=document.getElementById('theme-preset-grid');
+  if(!grid)return;
+  const cur=document.getElementById('edit-theme')?.value||'default';
+  grid.innerHTML='';
+  THEME_PRESETS.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='preset-swatch'+(cur===p.id?' active':'');
+    d.style.background=p.grad;
+    d.innerHTML=`<span>${p.label}</span>`;
+    d.onclick=()=>{
+      document.getElementById('edit-theme').value=p.id;
+      document.getElementById('edit-bgcolor').value=p.bg;document.getElementById('bgcolor-hex').value=p.bg;
+      document.getElementById('edit-textcolor').value=p.txt;document.getElementById('textcolor-hex').value=p.txt;
+      document.getElementById('edit-gradcolor2').value=p.g2;document.getElementById('gradcolor2-hex').value=p.g2;
+      syncPresetHighlight();
+    };
+    grid.appendChild(d);
+  });
+}
+function syncPresetHighlight(){
+  const cur=document.getElementById('edit-theme')?.value;
+  document.querySelectorAll('.preset-swatch').forEach(s=>{
+    const id=THEME_PRESETS.find(p=>p.label===s.querySelector('span')?.textContent||'')?.id;
+    s.classList.toggle('active',id===cur);
+  });
+}
+
+// ── MUSIC PLATFORM HINT ──
+document.addEventListener('change',e=>{
+  if(e.target.id==='edit-music-platform'){
+    const h=document.getElementById('music-hint');
+    const hints={spotify:'Paste a Spotify track/playlist URL — we\'ll convert it to an embed automatically.',soundcloud:'Paste a SoundCloud track URL.',youtube:'Paste a YouTube video URL.',custom:'Paste a direct iframe embed URL.',none:''};
+    h.textContent=hints[e.target.value]||'';
+  }
+});
 
 // ============ LINKS EDITOR ============
 function renderLinksEditor(){
@@ -869,32 +1164,56 @@ async function saveProfile(){
   }
   const statusRaw=document.getElementById('edit-status-texts').value;
   const statusTexts=statusRaw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const gv=id=>{const el=document.getElementById(id);return el?el.value:'';}
+  const gc=id=>{const el=document.getElementById(id);return el?el.checked:false;}
+  // Music URL → embed URL conversion
+  let rawMusicUrl=gv('edit-music-url').trim();
+  const platform=gv('edit-music-platform');
+  let musicEmbedUrl='';
+  if(rawMusicUrl&&platform==='spotify'){
+    const m=rawMusicUrl.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+    if(m)musicEmbedUrl=`https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator`;
+    else musicEmbedUrl=rawMusicUrl;
+  }else if(rawMusicUrl&&platform==='soundcloud'){
+    musicEmbedUrl=`https://w.soundcloud.com/player/?url=${encodeURIComponent(rawMusicUrl)}&auto_play=${gc('edit-music-autoplay')}&color=%237c6af7&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
+  }else if(rawMusicUrl&&platform==='youtube'){
+    const vid=rawMusicUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if(vid)musicEmbedUrl=`https://www.youtube.com/embed/${vid[1]}?autoplay=${gc('edit-music-autoplay')?1:0}&loop=1&playlist=${vid[1]}`;
+    else musicEmbedUrl=rawMusicUrl;
+  }else if(rawMusicUrl){
+    musicEmbedUrl=rawMusicUrl;
+  }
   const pd={
-    username:newUsername,displayName:document.getElementById('edit-displayname').value.trim(),
-    bio:document.getElementById('edit-bio').value.trim(),avatar:document.getElementById('edit-avatar').value.trim(),
-    discordId:document.getElementById('edit-discordid').value.trim(),
-    pronouns:document.getElementById('edit-pronouns').value.trim(),
-    location:document.getElementById('edit-location').value.trim(),
-    age:document.getElementById('edit-age').value.trim(),
+    username:newUsername,displayName:gv('edit-displayname').trim(),
+    bio:gv('edit-bio').trim(),avatar:gv('edit-avatar').trim(),
+    discordId:gv('edit-discordid').trim(),
+    pronouns:gv('edit-pronouns').trim(),location:gv('edit-location').trim(),age:gv('edit-age').trim(),
     statusTexts,
-    theme:document.getElementById('edit-theme').value,
-    bgColor:document.getElementById('edit-bgcolor').value,bgImage:document.getElementById('edit-bgimage').value.trim(),
-    textColor:document.getElementById('edit-textcolor').value,font:document.getElementById('edit-font').value,
-    glowingBorder:document.getElementById('edit-glowingborder').checked,
-    particles:document.getElementById('edit-particles').checked,
-    showDiscordPresence:document.getElementById('edit-discord-presence').checked,
-    avatarRing:document.getElementById('edit-avatar-ring').value,
-    avatarDeco:document.getElementById('edit-avatar-deco').value.trim(),
-    customCursor:document.getElementById('edit-custom-cursor').checked,
-    mouseTrail:document.getElementById('edit-mouse-trail').checked,
-    cursorColor:document.getElementById('edit-cursor-color').value,
-    showStats:document.getElementById('edit-show-stats').checked,
-    showOnline:document.getElementById('edit-show-online').checked,
-    showDates:document.getElementById('edit-show-dates').checked,
-    typingAnim:document.getElementById('edit-typing-anim').checked,
-    favicon:document.getElementById('edit-favicon').value.trim(),
+    theme:gv('edit-theme'),
+    bgColor:gv('edit-bgcolor'),bgImage:gv('edit-bgimage').trim(),bgVideo:gv('edit-bgvideo').trim(),
+    textColor:gv('edit-textcolor'),font:gv('edit-font'),
+    gradColor2:gv('edit-gradcolor2'),gradDir:gv('edit-graddir'),
+    bgOpacity:parseInt(gv('edit-bgopacity'))||100,
+    glassBlur:parseInt(gv('edit-glassblur'))||0,
+    rgbCycle:gv('edit-rgb-cycle'),
+    particleStyle:gv('edit-particle-style'),
+    neonLinks:gv('edit-neon-links'),
+    btnAnim:gv('edit-btn-anim'),
+    glowingBorder:gc('edit-glowingborder'),particles:gc('edit-particles'),
+    snowFx:gc('edit-snow-fx'),rainFx:gc('edit-rain-fx'),fireFx:gc('edit-fire-fx'),
+    glassCard:gc('edit-glass-card'),floatCard:gc('edit-float-card'),
+    showDiscordPresence:gc('edit-discord-presence'),
+    avatarRing:gv('edit-avatar-ring'),avatarDeco:gv('edit-avatar-deco').trim(),
+    customCursor:gc('edit-custom-cursor'),mouseTrail:gc('edit-mouse-trail'),
+    cursorColor:gv('edit-cursor-color'),
+    showStats:gc('edit-show-stats'),showOnline:gc('edit-show-online'),
+    showDates:gc('edit-show-dates'),typingAnim:gc('edit-typing-anim'),
+    favicon:gv('edit-favicon').trim(),
+    musicPlatform:platform,musicUrl:rawMusicUrl,musicEmbedUrl,
+    musicHeight:parseInt(gv('edit-music-height'))||152,
+    musicAutoplay:gc('edit-music-autoplay'),musicVisualizer:gc('edit-music-visualizer'),
     links:editingLinks.filter(l=>l.title&&l.url).map(l=>({title:l.title,url:makeAbsoluteUrl(l.url),type:l.type||'link',embedUrl:l.embedUrl||'',icon:l.icon||'',btnBg:l.btnBg||'#7c6af7',btnTextColor:l.btnTextColor||'#fff',btnRadius:l.btnRadius??12,btnShadow:l.btnShadow||'none'})),
-    socials:editingSocials.filter(s=>s.platform&&s.url).map(s=>({platform:s.platform,url:makeAbsoluteUrl(s.url),icon:s.icon||'&#128279;'})),
+    socials:editingSocials.filter(s=>s.platform&&s.url).map(s=>({platform:s.platform,url:makeAbsoluteUrl(s.url),icon:s.icon||'\u{1F517}'})),
     uid:currentUser.uid,email:currentUser.email,
     verified:userDoc.verified||false,verificationRequested:userDoc.verificationRequested||false,admin:userDoc.admin||false,
     joinDate:userDoc.joinDate||new Date().toISOString(),profileViews:userDoc.profileViews||0,
@@ -955,11 +1274,83 @@ function timeAgo(iso){
   }catch{return'';}
 }
 
+// ── CANVAS FX (snow/rain/fire) ──
+let fxAnimId=null;
+function stopFx(){if(fxAnimId){cancelAnimationFrame(fxAnimId);fxAnimId=null;}const c=document.getElementById('fx-canvas');if(c)c.remove();}
+function startFx(type,color){
+  stopFx();
+  const canvas=document.createElement('canvas');canvas.id='fx-canvas';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');
+  const particles=[];
+  const count=type==='fire'?80:120;
+  for(let i=0;i<count;i++) particles.push(mkFxParticle(type,canvas));
+  function mkFxParticle(type,c){
+    return type==='snow'?{x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*4+2,speed:Math.random()*1.5+0.5,wind:Math.random()*0.5-0.25,opacity:Math.random()*0.6+0.3}
+      :type==='rain'?{x:Math.random()*c.width,y:Math.random()*c.height,len:Math.random()*20+10,speed:Math.random()*8+8,opacity:Math.random()*0.4+0.2}
+      :{x:Math.random()*c.width,y:c.height+20,r:Math.random()*6+2,speed:Math.random()*3+2,vx:Math.random()*2-1,life:Math.random(),opacity:Math.random()*0.7+0.2};
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p,i)=>{
+      ctx.save();
+      if(type==='snow'){
+        ctx.globalAlpha=p.opacity;ctx.fillStyle=color||'#ffffff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+        p.y+=p.speed;p.x+=p.wind;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}
+      }else if(type==='rain'){
+        ctx.globalAlpha=p.opacity;ctx.strokeStyle=color||'#8888ff';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-2,p.y+p.len);ctx.stroke();
+        p.y+=p.speed;p.x-=2;if(p.y>canvas.height){p.y=-20;p.x=Math.random()*canvas.width;}
+      }else{
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
+        g.addColorStop(0,`rgba(255,${Math.floor(p.life*200)},0,${p.opacity})`);g.addColorStop(1,'rgba(255,100,0,0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*3,0,Math.PI*2);ctx.fill();
+        p.y-=p.speed;p.x+=p.vx;p.life-=0.008;p.opacity-=0.004;
+        if(p.life<=0||p.y<0){Object.assign(p,mkFxParticle('fire',canvas));}
+      }
+      ctx.restore();
+    });
+    fxAnimId=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
 async function renderProfile(data,container){
+  stopFx();
   const t=THEMES[data.theme]||THEMES.default;
   const bgColor=data.theme==='default'?(data.bgColor||'#0d0d14'):(t.bg||data.bgColor||'#0d0d14');
   const textColor=data.theme==='default'?(data.textColor||'#f0f0ff'):(t.text||data.textColor||'#f0f0ff');
-  container.style.cssText=`background:${data.bgImage?`url(${data.bgImage}) center/cover`:bgColor};color:${textColor};font-family:${data.font||"'Plus Jakarta Sans',sans-serif"};border-radius:24px;overflow:hidden;${data.glowingBorder?'box-shadow:0 0 30px rgba(124,106,247,0.6),0 0 60px rgba(224,86,176,0.3);border:1px solid rgba(124,106,247,0.5);':''}`;
+  const g2=data.gradColor2;
+  const gradDir=data.gradDir||'135deg';
+  const bgOpacity=(data.bgOpacity||100)/100;
+
+  // Compute background
+  let bgStyle='';
+  if(data.bgImage){
+    bgStyle=`url(${data.bgImage}) center/cover`;
+  }else if(g2&&g2!==bgColor&&gradDir!=='animated'){
+    bgStyle=`linear-gradient(${gradDir},${bgColor},${g2})`;
+  }else if(g2&&gradDir==='animated'){
+    bgStyle=`linear-gradient(135deg,${bgColor},${g2},${bgColor})`;
+  }else{
+    bgStyle=bgColor;
+  }
+
+  // Glass card
+  const isGlass=data.glassCard;
+  const glassStyle=isGlass?`backdrop-filter:blur(${data.glassBlur||16}px) saturate(180%);-webkit-backdrop-filter:blur(${data.glassBlur||16}px) saturate(180%);background:rgba(255,255,255,0.07)!important;border:1px solid rgba(255,255,255,0.18)!important;`:'';
+
+  let extraContainerStyle='';
+  if(data.rgbCycle==='border')extraContainerStyle+='animation:rgbBorder 3s linear infinite;';
+  else if(data.glowingBorder)extraContainerStyle+='box-shadow:0 0 30px rgba(124,106,247,0.6),0 0 60px rgba(224,86,176,0.3);border:1px solid rgba(124,106,247,0.5);';
+  if(data.floatCard)extraContainerStyle+='animation:floatCard 6s ease-in-out infinite;';
+  const hueClass=data.rgbCycle==='hue'?' rgb-cycle':'';
+  const neonClass=data.neonLinks==='neon'?' neon-links':'';
+  const btnAnimClass=data.btnAnim&&data.btnAnim!=='none'?` btn-anim-${data.btnAnim}`:'';
+  const gradAnimClass=(data.gradDir==='animated'&&g2)?' pub-bg-gradient':'';
+
+  container.className=`pub-card${hueClass}${neonClass}${btnAnimClass}${gradAnimClass}`;
+  container.style.cssText=`background:${bgStyle};color:${textColor};font-family:${data.font||"'Plus Jakarta Sans',sans-serif"};border-radius:24px;overflow:hidden;opacity:${bgOpacity};${glassStyle}${extraContainerStyle}`;
 
   // Determine online (last active within 10 min)
   const isOnline=data.lastActive&&(Date.now()-new Date(data.lastActive).getTime()<10*60*1000);
@@ -1079,6 +1470,38 @@ async function renderProfile(data,container){
   html+=`<div class="pub-footer">Made with <a href="#">LinkHub</a></div>`;
   container.innerHTML=html;
 
+  // Video background
+  if(data.bgVideo){
+    const vid=document.createElement('video');
+    vid.className='pub-video-bg';vid.src=data.bgVideo;vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+    container.insertBefore(vid,container.firstChild);
+  }
+
+  // Canvas FX
+  if(data.snowFx)startFx('snow','#ffffff');
+  else if(data.rainFx)startFx('rain','#8888ff');
+  else if(data.fireFx)startFx('fire');
+
+  // Music player
+  if(data.musicEmbedUrl&&data.musicPlatform!=='none'){
+    const musicDiv=document.createElement('div');musicDiv.className='music-bar';
+    const h=data.musicHeight||152;
+    musicDiv.innerHTML=`<iframe src="${escapeHtml(data.musicEmbedUrl)}" width="100%" height="${h}" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;"></iframe>`;
+    // insert before pub-links div or before footer
+    const linksDiv=container.querySelector('.pub-links');
+    const footer=container.querySelector('.pub-footer');
+    if(linksDiv)container.insertBefore(musicDiv,linksDiv);
+    else if(footer)container.insertBefore(musicDiv,footer);
+  }
+
+  // Music visualizer bars (decorative)
+  if(data.musicVisualizer&&data.musicEmbedUrl){
+    const vizDiv=document.createElement('div');vizDiv.className='music-viz';
+    for(let i=0;i<12;i++){const b=document.createElement('div');b.className='music-viz-bar';b.style.animationDelay=(i*0.07)+'s';b.style.animationDuration=(0.6+Math.random()*0.6)+'s';vizDiv.appendChild(b);}
+    const footer=container.querySelector('.pub-footer');
+    if(footer)container.insertBefore(vizDiv,footer);
+  }
+
   // Start typing animation
   if(data.typingAnim!==false&&data.statusTexts&&data.statusTexts.length){
     const tw=document.getElementById(`typing-wrap-${data.uid||'preview'}`);
@@ -1090,7 +1513,19 @@ async function renderProfile(data,container){
 
   // Particles
   if(data.particles&&window.tsParticles){
-    try{await tsParticles.load("particles-js",{fpsLimit:60,particles:{number:{value:60},color:{value:data.theme==='neon'?'#f0f':'#ffffff'},links:{enable:true,distance:100,color:'#ffffff',opacity:0.1},move:{enable:true,speed:0.8},size:{value:{min:1,max:3}},opacity:{value:{min:0.1,max:0.4}}}});}catch(e){}
+    const style=data.particleStyle||'dots';
+    const pColor=data.theme==='neon'?['#f0f','#0ff','#ff0']:'#ffffff';
+    const cfgMap={
+      stars:{shape:'star',links:false,size:{min:1,max:3},opacity:{min:0.3,max:0.9},speed:0.5},
+      snow:{shape:'circle',links:false,size:{min:2,max:5},opacity:{min:0.4,max:0.8},speed:1.5},
+      rain:{shape:'line',links:false,size:{min:1,max:2},opacity:{min:0.3,max:0.6},speed:8},
+      fire:{shape:'circle',links:false,size:{min:2,max:6},opacity:{min:0.2,max:0.7},speed:3},
+      bubbles:{shape:'circle',links:false,size:{min:4,max:12},opacity:{min:0.05,max:0.2},speed:0.6},
+      'neon-links':{shape:'circle',links:true,size:{min:1,max:3},opacity:{min:0.3,max:0.7},speed:0.8},
+      dots:{shape:'circle',links:false,size:{min:1,max:3},opacity:{min:0.1,max:0.4},speed:0.8},
+    };
+    const c=cfgMap[style]||cfgMap.dots;
+    try{await tsParticles.load("particles-js",{fpsLimit:60,particles:{number:{value:style==='rain'?200:60},color:{value:style==='fire'?['#ff4400','#ff8800','#ffcc00']:pColor},shape:{type:c.shape},links:{enable:!!c.links,distance:100,color:'#ffffff',opacity:0.1},move:{enable:true,speed:c.speed,direction:style==='rain'?'bottom-right':style==='snow'?'bottom':'none'},size:{value:c.size},opacity:{value:c.opacity}}});}catch(e){}
   }
 }
 
