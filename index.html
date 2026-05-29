@@ -16,60 +16,58 @@
 <div id="cursor-dot"></div>
 <div id="particles-js"></div>
 <div class="toast-container" id="toast-container"></div>
-<!-- ★ Changed href to root (dashboard) -->
-<a id="floating-edit-btn" class="floating-edit-btn hidden" title="Edit Profile" href="/">✏️</a>
+<a id="floating-edit-btn" class="floating-edit-btn hidden" title="Edit Profile" href="#">&#9998;&#65039;</a>
 
 <aside id="sidebar" class="sidebar hidden">
   <div class="sidebar-logo">
-    <div class="logo-icon">🔗</div>
+    <div class="logo-icon">&#128279;</div>
     <span class="logo-text">LinkHub</span>
   </div>
   <nav class="nav-section">
     <div class="nav-label">Workspace</div>
-    <!-- ★ Sidebar links stay as hashes because they are internal dashboard tabs -->
-    <a class="nav-link active" data-tab="edit" href="#"><span class="nav-icon">✏️</span> Edit Profile</a>
-    <a class="nav-link" data-tab="preview" href="#"><span class="nav-icon">👁️</span> Preview</a>
-    <a class="nav-link" data-tab="analytics" href="#"><span class="nav-icon">📊</span> Analytics</a>
+    <a class="nav-link active" data-tab="edit" href="#"><span class="nav-icon">&#9998;&#65039;</span> Edit Profile</a>
+    <a class="nav-link" data-tab="preview" href="#"><span class="nav-icon">&#128065;&#65039;</span> Preview</a>
+    <a class="nav-link" data-tab="analytics" href="#"><span class="nav-icon">&#128202;</span> Analytics</a>
     <div class="nav-label">System</div>
-    <a class="nav-link hidden" data-tab="admin" id="sidebar-admin" href="#"><span class="nav-icon">🛡️</span> Admin</a>
+    <a class="nav-link hidden" data-tab="admin" id="sidebar-admin" href="#"><span class="nav-icon">&#128737;&#65039;</span> Admin</a>
   </nav>
   <div class="sidebar-footer">
     <div class="user-chip">
       <div class="user-avatar-chip" id="user-av-chip"><span id="user-initial">?</span></div>
       <div class="user-info">
-        <div class="user-name-chip" id="user-email-display">—</div>
+        <div class="user-name-chip" id="user-email-display">&#8212;</div>
         <div class="user-role-chip" id="user-role-display">Member</div>
       </div>
     </div>
     <div class="toggle-row">
-      <button class="icon-btn" id="darkModeToggle">🌙 Theme</button>
-      <button class="icon-btn" onclick="logout()">🚪 Logout</button>
+      <button class="icon-btn" id="darkModeToggle">&#127769; Theme</button>
+      <button class="icon-btn" onclick="logout()">&#128682; Logout</button>
     </div>
   </div>
 </aside>
 
 <div id="main-content" class="main-content">
 
-  <!-- AUTH (shown when not logged in and on root) -->
+  <!-- AUTH -->
   <div id="auth-wrapper" class="auth-wrapper">
     <div class="auth-card">
       <div class="auth-logo">
-        <div class="mark">🔗</div>
+        <div class="mark">&#128279;</div>
         <h1>LinkHub</h1>
         <p>Your links, your identity</p>
       </div>
       <div id="login-form">
         <div class="form-row"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"></div>
-        <div class="form-row"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
+        <div class="form-row"><label>Password</label><input type="password" id="login-password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" autocomplete="current-password"></div>
         <div id="login-error" class="msg error hidden"></div>
-        <button class="btn btn-primary btn-full" onclick="login()">Sign In →</button>
-        <div class="auth-switch"><a href="#" onclick="showForgotPassword()">Forgot password?</a> &nbsp;·&nbsp; <a href="#" onclick="showSignup()">Create account</a></div>
+        <button class="btn btn-primary btn-full" onclick="login()">Sign In &#8594;</button>
+        <div class="auth-switch"><a href="#" onclick="showForgotPassword()">Forgot password?</a> &nbsp;&#183;&nbsp; <a href="#" onclick="showSignup()">Create account</a></div>
       </div>
       <div id="signup-form" class="hidden">
         <div class="form-row"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"></div>
         <div class="form-row"><label>Password</label><input type="password" id="signup-password" placeholder="Min. 6 characters"></div>
         <div id="signup-error" class="msg error hidden"></div>
-        <button class="btn btn-primary btn-full" onclick="signup()">Create Account →</button>
+        <button class="btn btn-primary btn-full" onclick="signup()">Create Account &#8594;</button>
         <div class="auth-switch"><a href="#" onclick="showLogin()">Already have an account? Sign in</a></div>
       </div>
       <div id="forgot-form" class="hidden">
@@ -77,42 +75,51 @@
         <div id="reset-error" class="msg error hidden"></div>
         <div id="reset-success" class="msg success hidden"></div>
         <button class="btn btn-primary btn-full" onclick="resetPassword()">Send Reset Email</button>
-        <div class="auth-switch"><a href="#" onclick="showLogin()">← Back to Sign In</a></div>
+        <div class="auth-switch"><a href="#" onclick="showLogin()">&#8592; Back to Sign In</a></div>
       </div>
     </div>
   </div>
 
-  <!-- DASHBOARD (shown when logged in and on root) -->
+  <!-- DASHBOARD -->
   <div id="dashboard" class="hidden" style="width:100%;display:flex;flex-direction:column;align-items:center;">
     <div class="profile-url-bar">
-      <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;white-space:nowrap;">🔗 Your page:</span>
-      <!-- ★ Updated to show clean URL -->
+      <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;white-space:nowrap;">&#128279; Your page:</span>
       <span class="url-text" id="profile-url-text">Set a username to get your link</span>
       <button class="btn btn-secondary btn-sm" onclick="copyProfileUrl()">Copy</button>
       <button class="btn btn-secondary btn-sm" onclick="openPublicProfile()">Visit</button>
     </div>
 
-    <!-- EDIT SECTION (entirely unchanged) -->
+    <!-- EDIT SECTION -->
     <div id="edit-section" style="width:100%;display:flex;flex-direction:column;align-items:center;">
 
       <!-- Profile Info Card -->
       <div class="card">
-        <div class="card-title"><div class="card-icon">👤</div> Profile Info</div>
+        <div class="card-title"><div class="card-icon">&#128100;</div> Profile Info</div>
         <div class="form-grid">
           <div class="form-row"><label>Username</label><input type="text" id="edit-username" placeholder="yourname"></div>
           <div class="form-row"><label>Display Name</label><input type="text" id="edit-displayname" placeholder="Your Name"></div>
         </div>
         <div class="form-row"><label>Bio / About</label><textarea id="edit-bio" placeholder="Tell the world about yourself..."></textarea></div>
 
+        <!-- NEW: Animated status text lines -->
         <div class="form-row">
           <label>Animated Status Texts <span style="font-size:0.65rem;opacity:0.6;">(one per line, cycles with typing effect)</span></label>
           <textarea id="edit-status-texts" rows="3" placeholder="Developer &#10;Coffee addict &#10;Building cool stuff..."></textarea>
         </div>
 
         <div class="form-grid-3">
-          <div class="form-row"><label>Pronouns</label><input type="text" id="edit-pronouns" placeholder="they/them"></div>
-          <div class="form-row"><label>Location</label><input type="text" id="edit-location" placeholder="📍 Earth"></div>
-          <div class="form-row"><label>Age</label><input type="number" id="edit-age" placeholder="22" min="1" max="150"></div>
+          <div class="form-row">
+            <label>Pronouns</label>
+            <input type="text" id="edit-pronouns" placeholder="they/them">
+          </div>
+          <div class="form-row">
+            <label>Location</label>
+            <input type="text" id="edit-location" placeholder="&#128205; Earth">
+          </div>
+          <div class="form-row">
+            <label>Age</label>
+            <input type="number" id="edit-age" placeholder="22" min="1" max="150">
+          </div>
         </div>
 
         <div class="form-grid">
@@ -120,62 +127,260 @@
           <div class="form-row"><label>Discord User ID</label><input type="text" id="edit-discordid" placeholder="1234567890..." oninput="updateDiscordPreview()"></div>
         </div>
         <div id="discord-id-hint" class="hint-text" style="margin-top:-0.5rem;margin-bottom:0.75rem;"></div>
-        <button class="btn btn-warning btn-sm" onclick="requestVerification()">⭐ Request Verification</button>
+        <button class="btn btn-warning btn-sm" onclick="requestVerification()">&#11088; Request Verification</button>
       </div>
 
-      <!-- Appearance Card — tabbed (all tabs unchanged) -->
+      <!-- Appearance Card — tabbed -->
       <div class="card">
-        <div class="card-title"><div class="card-icon">🎨</div> Appearance</div>
+        <div class="card-title"><div class="card-icon">&#127912;</div> Appearance</div>
+
         <div class="app-tabs">
-          <button class="app-tab active" onclick="showAppTab('themes',this)">🌟 Themes</button>
-          <button class="app-tab" onclick="showAppTab('colors',this)">🎨 Colors</button>
-          <button class="app-tab" onclick="showAppTab('background',this)">🌍 Background</button>
-          <button class="app-tab" onclick="showAppTab('effects',this)">✨ Effects</button>
-          <button class="app-tab" onclick="showAppTab('animations',this)">🌀 Motion</button>
-          <button class="app-tab" onclick="showAppTab('music',this)">🎵 Music</button>
-          <button class="app-tab" onclick="showAppTab('misc',this)">⚙️ Misc</button>
+          <button class="app-tab active" onclick="showAppTab('themes',this)">&#127775; Themes</button>
+          <button class="app-tab" onclick="showAppTab('colors',this)">&#127912; Colors</button>
+          <button class="app-tab" onclick="showAppTab('background',this)">&#127757; Background</button>
+          <button class="app-tab" onclick="showAppTab('effects',this)">&#10024; Effects</button>
+          <button class="app-tab" onclick="showAppTab('animations',this)">&#127798; Motion</button>
+          <button class="app-tab" onclick="showAppTab('music',this)">&#127925; Music</button>
+          <button class="app-tab" onclick="showAppTab('misc',this)">&#9881;&#65039; Misc</button>
         </div>
 
         <!-- THEMES TAB -->
         <div id="app-panel-themes" class="app-panel active">
-          <!-- ... (same as before) ... -->
+          <label style="margin-bottom:0.6rem;">Quick Presets</label>
+          <div class="preset-grid" id="theme-preset-grid"></div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Theme Base</label>
+              <select id="edit-theme" onchange="syncPresetHighlight()">
+                <option value="default">Default Dark</option>
+                <option value="neon">Neon Glow</option>
+                <option value="galaxy">Galaxy</option>
+                <option value="minimal">Minimal Light</option>
+                <option value="aurora">Aurora</option>
+                <option value="sunset">Sunset</option>
+                <option value="ocean">Ocean</option>
+                <option value="candy">Candy</option>
+                <option value="midnight">Midnight</option>
+                <option value="forest">Forest</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Font Family</label>
+              <select id="edit-font">
+                <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans</option>
+                <option value="'Syne', sans-serif">Syne</option>
+                <option value="'Courier New', monospace">Monospace</option>
+                <option value="Georgia, serif">Serif</option>
+                <option value="system-ui, sans-serif">System UI</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans</option>
+              </select>
+            </div>
+          </div>
         </div>
+
         <!-- COLORS TAB -->
         <div id="app-panel-colors" class="app-panel">
-          <!-- ... -->
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Background Color</label>
+              <div class="color-row">
+                <input type="color" id="edit-bgcolor" value="#0d0d14" oninput="document.getElementById('bgcolor-hex').value=this.value">
+                <input type="text" class="color-hex" id="bgcolor-hex" value="#0d0d14" oninput="document.getElementById('edit-bgcolor').value=this.value">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Text Color</label>
+              <div class="color-row">
+                <input type="color" id="edit-textcolor" value="#f0f0ff" oninput="document.getElementById('textcolor-hex').value=this.value">
+                <input type="text" class="color-hex" id="textcolor-hex" value="#f0f0ff" oninput="document.getElementById('edit-textcolor').value=this.value">
+              </div>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Gradient Color 2 <span style="font-size:0.6rem;opacity:0.5;">(leave blank for solid)</span></label>
+              <div class="color-row">
+                <input type="color" id="edit-gradcolor2" value="#1a1a2e" oninput="document.getElementById('gradcolor2-hex').value=this.value">
+                <input type="text" class="color-hex" id="gradcolor2-hex" value="#1a1a2e" oninput="document.getElementById('edit-gradcolor2').value=this.value">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Gradient Direction</label>
+              <select id="edit-graddir">
+                <option value="135deg">Diagonal ↘</option>
+                <option value="to bottom">Top → Bottom</option>
+                <option value="to right">Left → Right</option>
+                <option value="to top left">↖ Diagonal</option>
+                <option value="animated">Animated Shift</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>RGB Cycling Effect</label>
+            <select id="edit-rgb-cycle">
+              <option value="none">None</option>
+              <option value="border">RGB Border</option>
+              <option value="hue">Hue Rotate (Full Card)</option>
+            </select>
+          </div>
         </div>
+
         <!-- BACKGROUND TAB -->
         <div id="app-panel-background" class="app-panel">
-          <!-- ... -->
+          <div class="form-row">
+            <label>Background Image URL</label>
+            <input type="url" id="edit-bgimage" placeholder="https://...">
+          </div>
+          <div class="form-row">
+            <label>Background Video URL <span style="font-size:0.6rem;opacity:0.5;">(mp4/webm direct link)</span></label>
+            <input type="url" id="edit-bgvideo" placeholder="https://...video.mp4">
+          </div>
+          <div class="form-row">
+            <label>Background Opacity <span id="bgopacity-val">100%</span></label>
+            <input type="range" id="edit-bgopacity" min="10" max="100" value="100" style="width:100%;accent-color:var(--accent);" oninput="document.getElementById('bgopacity-val').textContent=this.value+'%'">
+          </div>
+          <div class="form-row">
+            <label>Glassmorphism Blur <span id="glassblur-val">0px</span></label>
+            <input type="range" id="edit-glassblur" min="0" max="24" value="0" style="width:100%;accent-color:var(--accent);" oninput="document.getElementById('glassblur-val').textContent=this.value+'px'">
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-glass-card"><span class="toggle-slider"></span> Glassmorphism Card</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-float-card"><span class="toggle-slider"></span> Floating Card Animation</label>
+          </div>
         </div>
+
         <!-- EFFECTS TAB -->
         <div id="app-panel-effects" class="app-panel">
-          <!-- ... -->
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Particle Style</label>
+              <select id="edit-particle-style">
+                <option value="dots">Dots</option>
+                <option value="stars">Stars</option>
+                <option value="snow">Snow</option>
+                <option value="rain">Rain</option>
+                <option value="fire">Fire Embers</option>
+                <option value="bubbles">Bubbles</option>
+                <option value="neon-links">Neon Network</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Neon Glow Links</label>
+              <select id="edit-neon-links">
+                <option value="none">None</option>
+                <option value="neon">Neon Glow</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-glowingborder"><span class="toggle-slider"></span> Glowing Border</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-particles"><span class="toggle-slider"></span> Particles</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-snow-fx"><span class="toggle-slider"></span> Snow Effect</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-rain-fx"><span class="toggle-slider"></span> Rain Effect</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-fire-fx"><span class="toggle-slider"></span> Fire Embers</label>
+          </div>
         </div>
+
         <!-- MOTION TAB -->
         <div id="app-panel-animations" class="app-panel">
-          <!-- ... -->
+          <div class="form-grid">
+            <div class="form-row">
+              <label>Button Animation</label>
+              <select id="edit-btn-anim">
+                <option value="none">Default</option>
+                <option value="bounce">Bounce</option>
+                <option value="shake">Shake</option>
+                <option value="glow">Glow Pulse</option>
+                <option value="float">Float</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Avatar Ring</label>
+              <select id="edit-avatar-ring">
+                <option value="none">None</option>
+                <option value="spin">Spinning Gradient</option>
+                <option value="pulse">Pulse</option>
+                <option value="rainbow">Rainbow</option>
+                <option value="glow">Glow</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Avatar Decoration Emoji</label>
+            <input type="text" id="edit-avatar-deco" placeholder="&#127941; crown, &#128293; fire…" maxlength="4">
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-custom-cursor"><span class="toggle-slider"></span> Custom Cursor</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-mouse-trail"><span class="toggle-slider"></span> Mouse Trail</label>
+          </div>
+          <div class="form-row" style="margin-top:0.75rem;">
+            <label>Cursor &amp; Trail Color</label>
+            <div class="color-row">
+              <input type="color" id="edit-cursor-color" value="#7c6af7" oninput="document.getElementById('cursor-color-hex').value=this.value">
+              <input type="text" class="color-hex" id="cursor-color-hex" value="#7c6af7" oninput="document.getElementById('edit-cursor-color').value=this.value">
+            </div>
+          </div>
         </div>
+
         <!-- MUSIC TAB -->
         <div id="app-panel-music" class="app-panel">
-          <!-- ... -->
+          <div class="form-row">
+            <label>Music Platform</label>
+            <select id="edit-music-platform">
+              <option value="none">None</option>
+              <option value="spotify">Spotify</option>
+              <option value="soundcloud">SoundCloud</option>
+              <option value="youtube">YouTube Music</option>
+              <option value="custom">Custom Embed URL</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Embed URL / Track URL</label>
+            <input type="url" id="edit-music-url" placeholder="Paste Spotify/SoundCloud/YouTube URL or embed URL">
+          </div>
+          <div id="music-hint" class="hint-text" style="margin-top:-0.5rem;margin-bottom:0.75rem;"></div>
+          <div class="form-row">
+            <label>Player Height</label>
+            <select id="edit-music-height">
+              <option value="80">Compact (80px)</option>
+              <option value="152" selected>Medium (152px)</option>
+              <option value="232">Tall (232px)</option>
+              <option value="352">Full (352px)</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-music-autoplay"><span class="toggle-slider"></span> Autoplay <span style="font-size:0.65rem;opacity:0.5;">(browser may block)</span></label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-music-visualizer"><span class="toggle-slider"></span> Visualizer Bars</label>
+          </div>
         </div>
+
         <!-- MISC TAB -->
         <div id="app-panel-misc" class="app-panel">
-          <!-- ... -->
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-discord-presence"><span class="toggle-slider"></span> Discord Presence</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-stats"><span class="toggle-slider"></span> View Counter</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-online"><span class="toggle-slider"></span> Online Status</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-show-dates"><span class="toggle-slider"></span> Join/Active Dates</label>
+            <label class="toggle-label"><input type="checkbox" class="toggle-input" id="edit-typing-anim"><span class="toggle-slider"></span> Typing Animation</label>
+          </div>
+          <div class="form-row">
+            <label>Custom Favicon URL</label>
+            <input type="url" id="edit-favicon" placeholder="https://...emoji.png">
+          </div>
         </div>
+
       </div>
 
       <!-- Links Card -->
       <div class="card">
-        <div class="card-title"><div class="card-icon">🔗</div> Links</div>
+        <div class="card-title"><div class="card-icon">&#128279;</div> Links</div>
         <div id="links-container" class="links-list"></div>
         <button class="btn btn-success btn-sm" onclick="addLink()">+ Add Link</button>
       </div>
 
       <!-- Socials Card -->
       <div class="card">
-        <div class="card-title"><div class="card-icon">🌐</div> Social Icons</div>
+        <div class="card-title"><div class="card-icon">&#127760;</div> Social Icons</div>
         <div id="socials-container" style="margin-bottom:0.75rem;"></div>
         <button class="btn btn-success btn-sm" onclick="addSocial()">+ Add Social</button>
       </div>
@@ -185,8 +390,8 @@
         <div id="save-error" class="msg error hidden"></div>
         <div id="save-success" class="msg success hidden"></div>
         <div style="display:flex;gap:0.75rem;">
-          <button class="btn btn-primary" style="flex:1;" onclick="saveProfile()">💾 Save Profile</button>
-          <button class="btn btn-secondary" onclick="switchTab('preview')">👁️ Preview</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="saveProfile()">&#128190; Save Profile</button>
+          <button class="btn btn-secondary" onclick="switchTab('preview')">&#128065;&#65039; Preview</button>
         </div>
       </div>
     </div>
@@ -194,7 +399,7 @@
     <!-- PREVIEW SECTION -->
     <div id="preview-section" class="hidden" style="width:100%;max-width:820px;">
       <div class="card">
-        <div class="card-title"><div class="card-icon">👁️</div> Live Preview</div>
+        <div class="card-title"><div class="card-icon">&#128065;&#65039;</div> Live Preview</div>
         <div class="preview-frame">
           <div id="profile-preview-container" style="width:100%;max-width:460px;"></div>
         </div>
@@ -204,13 +409,13 @@
     <!-- ANALYTICS SECTION -->
     <div id="analytics-section" class="hidden" style="width:100%;max-width:820px;">
       <div class="card">
-        <div class="card-title"><div class="card-icon">📊</div> Analytics</div>
+        <div class="card-title"><div class="card-icon">&#128202;</div> Analytics</div>
         <div class="stats-grid">
-          <div class="stat-card"><div class="stat-num" id="stat-views">—</div><div class="stat-label">Profile Views</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-clicks">—</div><div class="stat-label">Link Clicks</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-links">—</div><div class="stat-label">Active Links</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-views">&#8212;</div><div class="stat-label">Profile Views</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-clicks">&#8212;</div><div class="stat-label">Link Clicks</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-links">&#8212;</div><div class="stat-label">Active Links</div></div>
         </div>
-        <div class="card-title" style="margin-top:1rem;"><div class="card-icon">🔗</div> Share Your Profile</div>
+        <div class="card-title" style="margin-top:1rem;"><div class="card-icon">&#128279;</div> Share Your Profile</div>
         <div class="share-row">
           <input type="text" class="share-url" id="share-url-input" readonly>
           <button class="btn btn-secondary btn-sm" onclick="copyProfileUrl()">Copy</button>
@@ -222,14 +427,14 @@
     <div id="admin-section" class="hidden" style="width:100%;max-width:820px;">
       <div class="card">
         <div id="admin-login-block">
-          <div class="card-title"><div class="card-icon">🛡️</div> Admin Access</div>
+          <div class="card-title"><div class="card-icon">&#128737;&#65039;</div> Admin Access</div>
           <div class="form-row"><label>Admin Password</label><input type="password" id="admin-password" placeholder="Enter password"></div>
           <div id="admin-error" class="msg error hidden"></div>
           <button class="btn btn-primary" onclick="becomeAdmin()">Unlock Admin Panel</button>
         </div>
         <div id="admin-panel" class="hidden">
-          <div class="card-title"><div class="card-icon">🛡️</div> Admin Panel</div>
-          <button class="btn btn-secondary btn-sm" onclick="loadAdminUsers()" style="margin-bottom:1rem;">↻ Refresh Users</button>
+          <div class="card-title"><div class="card-icon">&#128737;&#65039;</div> Admin Panel</div>
+          <button class="btn btn-secondary btn-sm" onclick="loadAdminUsers()" style="margin-bottom:1rem;">&#8635; Refresh Users</button>
           <div id="admin-users-list"></div>
         </div>
       </div>
@@ -237,7 +442,7 @@
 
   </div><!-- end dashboard -->
 
-  <!-- PUBLIC PROFILE (shown when visiting /username) -->
+  <!-- PUBLIC PROFILE -->
   <div id="public-profile" class="hidden pub-wrapper">
     <div id="pub-card-root" class="pub-card"></div>
   </div>
@@ -249,591 +454,866 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script>
-// ============================================================
-// FIREBASE CONFIG (unchanged)
-// ============================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyDwxucvIFlsIUVdL69ZmUm2JHaH-09c6GM",
-  authDomain: "biolink111.firebaseapp.com",
-  projectId: "biolink111",
-  storageBucket: "biolink111.firebasestorage.app",
-  messagingSenderId: "783454791937",
-  appId: "1:783454791937:web:866804708e4c0ab4b31300"
-};
-
+const firebaseConfig={apiKey:"AIzaSyDwxucvIFlsIUVdL69ZmUm2JHaH-09c6GM",authDomain:"biolink111.firebaseapp.com",projectId:"biolink111",storageBucket:"biolink111.firebasestorage.app",messagingSenderId:"783454791937",appId:"1:783454791937:web:866804708e4c0ab4b31300"};
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-let currentUser = null;
-let userDoc = null;
-let editingLinks = [];
-let editingSocials = [];
-let isAdmin = false;
-const ADMIN_PASSWORD = "sharktamer16";
+const auth=firebase.auth(),db=firebase.firestore();
+let currentUser=null,userDoc=null,editingLinks=[],editingSocials=[],isAdmin=false;
+const ADMIN_PASSWORD="sharktamer16";
 
 // ============ CUSTOM CURSOR & MOUSE TRAIL ============
-const cursorEl = document.getElementById('custom-cursor');
-const dotEl = document.getElementById('cursor-dot');
-let cursorOn = false, trailOn = false, trailColor = '#7c6af7';
-let mx = 0, my = 0;
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  if (cursorOn) {
-    cursorEl.style.left = mx + 'px'; cursorEl.style.top = my + 'px';
-    dotEl.style.left = mx + 'px'; dotEl.style.top = my + 'px';
+const cursorEl=document.getElementById('custom-cursor');
+const dotEl=document.getElementById('cursor-dot');
+let cursorOn=false,trailOn=false,trailColor='#7c6af7';
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  if(cursorOn){
+    cursorEl.style.left=mx+'px';cursorEl.style.top=my+'px';
+    dotEl.style.left=mx+'px';dotEl.style.top=my+'px';
   }
-  if (trailOn) spawnTrail(mx, my);
+  if(trailOn) spawnTrail(mx,my);
 });
-document.addEventListener('mousedown', () => { if (cursorOn) cursorEl.classList.add('clicked'); });
-document.addEventListener('mouseup', () => { if (cursorOn) cursorEl.classList.remove('clicked'); });
+document.addEventListener('mousedown',()=>{if(cursorOn)cursorEl.classList.add('clicked');});
+document.addEventListener('mouseup',()=>{if(cursorOn)cursorEl.classList.remove('clicked');});
 
-function enableCursor(color) {
-  trailColor = color || '#7c6af7';
-  cursorEl.style.borderColor = trailColor;
-  dotEl.style.background = trailColor;
-  cursorEl.style.display = 'block'; dotEl.style.display = 'block';
+function enableCursor(color){
+  trailColor=color||'#7c6af7';
+  cursorEl.style.borderColor=trailColor;
+  dotEl.style.background=trailColor;
+  cursorEl.style.display='block';dotEl.style.display='block';
   document.body.classList.add('custom-cursor-on');
-  cursorOn = true;
+  cursorOn=true;
 }
-function disableCursor() {
-  cursorEl.style.display = 'none'; dotEl.style.display = 'none';
+function disableCursor(){
+  cursorEl.style.display='none';dotEl.style.display='none';
   document.body.classList.remove('custom-cursor-on');
-  cursorOn = false;
+  cursorOn=false;
 }
-function spawnTrail(x, y) {
-  const d = document.createElement('div');
-  d.className = 'trail-dot';
-  const sz = Math.random() * 8 + 4;
-  d.style.cssText = `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${trailColor};opacity:0.7;`;
+function spawnTrail(x,y){
+  const d=document.createElement('div');
+  d.className='trail-dot';
+  const sz=Math.random()*8+4;
+  d.style.cssText=`left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${trailColor};opacity:0.7;`;
   document.body.appendChild(d);
-  setTimeout(() => d.remove(), 600);
+  setTimeout(()=>d.remove(),600);
 }
 
-// ============ TOAST (unchanged) ============
-function toast(msg, type = 'info') {
-  const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-  const el = document.createElement('div'); el.className = `toast ${type}`;
-  el.innerHTML = `<span>${icons[type]}</span> ${escapeHtml(msg)}`;
+// ============ TOAST ============
+function toast(msg,type='info'){
+  const icons={success:'✅',error:'❌',info:'ℹ️',warning:'⚠️'};
+  const el=document.createElement('div');el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]}</span> ${escapeHtml(msg)}`;
   document.getElementById('toast-container').appendChild(el);
-  setTimeout(() => el.remove(), 3200);
+  setTimeout(()=>el.remove(),3200);
 }
 
-// ============ DARK MODE (unchanged) ============
-document.getElementById('darkModeToggle').addEventListener('click', () => {
-  const isLight = document.body.classList.toggle('light-mode');
-  if (isLight) {
-    document.body.style.setProperty('--bg', '#f4f4f8');
-    document.body.style.setProperty('--surface', '#fff');
-    document.body.style.setProperty('--surface2', '#f0f0f8');
-    document.body.style.setProperty('--text', '#1a1a2e');
-    document.body.style.setProperty('--text-muted', '#6b6b8a');
-    document.body.style.setProperty('--border', 'rgba(0,0,0,0.08)');
-  } else {
-    ['--bg', '--surface', '--surface2', '--text', '--text-muted', '--border'].forEach(p => document.body.style.removeProperty(p));
-  }
-  localStorage.setItem('lightMode', isLight);
+// ============ DARK MODE ============
+document.getElementById('darkModeToggle').addEventListener('click',()=>{
+  const isLight=document.body.classList.toggle('light-mode');
+  if(isLight){document.body.style.setProperty('--bg','#f4f4f8');document.body.style.setProperty('--surface','#fff');document.body.style.setProperty('--surface2','#f0f0f8');document.body.style.setProperty('--text','#1a1a2e');document.body.style.setProperty('--text-muted','#6b6b8a');document.body.style.setProperty('--border','rgba(0,0,0,0.08)');}
+  else{['--bg','--surface','--surface2','--text','--text-muted','--border'].forEach(p=>document.body.style.removeProperty(p));}
+  localStorage.setItem('lightMode',isLight);
 });
-if (localStorage.getItem('lightMode') === 'true') document.getElementById('darkModeToggle').click();
+if(localStorage.getItem('lightMode')==='true')document.getElementById('darkModeToggle').click();
 
-// ============ SIDEBAR NAV (unchanged) ============
-document.querySelectorAll('.nav-link[data-tab]').forEach(link => {
-  link.addEventListener('click', e => { e.preventDefault(); switchTab(link.dataset.tab); });
+// ============ SIDEBAR NAV ============
+document.querySelectorAll('.nav-link[data-tab]').forEach(link=>{
+  link.addEventListener('click',e=>{e.preventDefault();switchTab(link.dataset.tab);});
 });
-function switchTab(tab) {
-  ['edit', 'preview', 'analytics', 'admin'].forEach(t => document.getElementById(t + '-section')?.classList.add('hidden'));
-  document.getElementById(tab + '-section')?.classList.remove('hidden');
-  document.querySelectorAll('.nav-link[data-tab]').forEach(l => l.classList.toggle('active', l.dataset.tab === tab));
-  if (tab === 'preview') renderPreview();
-  if (tab === 'analytics') loadAnalytics();
-  if (tab === 'admin') showAdminSection();
+function switchTab(tab){
+  ['edit','preview','analytics','admin'].forEach(t=>document.getElementById(t+'-section')?.classList.add('hidden'));
+  document.getElementById(tab+'-section')?.classList.remove('hidden');
+  document.querySelectorAll('.nav-link[data-tab]').forEach(l=>l.classList.toggle('active',l.dataset.tab===tab));
+  if(tab==='preview')renderPreview();
+  if(tab==='analytics')loadAnalytics();
+  if(tab==='admin')showAdminSection();
 }
 
-// ============ ★ NEW PATH ROUTING (replaces hash-based for public profiles) ============
-(function() {
-  // Handle 404 redirects from GitHub Pages
-  const redirect = sessionStorage.redirect;
-  if (redirect) {
-    sessionStorage.removeItem('redirect');
-    history.replaceState(null, '', redirect);
-  }
-})();
-
-function getPathUsername() {
-  const path = window.location.pathname;
-  // If path is exactly "/" or empty, return null
-  if (path === '/' || path === '') return null;
-  // Remove leading slash and split
-  const segments = path.split('/').filter(Boolean);
-  // Only accept a single segment (no subdirectories)
-  if (segments.length === 1) return segments[0];
-  return null;
-}
-
-function router() {
-  const pathUser = getPathUsername();
-  if (pathUser) {
-    // Show public profile
-    showPublicProfileView();
-    loadPublicProfile(pathUser);
-  } else {
-    // Root path: decide based on auth
-    if (currentUser) {
-      showDashboardView();
-    } else {
-      showLoginView();
-    }
-  }
-}
-
-function navigate(url) {
-  history.pushState(null, '', url);
-  router();
-}
-
-// Listen for popstate (back/forward)
-window.addEventListener('popstate', router);
-
-// ============ AUTH STATE LISTENER (modified to use router) ============
-window.addEventListener('load', () => {
-  auth.onAuthStateChanged(async user => {
-    currentUser = user;
-    if (user) {
-      await loadUserProfile();
-      isAdmin = userDoc?.admin === true;
-      document.getElementById('sidebar-admin').classList.toggle('hidden', !isAdmin);
-    } else {
-      userDoc = null;
-      isAdmin = false;
-    }
-    router();
+// ============ ROUTING ============
+window.addEventListener('hashchange',handleRouting);
+window.addEventListener('load',()=>{
+  auth.onAuthStateChanged(async user=>{
+    currentUser=user;
+    if(user){await loadUserProfile();isAdmin=userDoc?.admin===true;document.getElementById('sidebar-admin').classList.toggle('hidden',!isAdmin);}
+    else{userDoc=null;isAdmin=false;}
+    handleRouting();
   });
 });
-
-// ============ VIEW HELPERS (modified for clean URLs) ============
-function showPublicProfileView() {
+function handleRouting(){
+  const hash=window.location.hash;
+  if(hash.startsWith('#/u/')){showPublicProfileView();loadPublicProfile(hash.slice(4));}
+  else if(currentUser){showDashboardView();}
+  else{showLoginView();}
+}
+function showPublicProfileView(){
   document.getElementById('auth-wrapper').classList.add('hidden');
   document.getElementById('dashboard').classList.add('hidden');
   document.getElementById('sidebar').classList.add('hidden');
   document.body.classList.add('no-sidebar');
   document.getElementById('public-profile').classList.remove('hidden');
 }
-
-function showDashboardView() {
+function showDashboardView(){
   document.getElementById('auth-wrapper').classList.add('hidden');
   document.getElementById('public-profile').classList.add('hidden');
   document.getElementById('sidebar').classList.remove('hidden');
   document.body.classList.remove('no-sidebar');
   document.getElementById('dashboard').classList.remove('hidden');
-  updateProfileUrlBar();
-  switchTab('edit');
-  const email = currentUser?.email || '';
-  document.getElementById('user-email-display').textContent = email;
-  document.getElementById('user-initial').textContent = email[0]?.toUpperCase() || '?';
-  document.getElementById('user-role-display').textContent = isAdmin ? 'Admin' : 'Member';
+  updateProfileUrlBar();switchTab('edit');
+  const email=currentUser?.email||'';
+  document.getElementById('user-email-display').textContent=email;
+  document.getElementById('user-initial').textContent=email[0]?.toUpperCase()||'?';
+  document.getElementById('user-role-display').textContent=isAdmin?'Admin':'Member';
 }
-
-function showLoginView() {
-  ['public-profile', 'dashboard'].forEach(id => document.getElementById(id).classList.add('hidden'));
+function showLoginView(){
+  ['public-profile','dashboard'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('sidebar').classList.add('hidden');
   document.body.classList.add('no-sidebar');
   document.getElementById('auth-wrapper').classList.remove('hidden');
   showLogin();
 }
-
-// ★ UPDATED URL generation
-function updateProfileUrlBar() {
-  const username = userDoc?.username;
-  const url = username ? `${window.location.origin}/${username}` : 'Set a username to get your link';
-  document.getElementById('profile-url-text').textContent = url;
-  const shareInput = document.getElementById('share-url-input');
-  if (shareInput) shareInput.value = username ? url : '';
+function show(id){document.getElementById(id)?.classList.remove('hidden');}
+function hide(id){document.getElementById(id)?.classList.add('hidden');}
+function showLoginForm(){showLoginView();}
+function showSignup(){hide('login-form');hide('forgot-form');show('signup-form');}
+function showLogin(){hide('signup-form');hide('forgot-form');show('login-form');}
+function showForgotPassword(){hide('login-form');hide('signup-form');show('forgot-form');}
+function updateProfileUrlBar(){
+  const username=userDoc?.username;
+  const base=window.location.origin+window.location.pathname;
+  const url=username?`${base}#/u/${username}`:'Set a username to get your link';
+  document.getElementById('profile-url-text').textContent=url;
+  const si=document.getElementById('share-url-input');if(si)si.value=username?url:'';
+}
+function copyProfileUrl(){
+  const username=userDoc?.username;
+  if(!username){toast('Set a username first!','warning');return;}
+  navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}#/u/${username}`).then(()=>toast('Link copied!','success'));
+}
+function openPublicProfile(){
+  const username=userDoc?.username;
+  if(!username){toast('Set a username first!','warning');return;}
+  window.location.hash=`#/u/${username}`;
 }
 
-function copyProfileUrl() {
-  const username = userDoc?.username;
-  if (!username) { toast('Set a username first!', 'warning'); return; }
-  navigator.clipboard.writeText(`${window.location.origin}/${username}`).then(() => toast('Link copied!', 'success'));
+// ============ AUTH ============
+async function login(){
+  const email=document.getElementById('login-email').value.trim(),pw=document.getElementById('login-password').value;
+  const err=document.getElementById('login-error');err.classList.add('hidden');
+  try{await auth.signInWithEmailAndPassword(email,pw);}catch(e){err.textContent=e.message;err.classList.remove('hidden');}
 }
+async function signup(){
+  const email=document.getElementById('signup-email').value.trim(),pw=document.getElementById('signup-password').value;
+  const err=document.getElementById('signup-error');err.classList.add('hidden');
+  if(pw.length<6){err.textContent='Password must be at least 6 characters.';err.classList.remove('hidden');return;}
+  try{await auth.createUserWithEmailAndPassword(email,pw);}catch(e){err.textContent=e.message;err.classList.remove('hidden');}
+}
+async function resetPassword(){
+  const email=document.getElementById('reset-email').value.trim();
+  const err=document.getElementById('reset-error'),suc=document.getElementById('reset-success');
+  err.classList.add('hidden');suc.classList.add('hidden');
+  try{await auth.sendPasswordResetEmail(email);suc.textContent='Reset email sent!';suc.classList.remove('hidden');}
+  catch(e){err.textContent=e.message;err.classList.remove('hidden');}
+}
+async function logout(){stopFx();await auth.signOut();currentUser=null;userDoc=null;window.location.hash='';}
 
-function openPublicProfile() {
-  const username = userDoc?.username;
-  if (!username) { toast('Set a username first!', 'warning'); return; }
-  navigate(`/${username}`);
-}
-
-// The old hash‑based routing functions are no longer used; they can be removed or left as dead code.
-// I've left them in the script but they won't be called.
-
-// ============ AUTH (unchanged) ============
-async function login() {
-  const email = document.getElementById('login-email').value.trim(), pw = document.getElementById('login-password').value;
-  const err = document.getElementById('login-error'); err.classList.add('hidden');
-  try { await auth.signInWithEmailAndPassword(email, pw); } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
-}
-async function signup() {
-  const email = document.getElementById('signup-email').value.trim(), pw = document.getElementById('signup-password').value;
-  const err = document.getElementById('signup-error'); err.classList.add('hidden');
-  if (pw.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.remove('hidden'); return; }
-  try { await auth.createUserWithEmailAndPassword(email, pw); } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
-}
-async function resetPassword() {
-  const email = document.getElementById('reset-email').value.trim();
-  const err = document.getElementById('reset-error'), suc = document.getElementById('reset-success');
-  err.classList.add('hidden'); suc.classList.add('hidden');
-  try { await auth.sendPasswordResetEmail(email); suc.textContent = 'Reset email sent!'; suc.classList.remove('hidden'); }
-  catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
-}
-async function logout() { stopFx(); await auth.signOut(); }
-
-// ============ FIRESTORE (unchanged) ============
-async function loadUserProfile() {
-  if (!currentUser) return;
-  const snap = await db.collection('profiles').doc(currentUser.uid).get();
-  if (snap.exists) {
-    userDoc = snap.data(); userDoc.links = userDoc.links || []; userDoc.socials = userDoc.socials || [];
-  } else {
-    userDoc = {
-      username: '', displayName: '', bio: '', avatar: '', discordId: '', pronouns: '', location: '', age: '', statusTexts: [],
-      theme: 'default', bgColor: '#0d0d14', bgImage: '', bgVideo: '', textColor: '#f0f0ff',
-      font: "'Plus Jakarta Sans', sans-serif",
-      gradColor2: '#1a1a2e', gradDir: '135deg', bgOpacity: 100, glassBlur: 0,
-      glowingBorder: false, glassCard: false, floatCard: false,
-      particles: false, particleStyle: 'dots', snowFx: false, rainFx: false, fireFx: false,
-      neonLinks: 'none', rgbCycle: 'none', btnAnim: 'none',
-      showDiscordPresence: true,
-      avatarRing: 'none', avatarDeco: '', customCursor: false, mouseTrail: false, cursorColor: '#7c6af7',
-      showStats: true, showOnline: true, showDates: true, typingAnim: true, favicon: '',
-      musicPlatform: 'none', musicUrl: '', musicEmbedUrl: '', musicHeight: 152, musicAutoplay: false, musicVisualizer: false,
-      links: [], socials: [], verified: false, verificationRequested: false, admin: false,
-      joinDate: new Date().toISOString(), profileViews: 0
-    };
+// ============ FIRESTORE ============
+async function loadUserProfile(){
+  if(!currentUser)return;
+  const snap=await db.collection('profiles').doc(currentUser.uid).get();
+  if(snap.exists){
+    userDoc=snap.data();userDoc.links=userDoc.links||[];userDoc.socials=userDoc.socials||[];
+  }else{
+    userDoc={username:'',displayName:'',bio:'',avatar:'',discordId:'',pronouns:'',location:'',age:'',statusTexts:[],
+      theme:'default',bgColor:'#0d0d14',bgImage:'',bgVideo:'',textColor:'#f0f0ff',
+      font:"'Plus Jakarta Sans', sans-serif",
+      gradColor2:'#1a1a2e',gradDir:'135deg',bgOpacity:100,glassBlur:0,
+      glowingBorder:false,glassCard:false,floatCard:false,
+      particles:false,particleStyle:'dots',snowFx:false,rainFx:false,fireFx:false,
+      neonLinks:'none',rgbCycle:'none',btnAnim:'none',
+      showDiscordPresence:true,
+      avatarRing:'none',avatarDeco:'',customCursor:false,mouseTrail:false,cursorColor:'#7c6af7',
+      showStats:true,showOnline:true,showDates:true,typingAnim:true,favicon:'',
+      musicPlatform:'none',musicUrl:'',musicEmbedUrl:'',musicHeight:152,musicAutoplay:false,musicVisualizer:false,
+      links:[],socials:[],verified:false,verificationRequested:false,admin:false,
+      joinDate:new Date().toISOString(),profileViews:0};
   }
-  isAdmin = userDoc.admin;
+  isAdmin=userDoc.admin;
   populateEditForm();
 }
 
-// ============ populateEditForm (unchanged) ============
-function populateEditForm() {
-  const s = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
-  const sc = (id, v) => { const el = document.getElementById(id); if (el) el.checked = !!v; };
-  s('edit-username', userDoc.username); s('edit-displayname', userDoc.displayName);
-  s('edit-bio', userDoc.bio); s('edit-avatar', userDoc.avatar);
-  s('edit-discordid', userDoc.discordId); s('edit-pronouns', userDoc.pronouns);
-  s('edit-location', userDoc.location); s('edit-age', userDoc.age);
-  s('edit-status-texts', (userDoc.statusTexts || []).join('\n'));
-  s('edit-theme', userDoc.theme || 'default'); s('edit-bgcolor', userDoc.bgColor || '#0d0d14');
-  s('bgcolor-hex', userDoc.bgColor || '#0d0d14'); s('edit-bgimage', userDoc.bgImage || '');
-  s('edit-bgvideo', userDoc.bgVideo || '');
-  s('edit-textcolor', userDoc.textColor || '#f0f0ff'); s('textcolor-hex', userDoc.textColor || '#f0f0ff');
-  s('edit-font', userDoc.font || "'Plus Jakarta Sans', sans-serif");
-  s('edit-avatar-ring', userDoc.avatarRing || 'none'); s('edit-avatar-deco', userDoc.avatarDeco || '');
-  s('edit-favicon', userDoc.favicon || ''); s('edit-cursor-color', userDoc.cursorColor || '#7c6af7');
-  s('cursor-color-hex', userDoc.cursorColor || '#7c6af7');
-  s('edit-gradcolor2', userDoc.gradColor2 || '#1a1a2e'); s('gradcolor2-hex', userDoc.gradColor2 || '#1a1a2e');
-  s('edit-graddir', userDoc.gradDir || '135deg');
-  s('edit-rgb-cycle', userDoc.rgbCycle || 'none');
-  s('edit-particle-style', userDoc.particleStyle || 'dots');
-  s('edit-neon-links', userDoc.neonLinks || 'none');
-  s('edit-btn-anim', userDoc.btnAnim || 'none');
-  s('edit-music-platform', userDoc.musicPlatform || 'none');
-  s('edit-music-url', userDoc.musicUrl || '');
-  s('edit-music-height', String(userDoc.musicHeight || 152));
-  const sr = (id, vlid, v, u) => { const el = document.getElementById(id); if (el) el.value = v || 0; const vl = document.getElementById(vlid); if (vl) vl.textContent = (v || 0) + u; };
-  sr('edit-bgopacity', 'bgopacity-val', userDoc.bgOpacity || 100, '%');
-  sr('edit-glassblur', 'glassblur-val', userDoc.glassBlur || 0, 'px');
-  sc('edit-glowingborder', userDoc.glowingBorder); sc('edit-particles', userDoc.particles);
-  sc('edit-discord-presence', userDoc.showDiscordPresence !== false);
-  sc('edit-custom-cursor', userDoc.customCursor); sc('edit-mouse-trail', userDoc.mouseTrail);
-  sc('edit-show-stats', userDoc.showStats !== false); sc('edit-show-online', userDoc.showOnline !== false);
-  sc('edit-show-dates', userDoc.showDates !== false); sc('edit-typing-anim', userDoc.typingAnim !== false);
-  sc('edit-glass-card', userDoc.glassCard); sc('edit-float-card', userDoc.floatCard);
-  sc('edit-snow-fx', userDoc.snowFx); sc('edit-rain-fx', userDoc.rainFx); sc('edit-fire-fx', userDoc.fireFx);
-  sc('edit-music-autoplay', userDoc.musicAutoplay); sc('edit-music-visualizer', userDoc.musicVisualizer);
+function populateEditForm(){
+  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+  const sc=(id,v)=>{const el=document.getElementById(id);if(el)el.checked=!!v;};
+  s('edit-username',userDoc.username);s('edit-displayname',userDoc.displayName);
+  s('edit-bio',userDoc.bio);s('edit-avatar',userDoc.avatar);
+  s('edit-discordid',userDoc.discordId);s('edit-pronouns',userDoc.pronouns);
+  s('edit-location',userDoc.location);s('edit-age',userDoc.age);
+  s('edit-status-texts',(userDoc.statusTexts||[]).join('\n'));
+  s('edit-theme',userDoc.theme||'default');s('edit-bgcolor',userDoc.bgColor||'#0d0d14');
+  s('bgcolor-hex',userDoc.bgColor||'#0d0d14');s('edit-bgimage',userDoc.bgImage||'');
+  s('edit-bgvideo',userDoc.bgVideo||'');
+  s('edit-textcolor',userDoc.textColor||'#f0f0ff');s('textcolor-hex',userDoc.textColor||'#f0f0ff');
+  s('edit-font',userDoc.font||"'Plus Jakarta Sans', sans-serif");
+  s('edit-avatar-ring',userDoc.avatarRing||'none');s('edit-avatar-deco',userDoc.avatarDeco||'');
+  s('edit-favicon',userDoc.favicon||'');s('edit-cursor-color',userDoc.cursorColor||'#7c6af7');
+  s('cursor-color-hex',userDoc.cursorColor||'#7c6af7');
+  s('edit-gradcolor2',userDoc.gradColor2||'#1a1a2e');s('gradcolor2-hex',userDoc.gradColor2||'#1a1a2e');
+  s('edit-graddir',userDoc.gradDir||'135deg');
+  s('edit-rgb-cycle',userDoc.rgbCycle||'none');
+  s('edit-particle-style',userDoc.particleStyle||'dots');
+  s('edit-neon-links',userDoc.neonLinks||'none');
+  s('edit-btn-anim',userDoc.btnAnim||'none');
+  s('edit-music-platform',userDoc.musicPlatform||'none');
+  s('edit-music-url',userDoc.musicUrl||'');
+  s('edit-music-height',String(userDoc.musicHeight||152));
+  // ranges
+  const sr=(id,vlid,v,u)=>{const el=document.getElementById(id);if(el)el.value=v||0;const vl=document.getElementById(vlid);if(vl)vl.textContent=(v||0)+u;};
+  sr('edit-bgopacity','bgopacity-val',userDoc.bgOpacity||100,'%');
+  sr('edit-glassblur','glassblur-val',userDoc.glassBlur||0,'px');
+  sc('edit-glowingborder',userDoc.glowingBorder);sc('edit-particles',userDoc.particles);
+  sc('edit-discord-presence',userDoc.showDiscordPresence!==false);
+  sc('edit-custom-cursor',userDoc.customCursor);sc('edit-mouse-trail',userDoc.mouseTrail);
+  sc('edit-show-stats',userDoc.showStats!==false);sc('edit-show-online',userDoc.showOnline!==false);
+  sc('edit-show-dates',userDoc.showDates!==false);sc('edit-typing-anim',userDoc.typingAnim!==false);
+  sc('edit-glass-card',userDoc.glassCard);sc('edit-float-card',userDoc.floatCard);
+  sc('edit-snow-fx',userDoc.snowFx);sc('edit-rain-fx',userDoc.rainFx);sc('edit-fire-fx',userDoc.fireFx);
+  sc('edit-music-autoplay',userDoc.musicAutoplay);sc('edit-music-visualizer',userDoc.musicVisualizer);
   buildThemePresets();
-  editingLinks = (userDoc.links || []).map(l => ({ btnBg: '#7c6af7', btnTextColor: '#ffffff', btnRadius: 12, btnShadow: 'none', ...l }));
-  editingSocials = (userDoc.socials || []).map(s => ({ ...s }));
-  renderLinksEditor(); renderSocialsEditor();
+  editingLinks=(userDoc.links||[]).map(l=>({btnBg:'#7c6af7',btnTextColor:'#ffffff',btnRadius:12,btnShadow:'none',...l}));
+  editingSocials=(userDoc.socials||[]).map(s=>({...s}));
+  renderLinksEditor();renderSocialsEditor();
 }
 
-// ── APP TABS (unchanged) ──
-function showAppTab(name, btn) {
-  document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.app-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('app-panel-' + name).classList.add('active');
+// ── APP TABS ──
+function showAppTab(name,btn){
+  document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('app-panel-'+name).classList.add('active');
   btn.classList.add('active');
 }
 
-// ── THEME PRESETS (unchanged) ──
-const THEME_PRESETS = [
-  { id: 'default', label: 'Dark', grad: 'linear-gradient(135deg,#0d0d14,#1a1a2e)', bg: '#0d0d14', txt: '#f0f0ff', g2: '#1a1a2e' },
-  { id: 'neon', label: 'Neon', grad: 'linear-gradient(135deg,#0a0010,#1a0030)', bg: '#0a0010', txt: '#fff', g2: '#1a0030' },
-  { id: 'galaxy', label: 'Galaxy', grad: 'linear-gradient(135deg,#060614,#1a0060)', bg: '#060614', txt: '#e8e8ff', g2: '#1a0060' },
-  { id: 'minimal', label: 'Light', grad: 'linear-gradient(135deg,#fafafa,#e8e8f0)', bg: '#fafafa', txt: '#1a1a1a', g2: '#e8e8f0' },
-  { id: 'aurora', label: 'Aurora', grad: 'linear-gradient(135deg,#060f1a,#001a2e)', bg: '#060f1a', txt: '#e0f7fa', g2: '#001a2e' },
-  { id: 'sunset', label: 'Sunset', grad: 'linear-gradient(135deg,#3d1a00,#7c2d12)', bg: '#1a0a00', txt: '#fff8f0', g2: '#7c2d12' },
-  { id: 'ocean', label: 'Ocean', grad: 'linear-gradient(135deg,#001a2e,#003366)', bg: '#00111a', txt: '#e0f4ff', g2: '#003366' },
-  { id: 'candy', label: 'Candy', grad: 'linear-gradient(135deg,#2d0a2d,#4a154b)', bg: '#1a0a1a', txt: '#fff0ff', g2: '#4a154b' },
-  { id: 'midnight', label: 'Midnight', grad: 'linear-gradient(135deg,#050510,#101030)', bg: '#050510', txt: '#c8c8ff', g2: '#101030' },
-  { id: 'forest', label: 'Forest', grad: 'linear-gradient(135deg,#0a1a0a,#0d3010)', bg: '#0a1a0a', txt: '#e0ffe0', g2: '#0d3010' },
+// ── THEME PRESETS ──
+const THEME_PRESETS=[
+  {id:'default', label:'Dark',    grad:'linear-gradient(135deg,#0d0d14,#1a1a2e)', bg:'#0d0d14', txt:'#f0f0ff', g2:'#1a1a2e'},
+  {id:'neon',    label:'Neon',    grad:'linear-gradient(135deg,#0a0010,#1a0030)', bg:'#0a0010', txt:'#fff',    g2:'#1a0030'},
+  {id:'galaxy',  label:'Galaxy',  grad:'linear-gradient(135deg,#060614,#1a0060)', bg:'#060614', txt:'#e8e8ff', g2:'#1a0060'},
+  {id:'minimal', label:'Light',   grad:'linear-gradient(135deg,#fafafa,#e8e8f0)', bg:'#fafafa', txt:'#1a1a1a', g2:'#e8e8f0'},
+  {id:'aurora',  label:'Aurora',  grad:'linear-gradient(135deg,#060f1a,#001a2e)', bg:'#060f1a', txt:'#e0f7fa', g2:'#001a2e'},
+  {id:'sunset',  label:'Sunset',  grad:'linear-gradient(135deg,#3d1a00,#7c2d12)', bg:'#1a0a00', txt:'#fff8f0', g2:'#7c2d12'},
+  {id:'ocean',   label:'Ocean',   grad:'linear-gradient(135deg,#001a2e,#003366)', bg:'#00111a', txt:'#e0f4ff', g2:'#003366'},
+  {id:'candy',   label:'Candy',   grad:'linear-gradient(135deg,#2d0a2d,#4a154b)', bg:'#1a0a1a', txt:'#fff0ff', g2:'#4a154b'},
+  {id:'midnight',label:'Midnight',grad:'linear-gradient(135deg,#050510,#101030)', bg:'#050510', txt:'#c8c8ff', g2:'#101030'},
+  {id:'forest',  label:'Forest',  grad:'linear-gradient(135deg,#0a1a0a,#0d3010)', bg:'#0a1a0a', txt:'#e0ffe0', g2:'#0d3010'},
 ];
-function buildThemePresets() {
-  const grid = document.getElementById('theme-preset-grid');
-  if (!grid) return;
-  const cur = document.getElementById('edit-theme')?.value || 'default';
-  grid.innerHTML = '';
-  THEME_PRESETS.forEach(p => {
-    const d = document.createElement('div');
-    d.className = 'preset-swatch' + (cur === p.id ? ' active' : '');
-    d.style.background = p.grad;
-    d.innerHTML = `<span>${p.label}</span>`;
-    d.onclick = () => {
-      document.getElementById('edit-theme').value = p.id;
-      document.getElementById('edit-bgcolor').value = p.bg; document.getElementById('bgcolor-hex').value = p.bg;
-      document.getElementById('edit-textcolor').value = p.txt; document.getElementById('textcolor-hex').value = p.txt;
-      document.getElementById('edit-gradcolor2').value = p.g2; document.getElementById('gradcolor2-hex').value = p.g2;
+function buildThemePresets(){
+  const grid=document.getElementById('theme-preset-grid');
+  if(!grid)return;
+  const cur=document.getElementById('edit-theme')?.value||'default';
+  grid.innerHTML='';
+  THEME_PRESETS.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='preset-swatch'+(cur===p.id?' active':'');
+    d.style.background=p.grad;
+    d.innerHTML=`<span>${p.label}</span>`;
+    d.onclick=()=>{
+      document.getElementById('edit-theme').value=p.id;
+      document.getElementById('edit-bgcolor').value=p.bg;document.getElementById('bgcolor-hex').value=p.bg;
+      document.getElementById('edit-textcolor').value=p.txt;document.getElementById('textcolor-hex').value=p.txt;
+      document.getElementById('edit-gradcolor2').value=p.g2;document.getElementById('gradcolor2-hex').value=p.g2;
       syncPresetHighlight();
     };
     grid.appendChild(d);
   });
 }
-function syncPresetHighlight() {
-  const cur = document.getElementById('edit-theme')?.value;
-  document.querySelectorAll('.preset-swatch').forEach(s => {
-    const id = THEME_PRESETS.find(p => p.label === s.querySelector('span')?.textContent || '')?.id;
-    s.classList.toggle('active', id === cur);
+function syncPresetHighlight(){
+  const cur=document.getElementById('edit-theme')?.value;
+  document.querySelectorAll('.preset-swatch').forEach(s=>{
+    const id=THEME_PRESETS.find(p=>p.label===s.querySelector('span')?.textContent||'')?.id;
+    s.classList.toggle('active',id===cur);
   });
 }
 
-// ── MUSIC PLATFORM HINT (unchanged) ──
-document.addEventListener('change', e => {
-  if (e.target.id === 'edit-music-platform') {
-    const h = document.getElementById('music-hint');
-    const hints = {
-      spotify: 'Paste a Spotify track/playlist URL — we\'ll convert it to an embed automatically.',
-      soundcloud: 'Paste a SoundCloud track URL.',
-      youtube: 'Paste a YouTube video URL.',
-      custom: 'Paste a direct iframe embed URL.',
-      none: ''
-    };
-    h.textContent = hints[e.target.value] || '';
+// ── MUSIC PLATFORM HINT ──
+document.addEventListener('change',e=>{
+  if(e.target.id==='edit-music-platform'){
+    const h=document.getElementById('music-hint');
+    const hints={spotify:'Paste a Spotify track/playlist URL — we\'ll convert it to an embed automatically.',soundcloud:'Paste a SoundCloud track URL.',youtube:'Paste a YouTube video URL.',custom:'Paste a direct iframe embed URL.',none:''};
+    h.textContent=hints[e.target.value]||'';
   }
 });
 
-// ============ LINKS EDITOR (unchanged) ============
-function renderLinksEditor() {
-  const container = document.getElementById('links-container'); container.innerHTML = '';
-  if (!editingLinks.length) { container.innerHTML = '<p style="text-align:center;padding:1.5rem 0;color:var(--text-dim);font-size:0.875rem;">No links yet — add your first one!</p>'; return; }
-  editingLinks.forEach((link, i) => {
-    const div = document.createElement('div'); div.className = 'link-card'; div.dataset.index = i;
-    div.innerHTML = `
+// ============ LINKS EDITOR ============
+function renderLinksEditor(){
+  const container=document.getElementById('links-container');container.innerHTML='';
+  if(!editingLinks.length){container.innerHTML='<p style="text-align:center;padding:1.5rem 0;color:var(--text-dim);font-size:0.875rem;">No links yet — add your first one!</p>';return;}
+  editingLinks.forEach((link,i)=>{
+    const div=document.createElement('div');div.className='link-card';div.dataset.index=i;
+    div.innerHTML=`
       <div class="link-card-header">
         <span class="drag-handle">&#8919;</span>
         <div class="link-preview-btn">
-          <div class="link-preview-dot" style="background:${link.btnBg || '#7c6af7'};"></div>
+          <div class="link-preview-dot" style="background:${link.btnBg||'#7c6af7'};"></div>
           <div style="min-width:0;">
-            <div class="link-preview-title">${escapeHtml(link.title || 'Untitled Link')}</div>
-            <div class="link-preview-url">${escapeHtml(link.url || 'No URL set')}</div>
+            <div class="link-preview-title">${escapeHtml(link.title||'Untitled Link')}</div>
+            <div class="link-preview-url">${escapeHtml(link.url||'No URL set')}</div>
           </div>
         </div>
-        <button class="btn btn-danger btn-icon btn-sm" onclick="removeLink(${i})">✕</button>
-        <button class="link-card-toggle" onclick="toggleLinkCard(${i},this)">Edit ▾</button>
+        <button class="btn btn-danger btn-icon btn-sm" onclick="removeLink(${i})">&#10005;</button>
+        <button class="link-card-toggle" onclick="toggleLinkCard(${i},this)">Edit &#9662;</button>
       </div>
       <div class="link-card-body collapsed" id="link-body-${i}">
         <div class="form-grid">
-          <div class="form-row"><label>Title</label><input type="text" placeholder="My Website" value="${escapeHtml(link.title || '')}" oninput="editingLinks[${i}].title=this.value;updateLinkPreview(${i})"></div>
+          <div class="form-row"><label>Title</label><input type="text" placeholder="My Website" value="${escapeHtml(link.title||'')}" oninput="editingLinks[${i}].title=this.value;updateLinkPreview(${i})"></div>
           <div class="form-row"><label>Type</label><select onchange="editingLinks[${i}].type=this.value;renderLinksEditor();">
-            <option value="link" ${link.type !== 'music' ? 'selected' : ''}>Link</option>
-            <option value="music" ${link.type === 'music' ? 'selected' : ''}>Music Embed</option>
+            <option value="link" ${link.type!=='music'?'selected':''}>Link</option>
+            <option value="music" ${link.type==='music'?'selected':''}>Music Embed</option>
           </select></div>
         </div>
-        <div class="form-row"><label>URL</label><input type="url" placeholder="https://..." value="${escapeHtml(link.url || '')}" oninput="editingLinks[${i}].url=this.value;updateLinkPreview(${i})"></div>
-        ${link.type === 'music' ? `<div class="form-row"><label>Embed URL</label><input type="url" placeholder="Spotify/SoundCloud embed" value="${escapeHtml(link.embedUrl || '')}" oninput="editingLinks[${i}].embedUrl=this.value"></div>` : ''}
+        <div class="form-row"><label>URL</label><input type="url" placeholder="https://..." value="${escapeHtml(link.url||'')}" oninput="editingLinks[${i}].url=this.value;updateLinkPreview(${i})"></div>
+        ${link.type==='music'?`<div class="form-row"><label>Embed URL</label><input type="url" placeholder="Spotify/SoundCloud embed" value="${escapeHtml(link.embedUrl||'')}" oninput="editingLinks[${i}].embedUrl=this.value"></div>`:''}
         <div class="link-style-row">
-          <div class="style-group"><label>Icon</label><input type="text" placeholder="🔗" value="${escapeHtml(link.icon || '')}" oninput="editingLinks[${i}].icon=this.value" style="width:110px;"></div>
-          <div class="style-group"><label>Bg</label><input type="color" value="${link.btnBg || '#7c6af7'}" oninput="editingLinks[${i}].btnBg=this.value;updateLinkPreview(${i})"></div>
-          <div class="style-group"><label>Text</label><input type="color" value="${link.btnTextColor || '#ffffff'}" oninput="editingLinks[${i}].btnTextColor=this.value"></div>
-          <div class="style-group"><label>Radius</label><input type="number" value="${link.btnRadius ?? 12}" min="0" max="999" oninput="editingLinks[${i}].btnRadius=parseInt(this.value) || 0" style="width:65px;"></div>
+          <div class="style-group"><label>Icon</label><input type="text" placeholder="&#128279;" value="${escapeHtml(link.icon||'')}" oninput="editingLinks[${i}].icon=this.value" style="width:110px;"></div>
+          <div class="style-group"><label>Bg</label><input type="color" value="${link.btnBg||'#7c6af7'}" oninput="editingLinks[${i}].btnBg=this.value;updateLinkPreview(${i})"></div>
+          <div class="style-group"><label>Text</label><input type="color" value="${link.btnTextColor||'#ffffff'}" oninput="editingLinks[${i}].btnTextColor=this.value"></div>
+          <div class="style-group"><label>Radius</label><input type="number" value="${link.btnRadius??12}" min="0" max="999" oninput="editingLinks[${i}].btnRadius=parseInt(this.value)||0" style="width:65px;"></div>
           <div class="style-group"><label>Shadow</label><select onchange="editingLinks[${i}].btnShadow=this.value" style="width:90px;">
-            <option value="none" ${!link.btnShadow || link.btnShadow === 'none' ? 'selected' : ''}>None</option>
-            <option value="0 4px 15px rgba(0,0,0,0.3)" ${link.btnShadow === '0 4px 15px rgba(0,0,0,0.3)' ? 'selected' : ''}>Soft</option>
-            <option value="0 8px 25px rgba(0,0,0,0.5)" ${link.btnShadow === '0 8px 25px rgba(0,0,0,0.5)' ? 'selected' : ''}>Heavy</option>
-            <option value="0 0 20px rgba(124,106,247,0.6)" ${link.btnShadow === '0 0 20px rgba(124,106,247,0.6)' ? 'selected' : ''}>Glow</option>
+            <option value="none" ${!link.btnShadow||link.btnShadow==='none'?'selected':''}>None</option>
+            <option value="0 4px 15px rgba(0,0,0,0.3)" ${link.btnShadow==='0 4px 15px rgba(0,0,0,0.3)'?'selected':''}>Soft</option>
+            <option value="0 8px 25px rgba(0,0,0,0.5)" ${link.btnShadow==='0 8px 25px rgba(0,0,0,0.5)'?'selected':''}>Heavy</option>
+            <option value="0 0 20px rgba(124,106,247,0.6)" ${link.btnShadow==='0 0 20px rgba(124,106,247,0.6)'?'selected':''}>Glow</option>
           </select></div>
         </div>
       </div>`;
     container.appendChild(div);
   });
-  new Sortable(container, {
-    handle: '.drag-handle', animation: 200, onEnd() {
-      const rows = container.querySelectorAll('.link-card'), nl = [];
-      rows.forEach(r => nl.push(editingLinks[parseInt(r.dataset.index)]));
-      editingLinks = nl; renderLinksEditor();
-    }
-  });
+  new Sortable(container,{handle:'.drag-handle',animation:200,onEnd(){
+    const rows=container.querySelectorAll('.link-card'),nl=[];
+    rows.forEach(r=>nl.push(editingLinks[parseInt(r.dataset.index)]));
+    editingLinks=nl;renderLinksEditor();
+  }});
 }
-function toggleLinkCard(i, btn) { const b = document.getElementById(`link-body-${i}`); btn.textContent = b.classList.toggle('collapsed') ? 'Edit ▾' : 'Close ▴'; }
-function updateLinkPreview(i) {
-  const c = document.querySelector(`.link-card[data-index="${i}"]`); if (!c) return;
-  c.querySelector('.link-preview-dot').style.background = editingLinks[i].btnBg || '#7c6af7';
-  c.querySelector('.link-preview-title').textContent = editingLinks[i].title || 'Untitled Link';
-  c.querySelector('.link-preview-url').textContent = editingLinks[i].url || 'No URL set';
+function toggleLinkCard(i,btn){const b=document.getElementById(`link-body-${i}`);btn.textContent=b.classList.toggle('collapsed')?'Edit \u25be':'Close \u25b4';}
+function updateLinkPreview(i){
+  const c=document.querySelector(`.link-card[data-index="${i}"]`);if(!c)return;
+  c.querySelector('.link-preview-dot').style.background=editingLinks[i].btnBg||'#7c6af7';
+  c.querySelector('.link-preview-title').textContent=editingLinks[i].title||'Untitled Link';
+  c.querySelector('.link-preview-url').textContent=editingLinks[i].url||'No URL set';
 }
-function addLink() {
-  editingLinks.push({ title: '', url: '', type: 'link', icon: '', embedUrl: '', btnBg: '#7c6af7', btnTextColor: '#ffffff', btnRadius: 12, btnShadow: 'none' });
+function addLink(){
+  editingLinks.push({title:'',url:'',type:'link',icon:'',embedUrl:'',btnBg:'#7c6af7',btnTextColor:'#ffffff',btnRadius:12,btnShadow:'none'});
   renderLinksEditor();
-  setTimeout(() => {
-    const cards = document.querySelectorAll('.link-card'), last = cards[cards.length - 1];
-    if (last) {
-      const t = last.querySelector('.link-card-toggle');
-      if (last.querySelector('.link-card-body.collapsed')) t?.click();
-      last.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, 50);
+  setTimeout(()=>{const cards=document.querySelectorAll('.link-card'),last=cards[cards.length-1];if(last){const t=last.querySelector('.link-card-toggle');if(last.querySelector('.link-card-body.collapsed'))t?.click();last.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);
 }
-function removeLink(i) { editingLinks.splice(i, 1); renderLinksEditor(); toast('Link removed', 'info'); }
+function removeLink(i){editingLinks.splice(i,1);renderLinksEditor();toast('Link removed','info');}
 
-// ============ SOCIALS (unchanged) ============
-function renderSocialsEditor() {
-  const c = document.getElementById('socials-container'); c.innerHTML = '';
-  editingSocials.forEach((s, i) => {
-    const div = document.createElement('div'); div.className = 'social-row';
-    div.innerHTML = `<input type="text" placeholder="Icon emoji" value="${escapeHtml(s.icon || '')}" oninput="editingSocials[${i}].icon=this.value" style="max-width:60px;text-align:center;font-size:1.1rem;"><input type="text" placeholder="Platform" value="${escapeHtml(s.platform || '')}" oninput="editingSocials[${i}].platform=this.value"><input type="url" placeholder="URL" value="${escapeHtml(s.url || '')}" oninput="editingSocials[${i}].url=this.value"><button class="btn btn-danger btn-icon btn-sm" onclick="removeSocial(${i})">✕</button>`;
+// ============ SOCIALS ============
+function renderSocialsEditor(){
+  const c=document.getElementById('socials-container');c.innerHTML='';
+  editingSocials.forEach((s,i)=>{
+    const div=document.createElement('div');div.className='social-row';
+    div.innerHTML=`<input type="text" placeholder="Icon emoji" value="${escapeHtml(s.icon||'')}" oninput="editingSocials[${i}].icon=this.value" style="max-width:60px;text-align:center;font-size:1.1rem;"><input type="text" placeholder="Platform" value="${escapeHtml(s.platform||'')}" oninput="editingSocials[${i}].platform=this.value"><input type="url" placeholder="URL" value="${escapeHtml(s.url||'')}" oninput="editingSocials[${i}].url=this.value"><button class="btn btn-danger btn-icon btn-sm" onclick="removeSocial(${i})">&#10005;</button>`;
     c.appendChild(div);
   });
 }
-function addSocial() { editingSocials.push({ platform: '', url: '', icon: '🔗' }); renderSocialsEditor(); }
-function removeSocial(i) { editingSocials.splice(i, 1); renderSocialsEditor(); }
-function updateDiscordPreview() {
-  const id = document.getElementById('edit-discordid').value.trim(), h = document.getElementById('discord-id-hint');
-  if (id && /^\d{17,19}$/.test(id)) h.innerHTML = `<span style="color:var(--success);">✓ Valid Discord ID</span>`;
-  else if (id) h.innerHTML = `<span style="color:var(--warning);">⚠ IDs are 17-19 digits (Discord → Settings → Advanced → Developer Mode)</span>`;
-  else h.innerHTML = '';
+function addSocial(){editingSocials.push({platform:'',url:'',icon:'&#128279;'});renderSocialsEditor();}
+function removeSocial(i){editingSocials.splice(i,1);renderSocialsEditor();}
+function updateDiscordPreview(){
+  const id=document.getElementById('edit-discordid').value.trim(),h=document.getElementById('discord-id-hint');
+  if(id&&/^\d{17,19}$/.test(id))h.innerHTML=`<span style="color:var(--success);">&#10003; Valid Discord ID</span>`;
+  else if(id)h.innerHTML=`<span style="color:var(--warning);">&#9888; IDs are 17-19 digits (Discord &#8594; Settings &#8594; Advanced &#8594; Developer Mode)</span>`;
+  else h.innerHTML='';
 }
 
-// ============ SAVE (unchanged) ============
-function makeAbsoluteUrl(url) {
-  if (!url) return ''; url = url.trim();
-  if (/^https?:\/\//i.test(url) || url.startsWith('data:')) return url;
-  if (url.startsWith('//')) return 'https:' + url;
-  return 'https://' + url;
+// ============ SAVE ============
+function makeAbsoluteUrl(url){
+  if(!url)return'';url=url.trim();
+  if(/^https?:\/\//i.test(url)||url.startsWith('data:'))return url;
+  if(url.startsWith('//'))return'https:'+url;
+  return'https://'+url;
 }
-async function saveProfile() {
-  const err = document.getElementById('save-error'), suc = document.getElementById('save-success');
-  err.classList.add('hidden'); suc.classList.add('hidden');
-  const newUsername = document.getElementById('edit-username').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
-  if (!newUsername) { err.textContent = 'Username is required.'; err.classList.remove('hidden'); return; }
-  if (userDoc.username !== newUsername) {
-    const snap = await db.collection('usernames').doc(newUsername).get();
-    if (snap.exists && snap.data().uid !== currentUser.uid) { err.textContent = 'Username already taken.'; err.classList.remove('hidden'); return; }
+async function saveProfile(){
+  const err=document.getElementById('save-error'),suc=document.getElementById('save-success');
+  err.classList.add('hidden');suc.classList.add('hidden');
+  const newUsername=document.getElementById('edit-username').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+  if(!newUsername){err.textContent='Username is required.';err.classList.remove('hidden');return;}
+  if(userDoc.username!==newUsername){
+    const snap=await db.collection('usernames').doc(newUsername).get();
+    if(snap.exists&&snap.data().uid!==currentUser.uid){err.textContent='Username already taken.';err.classList.remove('hidden');return;}
   }
-  const statusRaw = document.getElementById('edit-status-texts').value;
-  const statusTexts = statusRaw.split('\n').map(s => s.trim()).filter(Boolean);
-  const gv = id => { const el = document.getElementById(id); return el ? el.value : ''; };
-  const gc = id => { const el = document.getElementById(id); return el ? el.checked : false; };
-  let rawMusicUrl = gv('edit-music-url').trim();
-  const platform = gv('edit-music-platform');
-  let musicEmbedUrl = '';
-  if (rawMusicUrl && platform === 'spotify') {
-    const m = rawMusicUrl.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
-    if (m) musicEmbedUrl = `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator`;
-    else musicEmbedUrl = rawMusicUrl;
-  } else if (rawMusicUrl && platform === 'soundcloud') {
-    musicEmbedUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(rawMusicUrl)}&auto_play=${gc('edit-music-autoplay')}&color=%237c6af7&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
-  } else if (rawMusicUrl && platform === 'youtube') {
-    const vid = rawMusicUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    if (vid) musicEmbedUrl = `https://www.youtube.com/embed/${vid[1]}?autoplay=${gc('edit-music-autoplay') ? 1 : 0}&loop=1&playlist=${vid[1]}`;
-    else musicEmbedUrl = rawMusicUrl;
-  } else if (rawMusicUrl) {
-    musicEmbedUrl = rawMusicUrl;
+  const statusRaw=document.getElementById('edit-status-texts').value;
+  const statusTexts=statusRaw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const gv=id=>{const el=document.getElementById(id);return el?el.value:'';}
+  const gc=id=>{const el=document.getElementById(id);return el?el.checked:false;}
+  // Music URL → embed URL conversion
+  let rawMusicUrl=gv('edit-music-url').trim();
+  const platform=gv('edit-music-platform');
+  let musicEmbedUrl='';
+  if(rawMusicUrl&&platform==='spotify'){
+    const m=rawMusicUrl.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+    if(m)musicEmbedUrl=`https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator`;
+    else musicEmbedUrl=rawMusicUrl;
+  }else if(rawMusicUrl&&platform==='soundcloud'){
+    musicEmbedUrl=`https://w.soundcloud.com/player/?url=${encodeURIComponent(rawMusicUrl)}&auto_play=${gc('edit-music-autoplay')}&color=%237c6af7&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
+  }else if(rawMusicUrl&&platform==='youtube'){
+    const vid=rawMusicUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if(vid)musicEmbedUrl=`https://www.youtube.com/embed/${vid[1]}?autoplay=${gc('edit-music-autoplay')?1:0}&loop=1&playlist=${vid[1]}`;
+    else musicEmbedUrl=rawMusicUrl;
+  }else if(rawMusicUrl){
+    musicEmbedUrl=rawMusicUrl;
   }
-  const pd = {
-    username: newUsername, displayName: gv('edit-displayname').trim(),
-    bio: gv('edit-bio').trim(), avatar: gv('edit-avatar').trim(),
-    discordId: gv('edit-discordid').trim(),
-    pronouns: gv('edit-pronouns').trim(), location: gv('edit-location').trim(), age: gv('edit-age').trim(),
+  const pd={
+    username:newUsername,displayName:gv('edit-displayname').trim(),
+    bio:gv('edit-bio').trim(),avatar:gv('edit-avatar').trim(),
+    discordId:gv('edit-discordid').trim(),
+    pronouns:gv('edit-pronouns').trim(),location:gv('edit-location').trim(),age:gv('edit-age').trim(),
     statusTexts,
-    theme: gv('edit-theme'),
-    bgColor: gv('edit-bgcolor'), bgImage: gv('edit-bgimage').trim(), bgVideo: gv('edit-bgvideo').trim(),
-    textColor: gv('edit-textcolor'), font: gv('edit-font'),
-    gradColor2: gv('edit-gradcolor2'), gradDir: gv('edit-graddir'),
-    bgOpacity: parseInt(gv('edit-bgopacity')) || 100,
-    glassBlur: parseInt(gv('edit-glassblur')) || 0,
-    rgbCycle: gv('edit-rgb-cycle'),
-    particleStyle: gv('edit-particle-style'),
-    neonLinks: gv('edit-neon-links'),
-    btnAnim: gv('edit-btn-anim'),
-    glowingBorder: gc('edit-glowingborder'), particles: gc('edit-particles'),
-    snowFx: gc('edit-snow-fx'), rainFx: gc('edit-rain-fx'), fireFx: gc('edit-fire-fx'),
-    glassCard: gc('edit-glass-card'), floatCard: gc('edit-float-card'),
-    showDiscordPresence: gc('edit-discord-presence'),
-    avatarRing: gv('edit-avatar-ring'), avatarDeco: gv('edit-avatar-deco').trim(),
-    customCursor: gc('edit-custom-cursor'), mouseTrail: gc('edit-mouse-trail'),
-    cursorColor: gv('edit-cursor-color'),
-    showStats: gc('edit-show-stats'), showOnline: gc('edit-show-online'),
-    showDates: gc('edit-show-dates'), typingAnim: gc('edit-typing-anim'),
-    favicon: gv('edit-favicon').trim(),
-    musicPlatform: platform, musicUrl: rawMusicUrl, musicEmbedUrl,
-    musicHeight: parseInt(gv('edit-music-height')) || 152,
-    musicAutoplay: gc('edit-music-autoplay'), musicVisualizer: gc('edit-music-visualizer'),
-    links: editingLinks.filter(l => l.title && l.url).map(l => ({ title: l.title, url: makeAbsoluteUrl(l.url), type: l.type || 'link', embedUrl: l.embedUrl || '', icon: l.icon || '', btnBg: l.btnBg || '#7c6af7', btnTextColor: l.btnTextColor || '#fff', btnRadius: l.btnRadius ?? 12, btnShadow: l.btnShadow || 'none' })),
-    socials: editingSocials.filter(s => s.platform && s.url).map(s => ({ platform: s.platform, url: makeAbsoluteUrl(s.url), icon: s.icon || '🔗' })),
-    uid: currentUser.uid, email: currentUser.email,
-    verified: userDoc.verified || false, verificationRequested: userDoc.verificationRequested || false, admin: userDoc.admin || false,
-    joinDate: userDoc.joinDate || new Date().toISOString(), profileViews: userDoc.profileViews || 0,
-    lastActive: new Date().toISOString()
+    theme:gv('edit-theme'),
+    bgColor:gv('edit-bgcolor'),bgImage:gv('edit-bgimage').trim(),bgVideo:gv('edit-bgvideo').trim(),
+    textColor:gv('edit-textcolor'),font:gv('edit-font'),
+    gradColor2:gv('edit-gradcolor2'),gradDir:gv('edit-graddir'),
+    bgOpacity:parseInt(gv('edit-bgopacity'))||100,
+    glassBlur:parseInt(gv('edit-glassblur'))||0,
+    rgbCycle:gv('edit-rgb-cycle'),
+    particleStyle:gv('edit-particle-style'),
+    neonLinks:gv('edit-neon-links'),
+    btnAnim:gv('edit-btn-anim'),
+    glowingBorder:gc('edit-glowingborder'),particles:gc('edit-particles'),
+    snowFx:gc('edit-snow-fx'),rainFx:gc('edit-rain-fx'),fireFx:gc('edit-fire-fx'),
+    glassCard:gc('edit-glass-card'),floatCard:gc('edit-float-card'),
+    showDiscordPresence:gc('edit-discord-presence'),
+    avatarRing:gv('edit-avatar-ring'),avatarDeco:gv('edit-avatar-deco').trim(),
+    customCursor:gc('edit-custom-cursor'),mouseTrail:gc('edit-mouse-trail'),
+    cursorColor:gv('edit-cursor-color'),
+    showStats:gc('edit-show-stats'),showOnline:gc('edit-show-online'),
+    showDates:gc('edit-show-dates'),typingAnim:gc('edit-typing-anim'),
+    favicon:gv('edit-favicon').trim(),
+    musicPlatform:platform,musicUrl:rawMusicUrl,musicEmbedUrl,
+    musicHeight:parseInt(gv('edit-music-height'))||152,
+    musicAutoplay:gc('edit-music-autoplay'),musicVisualizer:gc('edit-music-visualizer'),
+    links:editingLinks.filter(l=>l.title&&l.url).map(l=>({title:l.title,url:makeAbsoluteUrl(l.url),type:l.type||'link',embedUrl:l.embedUrl||'',icon:l.icon||'',btnBg:l.btnBg||'#7c6af7',btnTextColor:l.btnTextColor||'#fff',btnRadius:l.btnRadius??12,btnShadow:l.btnShadow||'none'})),
+    socials:editingSocials.filter(s=>s.platform&&s.url).map(s=>({platform:s.platform,url:makeAbsoluteUrl(s.url),icon:s.icon||'\u{1F517}'})),
+    uid:currentUser.uid,email:currentUser.email,
+    verified:userDoc.verified||false,verificationRequested:userDoc.verificationRequested||false,admin:userDoc.admin||false,
+    joinDate:userDoc.joinDate||new Date().toISOString(),profileViews:userDoc.profileViews||0,
+    lastActive:new Date().toISOString()
   };
-  try {
+  try{
     await db.collection('profiles').doc(currentUser.uid).set(pd);
-    if (userDoc.username && userDoc.username !== newUsername) await db.collection('usernames').doc(userDoc.username).delete();
-    await db.collection('usernames').doc(newUsername).set({ uid: currentUser.uid });
-    userDoc = pd; updateProfileUrlBar();
-    toast('Profile saved! ✓', 'success'); suc.textContent = '✓ Saved!'; suc.classList.remove('hidden');
-    setTimeout(() => suc.classList.add('hidden'), 3000);
-  } catch (e) { err.textContent = 'Error: ' + e.message; err.classList.remove('hidden'); toast('Save failed: ' + e.message, 'error'); }
+    if(userDoc.username&&userDoc.username!==newUsername)await db.collection('usernames').doc(userDoc.username).delete();
+    await db.collection('usernames').doc(newUsername).set({uid:currentUser.uid});
+    userDoc=pd;updateProfileUrlBar();
+    toast('Profile saved! ✓','success');suc.textContent='✓ Saved!';suc.classList.remove('hidden');
+    setTimeout(()=>suc.classList.add('hidden'),3000);
+  }catch(e){err.textContent='Error: '+e.message;err.classList.remove('hidden');toast('Save failed: '+e.message,'error');}
 }
-async function requestVerification() {
-  if (!userDoc) return;
-  if (userDoc.verified) { toast('Already verified! ✔️', 'info'); return; }
-  if (userDoc.verificationRequested) { toast('Already requested.', 'warning'); return; }
-  await db.collection('profiles').doc(currentUser.uid).update({ verificationRequested: true });
-  userDoc.verificationRequested = true; toast('Verification requested!', 'success');
+async function requestVerification(){
+  if(!userDoc)return;
+  if(userDoc.verified){toast('Already verified! ✔️','info');return;}
+  if(userDoc.verificationRequested){toast('Already requested.','warning');return;}
+  await db.collection('profiles').doc(currentUser.uid).update({verificationRequested:true});
+  userDoc.verificationRequested=true;toast('Verification requested!','success');
 }
 
-// ============ TYPING ANIMATION (unchanged) ============
-function startTypingAnim(el, texts) {
-  if (!texts || !texts.length) return;
-  let tIdx = 0, cIdx = 0, deleting = false;
-  const cursor = document.createElement('span'); cursor.className = 'typing-cursor'; el.appendChild(cursor);
-  let span = document.createElement('span'); el.insertBefore(span, cursor);
-  function tick() {
-    const word = texts[tIdx] || '';
-    if (!deleting) {
-      span.textContent = word.slice(0, cIdx + 1); cIdx++;
-      if (cIdx >= word.length) { deleting = true; setTimeout(tick, 1800); return; }
-    } else {
-      span.textContent = word.slice(0, cIdx - 1); cIdx--;
-      if (cIdx === 0) { deleting = false; tIdx = (tIdx + 1) % texts.length; setTimeout(tick, 400); return; }
+// ============ TYPING ANIMATION ============
+function startTypingAnim(el,texts){
+  if(!texts||!texts.length)return;
+  let tIdx=0,cIdx=0,deleting=false;
+  const cursor=document.createElement('span');cursor.className='typing-cursor';el.appendChild(cursor);
+  let span=document.createElement('span');el.insertBefore(span,cursor);
+  function tick(){
+    const word=texts[tIdx]||'';
+    if(!deleting){
+      span.textContent=word.slice(0,cIdx+1);cIdx++;
+      if(cIdx>=word.length){deleting=true;setTimeout(tick,1800);return;}
+    }else{
+      span.textContent=word.slice(0,cIdx-1);cIdx--;
+      if(cIdx===0){deleting=false;tIdx=(tIdx+1)%texts.length;setTimeout(tick,400);return;}
     }
-    setTimeout(tick, deleting ? 60 : 90);
+    setTimeout(tick,deleting?60:90);
   }
   tick();
 }
 
-// ============ RENDER PROFILE (unchanged) ============
-// (All existing render functions remain exactly as they were)
-// ... rest of renderProfile, fetchDiscordPresence, etc. ...
-// (I have not modified any of them)
+// ============ RENDER PROFILE ============
+const THEMES={
+  neon:{bg:'#0a0010',text:'#fff'},galaxy:{bg:'#060614',text:'#e8e8ff'},
+  minimal:{bg:'#fafafa',text:'#1a1a1a'},aurora:{bg:'#060f1a',text:'#e0f7fa'},
+  sunset:{bg:'#1a0a00',text:'#fff8f0'},ocean:{bg:'#00111a',text:'#e0f4ff'},
+  default:{}
+};
+function isImgSrc(s){return s&&(s.startsWith('data:')||/\.(png|jpe?g|gif|svg|webp)/i.test(s));}
+function fmtDate(iso){if(!iso)return'';try{return new Date(iso).toLocaleDateString('en-US',{month:'short',year:'numeric'});}catch{return'';}}
+function timeAgo(iso){
+  if(!iso)return'';
+  try{
+    const diff=Date.now()-new Date(iso).getTime(),mins=Math.floor(diff/60000),hrs=Math.floor(mins/60),days=Math.floor(hrs/24);
+    if(mins<2)return'just now';if(mins<60)return`${mins}m ago`;if(hrs<24)return`${hrs}h ago`;if(days<30)return`${days}d ago`;
+    return fmtDate(iso);
+  }catch{return'';}
+}
 
-// ============================================================
-// All the remaining code (renderProfile, loadPublicProfile,
-// loadAnalytics, trackClick, admin functions, escapeHtml)
-// is exactly the same as in your original file.
-// I'm omitting them here only to keep this message length manageable,
-// but you must copy them from your existing file into this final version.
-// They are unchanged and will work perfectly with the new router.
-// ============================================================
-// ... YOUR EXISTING FUNCTIONS GO HERE (from the original file) ...
+// ── CANVAS FX (snow/rain/fire) ──
+let fxAnimId=null;
+function stopFx(){if(fxAnimId){cancelAnimationFrame(fxAnimId);fxAnimId=null;}const c=document.getElementById('fx-canvas');if(c)c.remove();}
+function startFx(type,color){
+  stopFx();
+  const canvas=document.createElement('canvas');canvas.id='fx-canvas';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');
+  const particles=[];
+  const count=type==='fire'?80:120;
+  for(let i=0;i<count;i++) particles.push(mkFxParticle(type,canvas));
+  function mkFxParticle(type,c){
+    return type==='snow'?{x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*4+2,speed:Math.random()*1.5+0.5,wind:Math.random()*0.5-0.25,opacity:Math.random()*0.6+0.3}
+      :type==='rain'?{x:Math.random()*c.width,y:Math.random()*c.height,len:Math.random()*20+10,speed:Math.random()*8+8,opacity:Math.random()*0.4+0.2}
+      :{x:Math.random()*c.width,y:c.height+20,r:Math.random()*6+2,speed:Math.random()*3+2,vx:Math.random()*2-1,life:Math.random(),opacity:Math.random()*0.7+0.2};
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p,i)=>{
+      ctx.save();
+      if(type==='snow'){
+        ctx.globalAlpha=p.opacity;ctx.fillStyle=color||'#ffffff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+        p.y+=p.speed;p.x+=p.wind;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}
+      }else if(type==='rain'){
+        ctx.globalAlpha=p.opacity;ctx.strokeStyle=color||'#8888ff';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-2,p.y+p.len);ctx.stroke();
+        p.y+=p.speed;p.x-=2;if(p.y>canvas.height){p.y=-20;p.x=Math.random()*canvas.width;}
+      }else{
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
+        g.addColorStop(0,`rgba(255,${Math.floor(p.life*200)},0,${p.opacity})`);g.addColorStop(1,'rgba(255,100,0,0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*3,0,Math.PI*2);ctx.fill();
+        p.y-=p.speed;p.x+=p.vx;p.life-=0.008;p.opacity-=0.004;
+        if(p.life<=0||p.y<0){Object.assign(p,mkFxParticle('fire',canvas));}
+      }
+      ctx.restore();
+    });
+    fxAnimId=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+async function renderProfile(data,container){
+  stopFx();
+  const t=THEMES[data.theme]||THEMES.default;
+  const bgColor=data.theme==='default'?(data.bgColor||'#0d0d14'):(t.bg||data.bgColor||'#0d0d14');
+  const textColor=data.theme==='default'?(data.textColor||'#f0f0ff'):(t.text||data.textColor||'#f0f0ff');
+  const g2=data.gradColor2;
+  const gradDir=data.gradDir||'135deg';
+  const bgOpacity=(data.bgOpacity||100)/100;
+
+  // Compute background
+  let bgStyle='';
+  if(data.bgImage){
+    bgStyle=`url(${data.bgImage}) center/cover`;
+  }else if(g2&&g2!==bgColor&&gradDir!=='animated'){
+    bgStyle=`linear-gradient(${gradDir},${bgColor},${g2})`;
+  }else if(g2&&gradDir==='animated'){
+    bgStyle=`linear-gradient(135deg,${bgColor},${g2},${bgColor})`;
+  }else{
+    bgStyle=bgColor;
+  }
+
+  // Glass card
+  const isGlass=data.glassCard;
+  const glassStyle=isGlass?`backdrop-filter:blur(${data.glassBlur||16}px) saturate(180%);-webkit-backdrop-filter:blur(${data.glassBlur||16}px) saturate(180%);background:rgba(255,255,255,0.07)!important;border:1px solid rgba(255,255,255,0.18)!important;`:'';
+
+  let extraContainerStyle='';
+  if(data.rgbCycle==='border')extraContainerStyle+='animation:rgbBorder 3s linear infinite;';
+  else if(data.glowingBorder)extraContainerStyle+='box-shadow:0 0 30px rgba(124,106,247,0.6),0 0 60px rgba(224,86,176,0.3);border:1px solid rgba(124,106,247,0.5);';
+  if(data.floatCard)extraContainerStyle+='animation:floatCard 6s ease-in-out infinite;';
+  const hueClass=data.rgbCycle==='hue'?' rgb-cycle':'';
+  const neonClass=data.neonLinks==='neon'?' neon-links':'';
+  const btnAnimClass=data.btnAnim&&data.btnAnim!=='none'?` btn-anim-${data.btnAnim}`:'';
+  const gradAnimClass=(data.gradDir==='animated'&&g2)?' pub-bg-gradient':'';
+
+  container.className=`pub-card${hueClass}${neonClass}${btnAnimClass}${gradAnimClass}`;
+  container.style.cssText=`background:${bgStyle};color:${textColor};font-family:${data.font||"'Plus Jakarta Sans',sans-serif"};border-radius:24px;overflow:hidden;opacity:${bgOpacity};${glassStyle}${extraContainerStyle}`;
+
+  // Determine online (last active within 10 min)
+  const isOnline=data.lastActive&&(Date.now()-new Date(data.lastActive).getTime()<10*60*1000);
+
+  let html='';
+
+  // Custom favicon
+  if(data.favicon){
+    const favEl=document.getElementById('dynamic-favicon');
+    if(favEl)favEl.href=data.favicon;
+  }
+
+  // Custom cursor/trail on public profile
+  if(data.customCursor)enableCursor(data.cursorColor||'#7c6af7');
+  else disableCursor();
+  trailOn=!!(data.mouseTrail);
+  if(trailOn)trailColor=data.cursorColor||'#7c6af7';
+
+  // Header
+  html+=`<div class="pub-header">`;
+
+  // Avatar wrap with ring
+  const ringClass=data.avatarRing&&data.avatarRing!=='none'?`avatar-wrap ring-${data.avatarRing}`:'avatar-wrap';
+  html+=`<div class="${ringClass}" style="display:inline-block;margin-bottom:1rem;">`;
+  if(data.avatar){
+    html+=`<img src="${escapeHtml(data.avatar)}" class="pub-avatar" style="width:88px;height:88px;border-radius:50%;object-fit:cover;display:block;" onerror="this.style.display='none'">`;
+  }else{
+    const init=(data.displayName||data.username||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    html+=`<div class="pub-avatar-fallback" style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#7c6af7,#e056b0);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;">${escapeHtml(init)}</div>`;
+  }
+  if(data.avatarDeco)html+=`<div class="avatar-deco">${escapeHtml(data.avatarDeco)}</div>`;
+  html+=`</div>`;
+
+  // Name
+  html+=`<div class="pub-name" style="color:${textColor};">${escapeHtml(data.displayName||data.username||'Anonymous')}`;
+  if(data.verified)html+=`<span class="pub-badge">&#10004; Verified</span>`;
+  html+=`</div>`;
+
+  // Status row (online dot + typing anim placeholder or static text)
+  if(data.showOnline!==false){
+    html+=`<div class="pub-status-row">`;
+    html+=`<div class="${isOnline?'online-dot':'offline-dot'}"></div>`;
+    html+=`<span class="status-text-anim" style="font-size:0.78rem;font-weight:600;opacity:0.7;">${isOnline?'Online':'Offline'}</span>`;
+    html+=`</div>`;
+  }
+
+  // Typing animation or static status texts
+  if(data.typingAnim!==false&&data.statusTexts&&data.statusTexts.length){
+    html+=`<div class="typing-wrap" id="typing-wrap-${data.uid||'preview'}" style="opacity:0.75;margin-top:0.3rem;"></div>`;
+  }
+
+  // Meta badges (pronouns, location, age)
+  const metaBadges=[];
+  if(data.pronouns)metaBadges.push(`<span class="pub-meta-badge">&#128100; ${escapeHtml(data.pronouns)}</span>`);
+  if(data.location)metaBadges.push(`<span class="pub-meta-badge">&#128205; ${escapeHtml(data.location)}</span>`);
+  if(data.age)metaBadges.push(`<span class="pub-meta-badge">&#127874; ${escapeHtml(String(data.age))}</span>`);
+  if(metaBadges.length)html+=`<div class="pub-meta">${metaBadges.join('')}</div>`;
+
+  // Bio
+  if(data.bio)html+=`<div class="pub-bio" style="color:${textColor};opacity:0.75;text-align:center;">${escapeHtml(data.bio)}</div>`;
+
+  // Stats (views) — incremented server-side via analytics, display count
+  if(data.showStats!==false){
+    const viewCount=data.profileViews||0;
+    html+=`<div class="pub-stats"><div class="pub-stat"><div class="pub-stat-num">${viewCount}</div><div class="pub-stat-label">Views</div></div>`;
+    const linkCount=(data.links||[]).filter(l=>l.type!=='music').length;
+    html+=`<div class="pub-stat"><div class="pub-stat-num">${linkCount}</div><div class="pub-stat-label">Links</div></div>`;
+    const socialCount=(data.socials||[]).length;
+    html+=`<div class="pub-stat"><div class="pub-stat-num">${socialCount}</div><div class="pub-stat-label">Socials</div></div></div>`;
+  }
+
+  // Dates
+  if(data.showDates!==false){
+    html+=`<div class="pub-dates">`;
+    if(data.joinDate)html+=`<div class="pub-date-item">&#128197; Joined ${fmtDate(data.joinDate)}</div>`;
+    if(data.lastActive)html+=`<div class="pub-date-item">&#9201;&#65039; Active ${timeAgo(data.lastActive)}</div>`;
+    html+=`</div>`;
+  }
+
+  html+=`</div>`;// end pub-header
+
+  // Discord
+  if(data.discordId&&data.showDiscordPresence!==false){
+    html+=`<div class="pub-discord" id="pub-discord-${data.uid||'preview'}">
+      <div class="discord-presence"><span>&#127918;</span><div class="discord-info"><div class="discord-name">Loading…</div><div class="discord-activity">Connecting…</div></div><div class="discord-status-dot offline"></div></div>
+    </div>`;
+  }
+
+  // Music embeds
+  (data.links||[]).filter(l=>l.type==='music').forEach(l=>{
+    html+=`<div class="pub-music-embed"><iframe src="${escapeHtml(l.embedUrl||l.url)}" frameborder="0" allow="encrypted-media" style="width:100%;height:80px;border:none;display:block;"></iframe></div>`;
+  });
+
+  // Links
+  const regularLinks=(data.links||[]).filter(l=>l.type!=='music');
+  if(regularLinks.length){
+    html+=`<div class="pub-links">`;
+    regularLinks.forEach((link,idx)=>{
+      const bg=link.btnBg||'#7c6af7';
+      const btnStyle=`background:${escapeHtml(bg)};color:${escapeHtml(link.btnTextColor||'#fff')};border-radius:${link.btnRadius??12}px;box-shadow:${escapeHtml(link.btnShadow||'none')};`;
+      let iconHtml='';
+      if(link.icon){iconHtml=isImgSrc(link.icon)?`<img src="${escapeHtml(link.icon)}" style="width:20px;height:20px;object-fit:contain;border-radius:3px;flex-shrink:0;">`:`<span>${escapeHtml(link.icon)}</span>`;}
+      html+=`<a href="${escapeHtml(makeAbsoluteUrl(link.url))}" target="_blank" rel="noopener noreferrer" class="pub-link-btn" style="${btnStyle}" onclick="trackClick('${escapeHtml(data.uid||'')}',${idx})">${iconHtml}<span>${escapeHtml(link.title)}</span></a>`;
+    });
+    html+=`</div>`;
+  }
+
+  // Socials
+  if(data.socials?.length){
+    html+=`<div class="pub-socials">`;
+    data.socials.forEach(s=>{
+      html+=`<a href="${escapeHtml(makeAbsoluteUrl(s.url))}" target="_blank" rel="noopener noreferrer" class="pub-social-icon" title="${escapeHtml(s.platform)}">${escapeHtml(s.icon||'&#128279;')}</a>`;
+    });
+    html+=`</div>`;
+  }
+
+  html+=`<div class="pub-footer">Made with <a href="#">LinkHub</a></div>`;
+  container.innerHTML=html;
+
+  // Video background
+  if(data.bgVideo){
+    const vid=document.createElement('video');
+    vid.className='pub-video-bg';vid.src=data.bgVideo;vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+    container.insertBefore(vid,container.firstChild);
+  }
+
+  // Canvas FX
+  if(data.snowFx)startFx('snow','#ffffff');
+  else if(data.rainFx)startFx('rain','#8888ff');
+  else if(data.fireFx)startFx('fire');
+
+  // Music player
+  if(data.musicEmbedUrl&&data.musicPlatform!=='none'){
+    const musicDiv=document.createElement('div');musicDiv.className='music-bar';
+    const h=data.musicHeight||152;
+    musicDiv.innerHTML=`<iframe src="${escapeHtml(data.musicEmbedUrl)}" width="100%" height="${h}" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;"></iframe>`;
+    // insert before pub-links div or before footer
+    const linksDiv=container.querySelector('.pub-links');
+    const footer=container.querySelector('.pub-footer');
+    if(linksDiv)container.insertBefore(musicDiv,linksDiv);
+    else if(footer)container.insertBefore(musicDiv,footer);
+  }
+
+  // Music visualizer bars (decorative)
+  if(data.musicVisualizer&&data.musicEmbedUrl){
+    const vizDiv=document.createElement('div');vizDiv.className='music-viz';
+    for(let i=0;i<12;i++){const b=document.createElement('div');b.className='music-viz-bar';b.style.animationDelay=(i*0.07)+'s';b.style.animationDuration=(0.6+Math.random()*0.6)+'s';vizDiv.appendChild(b);}
+    const footer=container.querySelector('.pub-footer');
+    if(footer)container.insertBefore(vizDiv,footer);
+  }
+
+  // Start typing animation
+  if(data.typingAnim!==false&&data.statusTexts&&data.statusTexts.length){
+    const tw=document.getElementById(`typing-wrap-${data.uid||'preview'}`);
+    if(tw)startTypingAnim(tw,data.statusTexts);
+  }
+
+  // Discord
+  if(data.discordId&&data.showDiscordPresence!==false)fetchDiscordPresence(data.discordId,data.uid||'preview');
+
+  // Particles
+  if(data.particles&&window.tsParticles){
+    const style=data.particleStyle||'dots';
+    const pColor=data.theme==='neon'?['#f0f','#0ff','#ff0']:'#ffffff';
+    const cfgMap={
+      stars:{shape:'star',links:false,size:{min:1,max:3},opacity:{min:0.3,max:0.9},speed:0.5},
+      snow:{shape:'circle',links:false,size:{min:2,max:5},opacity:{min:0.4,max:0.8},speed:1.5},
+      rain:{shape:'line',links:false,size:{min:1,max:2},opacity:{min:0.3,max:0.6},speed:8},
+      fire:{shape:'circle',links:false,size:{min:2,max:6},opacity:{min:0.2,max:0.7},speed:3},
+      bubbles:{shape:'circle',links:false,size:{min:4,max:12},opacity:{min:0.05,max:0.2},speed:0.6},
+      'neon-links':{shape:'circle',links:true,size:{min:1,max:3},opacity:{min:0.3,max:0.7},speed:0.8},
+      dots:{shape:'circle',links:false,size:{min:1,max:3},opacity:{min:0.1,max:0.4},speed:0.8},
+    };
+    const c=cfgMap[style]||cfgMap.dots;
+    try{await tsParticles.load("particles-js",{fpsLimit:60,particles:{number:{value:style==='rain'?200:60},color:{value:style==='fire'?['#ff4400','#ff8800','#ffcc00']:pColor},shape:{type:c.shape},links:{enable:!!c.links,distance:100,color:'#ffffff',opacity:0.1},move:{enable:true,speed:c.speed,direction:style==='rain'?'bottom-right':style==='snow'?'bottom':'none'},size:{value:c.size},opacity:{value:c.opacity}}});}catch(e){}
+  }
+}
+
+async function fetchDiscordPresence(discordId,uid){
+  const el=document.getElementById(`pub-discord-${uid}`);if(!el)return;
+  try{
+    const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),5000);
+    const res=await fetch(`https://api.lanyard.rest/v1/users/${discordId}`,{signal:ctrl.signal});
+    if(!res.ok)throw new Error();
+    const json=await res.json();if(!json.success)throw new Error();
+    const d=json.data,u=d.discord_user,status=d.discord_status;
+    const spotify=d.listening_to_spotify?d.spotify:null,act=d.activities?.find(a=>a.type===0);
+    const sc={online:'#23d160',idle:'#fee75c',dnd:'#ed4245',offline:'#747f8d'};
+    let activity={online:'Online',idle:'Away',dnd:'Do Not Disturb',offline:'Offline'}[status]||'Offline';
+    if(spotify)activity=`&#127925; ${spotify.song} \u2014 ${spotify.artist}`;
+    else if(act)activity=`&#127918; Playing ${act.name}`;
+    const avH=u.avatar,avUrl=avH?`https://cdn.discordapp.com/avatars/${discordId}/${avH}.${avH.startsWith('a_')?'gif':'png'}?size=64`:`https://cdn.discordapp.com/embed/avatars/0.png`;
+    const imgSrc=spotify?.album_art_url||avUrl;
+    const dot=status==='online'?`<div class="discord-status-dot online" style="background:${sc.online};"></div>`:`<div class="discord-status-dot ${status}" style="background:${sc[status]||'#747f8d'};"></div>`;
+    el.innerHTML=`<div class="discord-presence"><img src="${escapeHtml(imgSrc)}" style="width:38px;height:38px;border-radius:${spotify?'6px':'50%'};object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'"><div class="discord-info"><div class="discord-name">${escapeHtml(u.global_name||u.username)}</div><div class="discord-activity">${escapeHtml(activity)}</div></div>${dot}</div>`;
+  }catch(e){if(el)el.innerHTML='';}
+}
+
+function renderPreview(){
+  const c=document.getElementById('profile-preview-container');
+  if(!userDoc)return;
+  renderProfile({...userDoc,uid:currentUser?.uid},c);
+}
+
+// ============ PUBLIC PROFILE LOADER ============
+async function loadPublicProfile(username){
+  const root=document.getElementById('pub-card-root');
+  root.innerHTML='<div style="text-align:center;padding:3rem;opacity:0.4;">Loading…</div>';
+  document.getElementById('floating-edit-btn').classList.add('hidden');
+  try{
+    const uSnap=await db.collection('usernames').doc(username).get();
+    if(!uSnap.exists){root.innerHTML=`<div style="text-align:center;padding:3rem;"><div style="font-size:3rem;margin-bottom:1rem;">&#128269;</div><h2>@${escapeHtml(username)} not found</h2></div>`;return;}
+    const uid=uSnap.data().uid;
+    const pSnap=await db.collection('profiles').doc(uid).get();
+    if(!pSnap.exists){root.innerHTML='<p>User not found.</p>';return;}
+    const data={...pSnap.data(),uid};
+
+    // Increment profile views
+    try{await db.collection('profiles').doc(uid).update({profileViews:firebase.firestore.FieldValue.increment(1)});}catch(e){}
+
+    root.classList.add('pub-card-enter');
+    await renderProfile(data,root);
+
+    if(currentUser?.uid===uid){
+      const fb=document.getElementById('floating-edit-btn');fb.classList.remove('hidden');
+      fb.onclick=()=>{window.location.hash='';showDashboardView();};
+    }
+    try{await db.collection('analytics').add({profileId:uid,eventType:'view',timestamp:firebase.firestore.FieldValue.serverTimestamp()});}catch(e){}
+  }catch(e){root.innerHTML='<p style="color:var(--danger);text-align:center;padding:2rem;">Error loading profile.</p>';}
+}
+
+// ============ ANALYTICS ============
+async function loadAnalytics(){
+  try{
+    const[vs,cs]=await Promise.all([
+      db.collection('analytics').where('profileId','==',currentUser.uid).where('eventType','==','view').get(),
+      db.collection('analytics').where('profileId','==',currentUser.uid).where('eventType','==','click').get()
+    ]);
+    document.getElementById('stat-views').textContent=vs.size;
+    document.getElementById('stat-clicks').textContent=cs.size;
+    document.getElementById('stat-links').textContent=(userDoc?.links||[]).filter(l=>l.type!=='music').length;
+    const username=userDoc?.username,url=username?`${window.location.origin}${window.location.pathname}#/u/${username}`:'';
+    document.getElementById('share-url-input').value=url;
+  }catch(e){toast('Could not load analytics','error');}
+}
+async function trackClick(profileId,linkIndex){
+  if(!profileId)return;
+  try{await db.collection('analytics').add({profileId,eventType:'click',linkIndex,timestamp:firebase.firestore.FieldValue.serverTimestamp()});}catch(e){}
+}
+
+// ============ ADMIN ============
+function showAdminSection(){
+  const lb=document.getElementById('admin-login-block'),p=document.getElementById('admin-panel');
+  if(isAdmin){lb.classList.add('hidden');p.classList.remove('hidden');loadAdminUsers();}
+  else{lb.classList.remove('hidden');p.classList.add('hidden');}
+}
+async function becomeAdmin(){
+  const pw=document.getElementById('admin-password').value,err=document.getElementById('admin-error');err.classList.add('hidden');
+  if(pw!==ADMIN_PASSWORD){err.textContent='Incorrect password.';err.classList.remove('hidden');return;}
+  try{
+    await db.collection('profiles').doc(currentUser.uid).update({admin:true});
+    userDoc.admin=true;isAdmin=true;document.getElementById('sidebar-admin').classList.remove('hidden');
+    document.getElementById('user-role-display').textContent='Admin';showAdminSection();toast('Admin access granted!','success');
+  }catch(e){err.textContent='Error: '+e.message;err.classList.remove('hidden');}
+}
+async function loadAdminUsers(){
+  const c=document.getElementById('admin-users-list');if(!isAdmin){c.innerHTML='Access denied.';return;}
+  c.innerHTML='<p style="opacity:0.5;font-size:0.875rem;">Loading…</p>';
+  try{
+    const snap=await db.collection('profiles').get();
+    let html='<table class="admin-table"><thead><tr><th>Email</th><th>Username</th><th>Verified</th><th>Req.</th><th>Actions</th></tr></thead><tbody>';
+    snap.forEach(doc=>{const u=doc.data();html+=`<tr><td>${escapeHtml(u.email||'')}</td><td>@${escapeHtml(u.username||'')}</td><td>${u.verified?'&#10004;&#65039;':'&#8212;'}</td><td>${u.verificationRequested?'&#9203;':'&#8212;'}</td><td style="display:flex;gap:0.4rem;"><button class="btn btn-success btn-sm" onclick="adminToggleVerify('${doc.id}',true)">Verify</button><button class="btn btn-danger btn-sm" onclick="adminToggleVerify('${doc.id}',false)">Unverify</button></td></tr>`;});
+    html+='</tbody></table>';c.innerHTML=html;
+  }catch(e){c.innerHTML='<p style="color:var(--danger);">Error loading users.</p>';}
+}
+async function adminToggleVerify(userId,verify){
+  if(!isAdmin)return;
+  try{await db.collection('profiles').doc(userId).update({verified:verify,verifiacationRequested:false});toast(`User ${verify?'verified \u2714\ufe0f':'unverified'}`,'success');loadAdminUsers();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+function escapeHtml(str){
+  if(str==null)return'';
+  return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
 </script>
 </body>
 </html>
