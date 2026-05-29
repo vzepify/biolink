@@ -1201,8 +1201,10 @@ function renderLinksEditor(filterCat){
       ch.innerHTML=`<span style="display:flex;align-items:center;gap:0.5rem;">
         <input type="text" value="${escapeHtml(link.title||'Category')}" placeholder="Category Name"
           oninput="editingLinks[${i}].title=this.value;updateCatFilter()"
-          style="background:none;border:none;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);width:140px;padding:0.1rem 0.3rem;outline:none;">
-        <select oninput="editingLinks[${i}].catIcon=this.value" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.15rem 0.3rem;font-size:0.7rem;color:var(--text-muted);">
+          onfocus="this.style.background='rgba(124,106,247,0.08)';this.style.borderColor='var(--accent)';"
+          onblur="this.style.background='none';this.style.borderColor='transparent';"
+          style="background:none;border:1px solid transparent;border-radius:5px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);width:150px;padding:0.15rem 0.4rem;outline:none;cursor:text;transition:all 0.15s;">
+        <select onchange="editingLinks[${i}].catIcon=this.value" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.15rem 0.3rem;font-size:0.7rem;color:var(--text-muted);">
           <option value="📂" ${link.catIcon==='📂'||!link.catIcon?'selected':''}>📂</option>
           <option value="🔗" ${link.catIcon==='🔗'?'selected':''}>🔗</option>
           <option value="🎮" ${link.catIcon==='🎮'?'selected':''}>🎮</option>
@@ -1256,7 +1258,6 @@ function renderLinksEditor(filterCat){
     container.appendChild(div);
   });
   new Sortable(container,{handle:'.drag-handle',animation:200,
-    filter:'.link-category-header',
     onEnd(){
       const rows=container.querySelectorAll('[data-index]'),nl=[];
       rows.forEach(r=>{const idx=parseInt(r.dataset.index);if(!isNaN(idx))nl.push(editingLinks[idx]);});
