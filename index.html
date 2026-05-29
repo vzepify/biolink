@@ -7,11 +7,425 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link id="dynamic-favicon" rel="icon" type="image/png" href="/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+  <style>
+    :root {
+      --bg:#0d0d14;--surface:#13131f;--surface2:#1a1a2e;--surface3:#22223a;
+      --border:rgba(255,255,255,0.07);--border-hover:rgba(255,255,255,0.15);
+      --text:#f0f0ff;--text-muted:#7b7b9a;--text-dim:#4a4a6a;
+      --accent:#7c6af7;--accent2:#e056b0;--accent-glow:rgba(124,106,247,0.35);
+      --success:#22c55e;--danger:#ef4444;--warning:#f59e0b;
+      --radius:16px;--radius-sm:10px;--sidebar-w:260px;
+      --transition:0.2s cubic-bezier(.4,0,.2,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(124,106,247,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 80% 80%,rgba(224,86,176,0.08) 0%,transparent 60%);pointer-events:none;z-index:0;}
+
+    /* ===== CUSTOM CURSOR ===== */
+    body.custom-cursor-on{cursor:none!important;}
+    body.custom-cursor-on *{cursor:none!important;}
+    #custom-cursor{position:fixed;width:18px;height:18px;border:2px solid var(--accent);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.08s,opacity 0.2s,background 0.15s;mix-blend-mode:difference;}
+    #custom-cursor.clicked{transform:translate(-50%,-50%) scale(0.6);background:var(--accent);}
+    #cursor-dot{position:fixed;width:5px;height:5px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.04s;}
+    /* Mouse trail */
+    .trail-dot{position:fixed;pointer-events:none;z-index:99998;border-radius:50%;transform:translate(-50%,-50%);animation:trailFade 0.6s forwards;}
+    @keyframes trailFade{0%{opacity:0.7;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-50%) scale(0.1);}}
+
+    /* ===== SIDEBAR ===== */
+    .sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);padding:1.5rem 1rem;display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:100;overflow-y:auto;}
+    .sidebar-logo{display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.75rem;margin-bottom:1.5rem;}
+    .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+    .logo-text{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .nav-section{flex:1;display:flex;flex-direction:column;gap:0.2rem;}
+    .nav-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);padding:0.6rem 0.75rem 0.2rem;margin-top:0.4rem;}
+    .nav-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.75rem;color:var(--text-muted);text-decoration:none;border-radius:var(--radius-sm);font-weight:500;font-size:0.875rem;transition:all var(--transition);cursor:pointer;border:1px solid transparent;}
+    .nav-link:hover{color:var(--text);background:var(--surface2);}
+    .nav-link.active{color:var(--text);background:linear-gradient(135deg,rgba(124,106,247,0.18),rgba(224,86,176,0.1));border-color:rgba(124,106,247,0.25);}
+    .nav-link .nav-icon{font-size:1rem;width:20px;text-align:center;}
+    .sidebar-footer{display:flex;flex-direction:column;gap:0.5rem;padding-top:1rem;border-top:1px solid var(--border);flex-shrink:0;}
+    .user-chip{display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border);}
+    .user-avatar-chip{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;overflow:hidden;}
+    .user-avatar-chip img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .user-info{flex:1;min-width:0;}
+    .user-name-chip{font-size:0.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .user-role-chip{font-size:0.65rem;color:var(--text-muted);}
+    .toggle-row{display:flex;gap:0.5rem;}
+    .icon-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.5rem;border-radius:var(--radius-sm);background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:0.78rem;font-family:inherit;cursor:pointer;transition:all var(--transition);font-weight:500;}
+    .icon-btn:hover{background:var(--surface2);color:var(--text);border-color:var(--border-hover);}
+
+    /* ===== MAIN ===== */
+    .main-content{margin-left:var(--sidebar-w);flex:1;padding:2rem;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}
+    body.no-sidebar .main-content{margin-left:0;}
+
+    .profile-url-bar{background:linear-gradient(135deg,rgba(124,106,247,0.12),rgba(224,86,176,0.08));border:1px solid rgba(124,106,247,0.2);border-radius:var(--radius-sm);padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;max-width:820px;width:100%;}
+    .url-text{flex:1;font-size:0.875rem;font-family:'Courier New',monospace;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+    .card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:1.75rem;width:100%;max-width:820px;margin-bottom:1.25rem;}
+    .card-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
+    .card-icon{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;background:rgba(124,106,247,0.15);flex-shrink:0;}
+
+    .form-row{margin-bottom:1rem;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;}
+    label{display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem;}
+    input,textarea,select{width:100%;padding:0.65rem 0.85rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:inherit;font-size:0.875rem;transition:all var(--transition);outline:none;}
+    input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+    input::placeholder,textarea::placeholder{color:var(--text-dim);}
+    textarea{resize:vertical;min-height:80px;}
+    select option{background:#1a1a2e;}
+
+    .toggle-label{display:flex;align-items:center;gap:0.75rem;cursor:pointer;font-size:0.875rem;font-weight:500;color:var(--text-muted);text-transform:none;letter-spacing:0;padding:0.35rem 0;}
+    .toggle-input{display:none;}
+    .toggle-slider{width:36px;height:20px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;position:relative;flex-shrink:0;transition:all var(--transition);}
+    .toggle-slider::after{content:'';position:absolute;width:14px;height:14px;background:var(--text-muted);border-radius:50%;top:2px;left:2px;transition:all var(--transition);}
+    .toggle-input:checked + .toggle-slider{background:var(--accent);border-color:var(--accent);}
+    .toggle-input:checked + .toggle-slider::after{left:18px;background:white;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.65rem 1.2rem;border-radius:var(--radius-sm);font-family:inherit;font-size:0.875rem;font-weight:600;cursor:pointer;transition:all var(--transition);border:1px solid transparent;text-decoration:none;white-space:nowrap;}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#9b6af7);color:white;border:none;}
+    .btn-primary:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 8px 25px rgba(124,106,247,0.4);}
+    .btn-secondary{background:var(--surface2);color:var(--text);border-color:var(--border);}
+    .btn-secondary:hover{border-color:var(--border-hover);background:rgba(255,255,255,0.05);}
+    .btn-success{background:rgba(34,197,94,0.12);color:var(--success);border-color:rgba(34,197,94,0.3);}
+    .btn-success:hover{background:rgba(34,197,94,0.22);}
+    .btn-danger{background:rgba(239,68,68,0.1);color:var(--danger);border-color:rgba(239,68,68,0.2);}
+    .btn-danger:hover{background:rgba(239,68,68,0.2);}
+    .btn-warning{background:rgba(245,158,11,0.12);color:var(--warning);border-color:rgba(245,158,11,0.3);}
+    .btn-warning:hover{background:rgba(245,158,11,0.22);}
+    .btn-sm{padding:0.35rem 0.7rem;font-size:0.78rem;border-radius:7px;}
+    .btn-full{width:100%;}
+    .btn-icon{padding:0.45rem;border-radius:7px;min-width:32px;min-height:32px;}
+
+    .color-row{display:flex;align-items:center;gap:0.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.35rem 0.6rem;}
+    input[type="color"]{width:30px;height:30px;padding:2px;border:none;border-radius:6px;cursor:pointer;background:none;flex-shrink:0;}
+    .color-hex{flex:1;background:none;border:none;font-size:0.82rem;color:var(--text);padding:0 0.25rem;margin:0;}
+    .color-hex:focus{border:none;box-shadow:none;}
+
+    /* ===== LINKS ===== */
+    .links-list{display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1rem;}
+    .link-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;transition:border-color var(--transition);}
+    .link-card:hover{border-color:var(--border-hover);}
+    .link-card-header{display:flex;align-items:center;gap:0.5rem;padding:0.75rem;}
+    .drag-handle{cursor:grab;color:var(--text-dim);padding:0.2rem;font-size:1rem;user-select:none;}
+    .drag-handle:active{cursor:grabbing;}
+    .link-preview-btn{flex:1;display:flex;align-items:center;gap:0.5rem;min-width:0;}
+    .link-preview-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .link-preview-title{font-size:0.875rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .link-preview-url{font-size:0.72rem;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .link-card-toggle{background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0.25rem 0.5rem;border-radius:6px;font-size:0.75rem;font-family:inherit;transition:all var(--transition);}
+    .link-card-toggle:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+    .link-card-body{padding:0.75rem;border-top:1px solid var(--border);}
+    .link-card-body.collapsed{display:none;}
+    .link-style-row{display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;margin-top:0.75rem;}
+    .style-group{display:flex;flex-direction:column;gap:0.25rem;}
+    .style-group label{font-size:0.65rem;}
+    .style-group input[type="color"]{width:40px;height:32px;}
+    .style-group select,.style-group input[type="number"]{padding:0.35rem 0.5rem;font-size:0.78rem;}
+
+    /* ===== TOAST ===== */
+    .toast-container{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:0.5rem;z-index:9999;}
+    .toast{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 1rem;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);font-size:0.875rem;font-weight:500;animation:slideUp 0.3s ease,fadeOut 0.3s 2.7s ease forwards;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+    .toast.success{border-color:rgba(34,197,94,0.4);}
+    .toast.error{border-color:rgba(239,68,68,0.4);}
+    .toast.info{border-color:rgba(124,106,247,0.4);}
+    .toast.warning{border-color:rgba(245,158,11,0.4);}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes fadeOut{from{opacity:1;}to{opacity:0;}}
+
+    .msg{font-size:0.85rem;text-align:center;margin-bottom:0.75rem;padding:0.6rem 1rem;border-radius:8px;}
+    .msg.error{background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid rgba(239,68,68,0.2);}
+    .msg.success{background:rgba(34,197,94,0.1);color:var(--success);border:1px solid rgba(34,197,94,0.2);}
+
+    /* ===== AUTH ===== */
+    .auth-wrapper{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;width:100%;padding:2rem;}
+    .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:100%;max-width:420px;}
+    .auth-logo{text-align:center;margin-bottom:2rem;}
+    .auth-logo .mark{width:52px;height:52px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 0.75rem;}
+    .auth-logo h1{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .auth-logo p{color:var(--text-muted);font-size:0.875rem;margin-top:0.25rem;}
+    .auth-switch{text-align:center;margin-top:1.25rem;font-size:0.85rem;color:var(--text-muted);}
+    .auth-switch a{color:var(--accent);text-decoration:none;font-weight:600;}
+
+    /* ===== PUBLIC PROFILE ===== */
+    .pub-wrapper{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:3rem 1.5rem;}
+    .pub-card{width:100%;max-width:500px;border-radius:24px;overflow:hidden;position:relative;}
+    /* Entrance animation */
+    .pub-card-enter{animation:cardEnter 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+    @keyframes cardEnter{from{opacity:0;transform:translateY(30px) scale(0.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+
+    .pub-header{padding:2.5rem 2rem 1.5rem;text-align:center;position:relative;}
+
+    /* Avatar ring animations */
+    .avatar-wrap{position:relative;display:inline-block;margin-bottom:1rem;}
+    .avatar-wrap.ring-spin::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:3px solid transparent;border-top-color:var(--accent);border-right-color:var(--accent2);animation:spinRing 2s linear infinite;}
+    .avatar-wrap.ring-pulse::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:3px solid var(--accent);animation:pulseRing 1.5s ease-in-out infinite;}
+    .avatar-wrap.ring-rainbow::before{content:'';position:absolute;inset:-6px;border-radius:50%;padding:3px;background:conic-gradient(#ff0000,#ff7700,#ffff00,#00ff00,#0000ff,#8b00ff,#ff0000);border-radius:50%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinRing 3s linear infinite;}
+    .avatar-wrap.ring-glow::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:3px solid var(--accent);box-shadow:0 0 15px var(--accent),0 0 30px var(--accent);animation:glowRing 2s ease-in-out infinite;}
+    @keyframes spinRing{to{transform:rotate(360deg);}}
+    @keyframes pulseRing{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.05);}}
+    @keyframes glowRing{0%,100%{box-shadow:0 0 10px var(--accent),0 0 20px var(--accent);}50%{box-shadow:0 0 25px var(--accent),0 0 50px var(--accent);}}
+    @keyframes spinRing{to{transform:rotate(360deg);}}
+
+    /* Avatar decoration badges */
+    .avatar-deco{position:absolute;bottom:2px;right:2px;font-size:1.1rem;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5));}
+
+    .pub-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;display:block;}
+    .pub-avatar-fallback{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;}
+
+    /* Hover effect on name */
+    .pub-name{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:0.25rem;transition:transform 0.2s;}
+    .pub-name:hover{transform:scale(1.03);}
+
+    .pub-badge{display:inline-flex;align-items:center;gap:0.25rem;background:rgba(29,161,242,0.15);color:#1da1f2;border:1px solid rgba(29,161,242,0.3);padding:0.15rem 0.5rem;border-radius:20px;font-size:0.7rem;font-weight:700;margin-left:0.4rem;vertical-align:middle;}
+    /* Meta badges (pronouns, age, location) */
+    .pub-meta{display:flex;flex-wrap:wrap;gap:0.4rem;justify-content:center;margin-top:0.5rem;}
+    .pub-meta-badge{display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:600;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);}
+
+    /* Status dot */
+    .pub-status-row{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.4rem;}
+    .online-dot{width:8px;height:8px;border-radius:50%;background:#23d160;flex-shrink:0;position:relative;}
+    .online-dot::after{content:'';position:absolute;inset:-2px;border-radius:50%;background:rgba(35,209,96,0.3);animation:pulse 2s infinite;}
+    .offline-dot{width:8px;height:8px;border-radius:50%;background:#747f8d;flex-shrink:0;}
+    .status-text-anim{font-size:0.78rem;font-weight:600;}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:0;}}
+
+    /* Typing animation */
+    .typing-wrap{font-size:0.85rem;margin-top:0.4rem;min-height:1.4em;}
+    .typing-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);margin-left:1px;animation:blink 1s step-end infinite;vertical-align:text-bottom;}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+    .pub-bio{font-size:0.875rem;line-height:1.6;margin-top:0.6rem;white-space:pre-wrap;}
+
+    /* Stats row */
+    .pub-stats{display:flex;justify-content:center;gap:1.5rem;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(255,255,255,0.07);}
+    .pub-stat{text-align:center;}
+    .pub-stat-num{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;}
+    .pub-stat-label{font-size:0.65rem;opacity:0.5;text-transform:uppercase;letter-spacing:0.05em;}
+
+    /* Join date / last active */
+    .pub-dates{display:flex;justify-content:center;gap:1rem;margin-top:0.5rem;flex-wrap:wrap;}
+    .pub-date-item{font-size:0.7rem;opacity:0.45;display:flex;align-items:center;gap:0.25rem;}
+
+    .pub-links{padding:0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:0.65rem;}
+    .pub-link-btn{display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.9rem 1.25rem;border-radius:12px;text-decoration:none;font-weight:700;font-size:0.925rem;transition:all 0.18s ease;cursor:pointer;border:none;}
+    .pub-link-btn:hover{transform:translateY(-2px);filter:brightness(1.12);}
+    .pub-link-btn:active{transform:scale(0.98);}
+
+    .pub-discord{margin:0 1.5rem 1rem;border-radius:12px;overflow:hidden;}
+    .discord-presence{background:rgba(88,101,242,0.1);border:1px solid rgba(88,101,242,0.25);border-radius:12px;padding:0.875rem 1rem;display:flex;align-items:center;gap:0.75rem;}
+    .discord-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;position:relative;}
+    .discord-status-dot.online{background:#23d160;}
+    .discord-status-dot.idle{background:#fee75c;}
+    .discord-status-dot.dnd{background:#ed4245;}
+    .discord-status-dot.offline{background:#747f8d;}
+    .discord-status-dot.online::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:rgba(35,209,96,0.3);animation:pulse 2s infinite;}
+    .discord-info{flex:1;min-width:0;}
+    .discord-name{font-size:0.85rem;font-weight:700;}
+    .discord-activity{font-size:0.75rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+    .pub-socials{display:flex;justify-content:center;gap:0.75rem;padding:0 1.5rem 1.75rem;flex-wrap:wrap;}
+    .pub-social-icon{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.1rem;transition:all var(--transition);}
+    .pub-social-icon:hover{background:rgba(255,255,255,0.12);transform:translateY(-2px);}
+
+    .pub-music-embed{margin:0 1.5rem 1rem;border-radius:12px;overflow:hidden;}
+    .pub-music-embed iframe{width:100%;height:80px;border:none;display:block;}
+    .pub-footer{text-align:center;padding:1rem;font-size:0.72rem;color:var(--text-dim);border-top:1px solid rgba(255,255,255,0.04);}
+    .pub-footer a{color:var(--accent);text-decoration:none;}
+
+    .floating-edit-btn{position:fixed;bottom:2rem;right:2rem;z-index:999;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:50%;width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer;box-shadow:0 8px 20px rgba(124,106,247,0.4);transition:transform 0.2s;text-decoration:none;}
+    .floating-edit-btn:hover{transform:scale(1.1);}
+
+    /* ===== ANALYTICS ===== */
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;}
+    .stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.25rem;text-align:center;}
+    .stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .stat-label{font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;font-weight:600;text-transform:uppercase;}
+    .share-row{display:flex;gap:0.75rem;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.6rem 0.75rem;}
+    .share-url{flex:1;font-size:0.82rem;color:var(--accent);font-family:'Courier New',monospace;background:none;border:none;outline:none;margin:0;padding:0;}
+
+    .social-row{display:flex;gap:0.5rem;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;margin-bottom:0.5rem;}
+    .social-row input{flex:1;background:none;border:none;padding:0.2rem 0.4rem;font-size:0.875rem;margin-bottom:0;}
+    .social-row input:focus{box-shadow:none;border:none;}
+
+    .admin-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+    .admin-table th{text-align:left;padding:0.6rem 0.75rem;color:var(--text-muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);font-weight:600;}
+    .admin-table td{padding:0.6rem 0.75rem;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;}
+    .admin-table tr:hover td{background:rgba(255,255,255,0.02);}
+
+    .preview-frame{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;display:flex;justify-content:center;}
+    .hidden{display:none!important;}
+    ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:10px;}
+    #particles-js{position:fixed;inset:0;z-index:0;pointer-events:none;}
+    .hint-text{font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;line-height:1.4;}
+
+    @media(max-width:768px){
+      :root{--sidebar-w:0px;}
+      .sidebar{transform:translateX(-100%);width:260px;transition:transform 0.3s;}
+      .sidebar.open{transform:translateX(0);}
+      .main-content{margin-left:0;padding:1rem;}
+      .form-grid,.form-grid-3{grid-template-columns:1fr;}
+      .stats-grid{grid-template-columns:1fr 1fr;}
+    }
+
+    /* ===== GRADIENT BG ===== */
+    .pub-bg-gradient { background-size: 400% 400% !important; animation: gradientShift 8s ease infinite; }
+    @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+    /* ===== VIDEO BG ===== */
+    .pub-video-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.35; pointer-events:none; }
+    .pub-card { position:relative; overflow:hidden; }
+    .pub-card > *:not(.pub-video-bg):not(#pub-overlay) { position:relative; z-index:1; }
+    #pub-overlay { position:absolute; inset:0; z-index:0; pointer-events:none; }
+
+    /* ===== GLASSMORPHISM ===== */
+    .glass-card { backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); background: rgba(255,255,255,0.07) !important; border: 1px solid rgba(255,255,255,0.18) !important; }
+
+    /* ===== NEON GLOW LINKS ===== */
+    .neon-links .pub-link-btn { box-shadow: 0 0 10px currentColor, 0 0 20px currentColor !important; transition: box-shadow 0.3s, transform 0.18s !important; }
+    .neon-links .pub-link-btn:hover { box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor !important; }
+
+    /* ===== RGB CYCLE ===== */
+    .rgb-cycle { animation: rgbCycle 3s linear infinite; }
+    @keyframes rgbCycle { 0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(360deg)} }
+    .rgb-border { animation: rgbBorder 3s linear infinite; }
+    @keyframes rgbBorder { 0%{box-shadow:0 0 20px #ff0000,0 0 40px #ff0000} 16%{box-shadow:0 0 20px #ff7700,0 0 40px #ff7700} 33%{box-shadow:0 0 20px #ffff00,0 0 40px #ffff00} 50%{box-shadow:0 0 20px #00ff00,0 0 40px #00ff00} 66%{box-shadow:0 0 20px #0000ff,0 0 40px #0000ff} 83%{box-shadow:0 0 20px #8b00ff,0 0 40px #8b00ff} 100%{box-shadow:0 0 20px #ff0000,0 0 40px #ff0000} }
+
+    /* ===== ANIMATED BUTTONS ===== */
+    .btn-anim-bounce .pub-link-btn { transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1) !important; }
+    .btn-anim-bounce .pub-link-btn:hover { transform: translateY(-4px) scale(1.04) !important; }
+    .btn-anim-shake .pub-link-btn:hover { animation: btnShake 0.4s ease !important; }
+    @keyframes btnShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+    .btn-anim-glow .pub-link-btn:hover { animation: btnGlowPulse 0.6s ease infinite alternate !important; }
+    @keyframes btnGlowPulse { from{filter:brightness(1)} to{filter:brightness(1.35) drop-shadow(0 0 8px currentColor)} }
+    .btn-anim-float .pub-link-btn { animation: floatBtn 3s ease-in-out infinite; }
+    @keyframes floatBtn { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+    /* ===== SNOW / RAIN / FIRE canvas ===== */
+    #fx-canvas { position:fixed; inset:0; pointer-events:none; z-index:2; }
+
+    /* ===== MUSIC BAR ===== */
+    .music-bar { margin: 0 1.5rem 1rem; border-radius: 12px; overflow: hidden; }
+    .music-bar iframe { width:100%; border:none; display:block; border-radius: 12px; }
+    .music-viz { display:flex; align-items:flex-end; justify-content:center; gap:3px; height:32px; padding: 0 1.5rem 0.75rem; }
+    .music-viz-bar { width:4px; background:var(--accent); border-radius:2px; animation:vizBounce 0.8s ease-in-out infinite; }
+    @keyframes vizBounce { 0%,100%{height:4px} 50%{height:28px} }
+
+    /* ===== FLOATING UI ===== */
+    .pub-card.float-anim { animation: floatCard 6s ease-in-out infinite; }
+    @keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    /* ===== THEME PRESET PICKER (editor) ===== */
+    .preset-grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:0.5rem; margin-bottom:1rem; }
+    .preset-swatch { height:48px; border-radius:10px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; position:relative; overflow:hidden; }
+    .preset-swatch:hover { transform:scale(1.06); }
+    .preset-swatch.active { border-color:white; box-shadow:0 0 0 1px rgba(255,255,255,0.4); }
+    .preset-swatch span { position:absolute; bottom:3px; left:0; right:0; text-align:center; font-size:0.58rem; font-weight:700; color:rgba(255,255,255,0.9); text-shadow:0 1px 3px rgba(0,0,0,0.8); }
+
+    /* Sub-section tabs */
+    .app-tabs { display:flex; gap:0.3rem; background:var(--surface2); padding:0.3rem; border-radius:var(--radius-sm); margin-bottom:1.25rem; flex-wrap:wrap; }
+    .app-tab { flex:1; min-width:80px; text-align:center; padding:0.45rem 0.3rem; font-size:0.75rem; font-weight:600; color:var(--text-muted); border-radius:7px; cursor:pointer; transition:all var(--transition); border:none; background:none; font-family:inherit; white-space:nowrap; }
+    .app-tab.active { background:var(--surface); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+    .app-panel { display:none; }
+    .app-panel.active { display:block; }
+
+
+    /* ===== LINK FEATURES ===== */
+    /* Category headers */
+    .link-category-header {
+      display:flex; align-items:center; gap:0.5rem; margin:0.75rem 0 0.4rem;
+      font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+      color:var(--text-dim);
+    }
+    .link-category-header::before,.link-category-header::after {
+      content:''; flex:1; height:1px; background:var(--border);
+    }
+    /* Status badges on link cards */
+    .link-status-badge {
+      font-size:0.6rem; font-weight:700; padding:0.1rem 0.4rem; border-radius:20px;
+      text-transform:uppercase; letter-spacing:0.05em; flex-shrink:0;
+    }
+    .badge-private { background:rgba(124,106,247,0.15); color:var(--accent); border:1px solid rgba(124,106,247,0.3); }
+    .badge-nsfw    { background:rgba(239,68,68,0.12);   color:var(--danger); border:1px solid rgba(239,68,68,0.25); }
+    .badge-sched   { background:rgba(245,158,11,0.12);  color:var(--warning); border:1px solid rgba(245,158,11,0.25); }
+    .badge-clicks  { background:rgba(34,197,94,0.1);   color:var(--success); border:1px solid rgba(34,197,94,0.25); }
+    /* Click-count on card header */
+    .link-click-count { font-size:0.68rem; color:var(--text-dim); font-weight:600; white-space:nowrap; }
+    /* NSFW gate */
+    .nsfw-gate {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:0.5rem; padding:0.9rem 1.25rem; border-radius:12px; cursor:pointer;
+      border:2px dashed rgba(239,68,68,0.4); background:rgba(239,68,68,0.06);
+      font-size:0.875rem; font-weight:700; color:var(--danger); transition:all 0.2s;
+      user-select:none;
+    }
+    .nsfw-gate:hover { background:rgba(239,68,68,0.12); }
+    .nsfw-gate small { font-size:0.7rem; font-weight:500; opacity:0.7; }
+    /* Embed containers */
+    .link-embed-wrap {
+      margin:0; border-radius:12px; overflow:hidden; width:100%;
+    }
+    .link-embed-wrap iframe { width:100%; border:none; display:block; }
+    .yt-embed-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px; }
+    .yt-embed-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+    .twitch-embed-wrap { border-radius:12px; overflow:hidden; }
+    .tiktok-embed-wrap { border-radius:12px; overflow:hidden; background:#000; min-height:560px; }
+    .discord-invite-btn {
+      display:flex; align-items:center; justify-content:center; gap:0.75rem;
+      padding:0.9rem 1.25rem; border-radius:12px; text-decoration:none;
+      font-weight:700; font-size:0.925rem; transition:all 0.18s ease;
+      background:#5865F2; color:white;
+    }
+    .discord-invite-btn:hover { background:#4752c4; transform:translateY(-2px); }
+    .steam-btn {
+      display:flex; align-items:center; justify-content:center; gap:0.75rem;
+      padding:0.9rem 1.25rem; border-radius:12px; text-decoration:none;
+      font-weight:700; font-size:0.925rem; transition:all 0.18s ease;
+      background:linear-gradient(135deg,#1b2838,#2a475e); color:#c7d5e0;
+    }
+    .steam-btn:hover { filter:brightness(1.15); transform:translateY(-2px); }
+    /* Per-link hover animations */
+    .lha-bounce:hover { animation:lhaBounce 0.4s cubic-bezier(0.34,1.56,0.64,1) !important; }
+    @keyframes lhaBounce { 0%{transform:scale(1)} 50%{transform:scale(1.06) translateY(-3px)} 100%{transform:scale(1)} }
+    .lha-shake:hover  { animation:lhaShake 0.4s ease !important; }
+    @keyframes lhaShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+    .lha-glow:hover   { filter:brightness(1.2) drop-shadow(0 0 8px currentColor) !important; }
+    .lha-spin:hover   { animation:lhaSpin 0.6s ease !important; }
+    @keyframes lhaSpin { from{transform:rotate(-3deg) scale(0.97)} to{transform:rotate(0) scale(1)} }
+    .lha-float { animation:lhaFloat 3s ease-in-out infinite; }
+    @keyframes lhaFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    .lha-pulse { animation:lhaPulse 2s ease-in-out infinite; }
+    @keyframes lhaPulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    /* Scheduled / hidden dim in editor */
+    .link-card.is-private { border-color:rgba(124,106,247,0.3); }
+    .link-card.is-nsfw    { border-color:rgba(239,68,68,0.3); }
+    .link-card.is-hidden  { opacity:0.5; }
+    /* Link editor advanced row */
+    .link-adv-row { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:flex-start; margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid var(--border); }
+    .link-adv-row .toggle-label { font-size:0.78rem; padding:0.2rem 0; }
+    /* Category filter bar */
+    .cat-filter-bar { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.75rem; }
+    .cat-filter-chip {
+      padding:0.3rem 0.75rem; border-radius:20px; font-size:0.75rem; font-weight:600;
+      cursor:pointer; transition:all 0.15s; border:1px solid var(--border);
+      background:var(--surface2); color:var(--text-muted);
+    }
+    .cat-filter-chip.active { background:var(--accent); color:white; border-color:var(--accent); }
+    /* Quick-add special buttons */
+    .quick-add-row { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.75rem; }
+    .quick-btn {
+      display:inline-flex; align-items:center; gap:0.35rem; padding:0.35rem 0.7rem;
+      border-radius:8px; font-size:0.75rem; font-weight:600; cursor:pointer;
+      border:1px solid var(--border); background:var(--surface2); color:var(--text-muted);
+      transition:all 0.15s; font-family:inherit;
+    }
+    .quick-btn:hover { border-color:var(--border-hover); color:var(--text); background:var(--surface3); }
+
+  </style>
 </head>
 <body class="no-sidebar">
+
 <div id="custom-cursor"></div>
 <div id="cursor-dot"></div>
 <div id="particles-js"></div>
@@ -374,8 +788,31 @@
       <!-- Links Card -->
       <div class="card">
         <div class="card-title"><div class="card-icon">&#128279;</div> Links</div>
+
+        <!-- Category filter -->
+        <div class="cat-filter-bar" id="cat-filter-bar">
+          <div class="cat-filter-chip active" onclick="filterLinksByCategory('',this)">All</div>
+        </div>
+
         <div id="links-container" class="links-list"></div>
-        <button class="btn btn-success btn-sm" onclick="addLink()">+ Add Link</button>
+
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;">
+          <button class="btn btn-success btn-sm" onclick="addLink()">+ Add Link</button>
+          <button class="btn btn-secondary btn-sm" onclick="addLink('category')">&#128193; Add Category Header</button>
+        </div>
+
+        <!-- Quick-add special types -->
+        <div class="quick-add-row">
+          <button class="quick-btn" onclick="addLink('discord')">&#127918; Discord Invite</button>
+          <button class="quick-btn" onclick="addLink('steam')">&#127918; Steam Profile</button>
+          <button class="quick-btn" onclick="addLink('youtube_embed')">&#9654;&#65039; YouTube Embed</button>
+          <button class="quick-btn" onclick="addLink('twitch_embed')">&#128420; Twitch Embed</button>
+          <button class="quick-btn" onclick="addLink('tiktok_embed')">&#127926; TikTok Embed</button>
+          <button class="quick-btn" onclick="addLink('social_embed')">&#128248; Social Embed</button>
+        </div>
+
+        <!-- Link stats summary -->
+        <div id="link-stats-row" style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);display:flex;gap:1rem;flex-wrap:wrap;font-size:0.75rem;color:var(--text-muted);"></div>
       </div>
 
       <!-- Socials Card -->
@@ -679,7 +1116,7 @@ function populateEditForm(){
   sc('edit-snow-fx',userDoc.snowFx);sc('edit-rain-fx',userDoc.rainFx);sc('edit-fire-fx',userDoc.fireFx);
   sc('edit-music-autoplay',userDoc.musicAutoplay);sc('edit-music-visualizer',userDoc.musicVisualizer);
   buildThemePresets();
-  editingLinks=(userDoc.links||[]).map(l=>({btnBg:'#7c6af7',btnTextColor:'#ffffff',btnRadius:12,btnShadow:'none',...l}));
+  editingLinks=(userDoc.links||[]).map(l=>({btnBg:'#7c6af7',btnTextColor:'#ffffff',btnRadius:12,btnShadow:'none',hoverAnim:'none',nsfw:false,private:false,hidden:false,schedStart:'',schedEnd:'',clicks:0,category:'',...l}));
   editingSocials=(userDoc.socials||[]).map(s=>({...s}));
   renderLinksEditor();renderSocialsEditor();
 }
@@ -743,54 +1180,194 @@ document.addEventListener('change',e=>{
 });
 
 // ============ LINKS EDITOR ============
-function renderLinksEditor(){
-  const container=document.getElementById('links-container');container.innerHTML='';
-  if(!editingLinks.length){container.innerHTML='<p style="text-align:center;padding:1.5rem 0;color:var(--text-dim);font-size:0.875rem;">No links yet — add your first one!</p>';return;}
+function renderLinksEditor(filterCat){
+  const container=document.getElementById('links-container');
+  container.innerHTML='';
+  if(!editingLinks.length){
+    container.innerHTML='<p style="text-align:center;padding:1.5rem 0;color:var(--text-dim);font-size:0.875rem;">No links yet — add your first one!</p>';
+    updateLinkStats();updateCatFilter();return;
+  }
+  // Build category list from links
+  updateCatFilter();
+  const now=Date.now();
+  let lastCat='';
   editingLinks.forEach((link,i)=>{
-    const div=document.createElement('div');div.className='link-card';div.dataset.index=i;
+    // If filtering by category
+    if(filterCat && filterCat!=='' && link.category!==filterCat && link.type!=='category') return;
+    // Category header type
+    if(link.type==='category'){
+      const ch=document.createElement('div');ch.className='link-category-header';
+      ch.dataset.index=i;ch.dataset.catType='true';
+      ch.innerHTML=`<span style="display:flex;align-items:center;gap:0.5rem;">
+        <input type="text" value="${escapeHtml(link.title||'Category')}" placeholder="Category Name"
+          oninput="editingLinks[${i}].title=this.value;updateCatFilter()"
+          style="background:none;border:none;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);width:140px;padding:0.1rem 0.3rem;outline:none;">
+        <select oninput="editingLinks[${i}].catIcon=this.value" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.15rem 0.3rem;font-size:0.7rem;color:var(--text-muted);">
+          <option value="📂" ${link.catIcon==='📂'||!link.catIcon?'selected':''}>📂</option>
+          <option value="🔗" ${link.catIcon==='🔗'?'selected':''}>🔗</option>
+          <option value="🎮" ${link.catIcon==='🎮'?'selected':''}>🎮</option>
+          <option value="🎵" ${link.catIcon==='🎵'?'selected':''}>🎵</option>
+          <option value="💼" ${link.catIcon==='💼'?'selected':''}>💼</option>
+          <option value="⭐" ${link.catIcon==='⭐'?'selected':''}>⭐</option>
+          <option value="🔥" ${link.catIcon==='🔥'?'selected':''}>🔥</option>
+        </select>
+        <button class="btn btn-danger btn-icon btn-sm" onclick="removeLink(${i})" title="Remove" style="padding:0.2rem 0.4rem;font-size:0.65rem;">✕</button>
+      </span>`;
+      container.appendChild(ch);
+      return;
+    }
+    const div=document.createElement('div');
+    let cardClass='link-card';
+    if(link.private)cardClass+=' is-private';
+    if(link.nsfw)cardClass+=' is-nsfw';
+    if(link.hidden)cardClass+=' is-hidden';
+    div.className=cardClass;div.dataset.index=i;
+    // Status badges
+    const badges=[];
+    if(link.private)badges.push(`<span class="link-status-badge badge-private">🔒 Private</span>`);
+    if(link.nsfw)badges.push(`<span class="link-status-badge badge-nsfw">🔞 NSFW</span>`);
+    if(link.hidden)badges.push(`<span class="link-status-badge" style="background:rgba(255,255,255,0.05);color:var(--text-dim);border:1px solid var(--border);">👁 Hidden</span>`);
+    const isScheduled=link.schedStart||link.schedEnd;
+    if(isScheduled)badges.push(`<span class="link-status-badge badge-sched">⏰ Scheduled</span>`);
+    const clickCount=link.clicks||0;
+    // Type label
+    const typeLabels={link:'🔗',music:'🎵',youtube_embed:'▶️',twitch_embed:'📺',tiktok_embed:'🎵',discord:'🎮',steam:'🎮',social_embed:'📱',category:'📂'};
+    const typeLabel=typeLabels[link.type||'link']||'🔗';
+    let dotBg=link.btnBg||'#7c6af7';
     div.innerHTML=`
       <div class="link-card-header">
-        <span class="drag-handle">&#8919;</span>
+        <span class="drag-handle">⠿</span>
+        <span style="font-size:0.9rem;flex-shrink:0;">${typeLabel}</span>
         <div class="link-preview-btn">
-          <div class="link-preview-dot" style="background:${link.btnBg||'#7c6af7'};"></div>
+          <div class="link-preview-dot" style="background:${dotBg};"></div>
           <div style="min-width:0;">
             <div class="link-preview-title">${escapeHtml(link.title||'Untitled Link')}</div>
             <div class="link-preview-url">${escapeHtml(link.url||'No URL set')}</div>
           </div>
         </div>
-        <button class="btn btn-danger btn-icon btn-sm" onclick="removeLink(${i})">&#10005;</button>
-        <button class="link-card-toggle" onclick="toggleLinkCard(${i},this)">Edit &#9662;</button>
+        ${badges.join('')}
+        <span class="link-click-count" title="Total clicks">👆 ${clickCount}</span>
+        <button class="btn btn-danger btn-icon btn-sm" onclick="removeLink(${i})" title="Remove">✕</button>
+        <button class="link-card-toggle" onclick="toggleLinkCard(${i},this)">Edit ▾</button>
       </div>
       <div class="link-card-body collapsed" id="link-body-${i}">
-        <div class="form-grid">
-          <div class="form-row"><label>Title</label><input type="text" placeholder="My Website" value="${escapeHtml(link.title||'')}" oninput="editingLinks[${i}].title=this.value;updateLinkPreview(${i})"></div>
-          <div class="form-row"><label>Type</label><select onchange="editingLinks[${i}].type=this.value;renderLinksEditor();">
-            <option value="link" ${link.type!=='music'?'selected':''}>Link</option>
-            <option value="music" ${link.type==='music'?'selected':''}>Music Embed</option>
-          </select></div>
-        </div>
-        <div class="form-row"><label>URL</label><input type="url" placeholder="https://..." value="${escapeHtml(link.url||'')}" oninput="editingLinks[${i}].url=this.value;updateLinkPreview(${i})"></div>
-        ${link.type==='music'?`<div class="form-row"><label>Embed URL</label><input type="url" placeholder="Spotify/SoundCloud embed" value="${escapeHtml(link.embedUrl||'')}" oninput="editingLinks[${i}].embedUrl=this.value"></div>`:''}
-        <div class="link-style-row">
-          <div class="style-group"><label>Icon</label><input type="text" placeholder="&#128279;" value="${escapeHtml(link.icon||'')}" oninput="editingLinks[${i}].icon=this.value" style="width:110px;"></div>
-          <div class="style-group"><label>Bg</label><input type="color" value="${link.btnBg||'#7c6af7'}" oninput="editingLinks[${i}].btnBg=this.value;updateLinkPreview(${i})"></div>
-          <div class="style-group"><label>Text</label><input type="color" value="${link.btnTextColor||'#ffffff'}" oninput="editingLinks[${i}].btnTextColor=this.value"></div>
-          <div class="style-group"><label>Radius</label><input type="number" value="${link.btnRadius??12}" min="0" max="999" oninput="editingLinks[${i}].btnRadius=parseInt(this.value)||0" style="width:65px;"></div>
-          <div class="style-group"><label>Shadow</label><select onchange="editingLinks[${i}].btnShadow=this.value" style="width:90px;">
-            <option value="none" ${!link.btnShadow||link.btnShadow==='none'?'selected':''}>None</option>
-            <option value="0 4px 15px rgba(0,0,0,0.3)" ${link.btnShadow==='0 4px 15px rgba(0,0,0,0.3)'?'selected':''}>Soft</option>
-            <option value="0 8px 25px rgba(0,0,0,0.5)" ${link.btnShadow==='0 8px 25px rgba(0,0,0,0.5)'?'selected':''}>Heavy</option>
-            <option value="0 0 20px rgba(124,106,247,0.6)" ${link.btnShadow==='0 0 20px rgba(124,106,247,0.6)'?'selected':''}>Glow</option>
-          </select></div>
-        </div>
+        ${buildLinkBodyHTML(link,i)}
       </div>`;
     container.appendChild(div);
   });
-  new Sortable(container,{handle:'.drag-handle',animation:200,onEnd(){
-    const rows=container.querySelectorAll('.link-card'),nl=[];
-    rows.forEach(r=>nl.push(editingLinks[parseInt(r.dataset.index)]));
-    editingLinks=nl;renderLinksEditor();
-  }});
+  new Sortable(container,{handle:'.drag-handle',animation:200,
+    filter:'.link-category-header',
+    onEnd(){
+      const rows=container.querySelectorAll('[data-index]'),nl=[];
+      rows.forEach(r=>{const idx=parseInt(r.dataset.index);if(!isNaN(idx))nl.push(editingLinks[idx]);});
+      editingLinks=nl;renderLinksEditor(filterCat);
+    }
+  });
+  updateLinkStats();
+}
+
+function buildLinkBodyHTML(link,i){
+  const type=link.type||'link';
+  const isEmbed=['youtube_embed','twitch_embed','tiktok_embed','social_embed'].includes(type);
+  const isSpecial=['discord','steam'].includes(type);
+  // category selector from existing categories
+  const cats=[...new Set(editingLinks.filter(l=>l.type==='category').map(l=>l.title||'Category'))];
+  const catOpts=cats.map(c=>`<option value="${escapeHtml(c)}" ${link.category===c?'selected':''}>${escapeHtml(c)}</option>`).join('');
+  const typeOpts=`
+    <option value="link" ${type==='link'?'selected':''}>🔗 Link</option>
+    <option value="music" ${type==='music'?'selected':''}>🎵 Music Embed</option>
+    <option value="youtube_embed" ${type==='youtube_embed'?'selected':''}>▶️ YouTube Embed</option>
+    <option value="twitch_embed" ${type==='twitch_embed'?'selected':''}>📺 Twitch Embed</option>
+    <option value="tiktok_embed" ${type==='tiktok_embed'?'selected':''}>🎵 TikTok Embed</option>
+    <option value="discord" ${type==='discord'?'selected':''}>🎮 Discord Invite</option>
+    <option value="steam" ${type==='steam'?'selected':''}>🎮 Steam Profile</option>
+    <option value="social_embed" ${type==='social_embed'?'selected':''}>📱 Social Embed</option>
+  `;
+  let urlLabel='URL',urlPlaceholder='https://...';
+  if(type==='discord')   {urlLabel='Discord Invite URL';urlPlaceholder='https://discord.gg/...';}
+  if(type==='steam')     {urlLabel='Steam Profile URL';urlPlaceholder='https://steamcommunity.com/id/...';}
+  if(type==='youtube_embed'){urlLabel='YouTube URL';urlPlaceholder='https://youtube.com/watch?v=...';}
+  if(type==='twitch_embed'){urlLabel='Twitch Channel';urlPlaceholder='channel name or full URL';}
+  if(type==='tiktok_embed'){urlLabel='TikTok Video URL';urlPlaceholder='https://www.tiktok.com/@user/video/...';}
+  if(type==='social_embed'){urlLabel='Embed/Post URL';urlPlaceholder='https://...';}
+  const styleSection=(isEmbed||isSpecial)?'':`
+    <div class="link-style-row">
+      <div class="style-group"><label>Icon</label><input type="text" placeholder="🔗" value="${escapeHtml(link.icon||'')}" oninput="editingLinks[${i}].icon=this.value" style="width:110px;"></div>
+      <div class="style-group"><label>Bg</label><input type="color" value="${link.btnBg||'#7c6af7'}" oninput="editingLinks[${i}].btnBg=this.value;updateLinkPreview(${i})"></div>
+      <div class="style-group"><label>Text</label><input type="color" value="${link.btnTextColor||'#ffffff'}" oninput="editingLinks[${i}].btnTextColor=this.value"></div>
+      <div class="style-group"><label>Radius</label><input type="number" value="${link.btnRadius??12}" min="0" max="999" oninput="editingLinks[${i}].btnRadius=parseInt(this.value)||0" style="width:65px;"></div>
+      <div class="style-group"><label>Shadow</label><select onchange="editingLinks[${i}].btnShadow=this.value" style="width:90px;">
+        <option value="none" ${!link.btnShadow||link.btnShadow==='none'?'selected':''}>None</option>
+        <option value="0 4px 15px rgba(0,0,0,0.3)" ${link.btnShadow==='0 4px 15px rgba(0,0,0,0.3)'?'selected':''}>Soft</option>
+        <option value="0 8px 25px rgba(0,0,0,0.5)" ${link.btnShadow==='0 8px 25px rgba(0,0,0,0.5)'?'selected':''}>Heavy</option>
+        <option value="0 0 20px rgba(124,106,247,0.6)" ${link.btnShadow==='0 0 20px rgba(124,106,247,0.6)'?'selected':''}>Glow</option>
+      </select></div>
+      <div class="style-group"><label>Hover Anim</label><select onchange="editingLinks[${i}].hoverAnim=this.value" style="width:90px;">
+        <option value="none" ${!link.hoverAnim||link.hoverAnim==='none'?'selected':''}>Default</option>
+        <option value="bounce" ${link.hoverAnim==='bounce'?'selected':''}>Bounce</option>
+        <option value="shake"  ${link.hoverAnim==='shake'?'selected':''}>Shake</option>
+        <option value="glow"   ${link.hoverAnim==='glow'?'selected':''}>Glow</option>
+        <option value="spin"   ${link.hoverAnim==='spin'?'selected':''}>Spin</option>
+        <option value="float"  ${link.hoverAnim==='float'?'selected':''}>Float</option>
+        <option value="pulse"  ${link.hoverAnim==='pulse'?'selected':''}>Pulse</option>
+      </select></div>
+    </div>`;
+  return `
+    <div class="form-grid">
+      <div class="form-row"><label>Title</label><input type="text" placeholder="My Link" value="${escapeHtml(link.title||'')}" oninput="editingLinks[${i}].title=this.value;updateLinkPreview(${i})"></div>
+      <div class="form-row"><label>Type</label><select onchange="editingLinks[${i}].type=this.value;renderLinksEditor();">${typeOpts}</select></div>
+    </div>
+    <div class="form-row"><label>${urlLabel}</label><input type="url" placeholder="${urlPlaceholder}" value="${escapeHtml(link.url||'')}" oninput="editingLinks[${i}].url=this.value;updateLinkPreview(${i})"></div>
+    ${type==='music'?`<div class="form-row"><label>Embed URL</label><input type="url" placeholder="Spotify/SoundCloud embed" value="${escapeHtml(link.embedUrl||'')}" oninput="editingLinks[${i}].embedUrl=this.value"></div>`:''}
+    ${styleSection}
+    <div class="link-adv-row">
+      ${cats.length?`<div class="style-group"><label>Category</label><select onchange="editingLinks[${i}].category=this.value" style="width:110px;"><option value="">None</option>${catOpts}</select></div>`:''}
+      <div class="style-group">
+        <label>Scheduled Start</label>
+        <input type="datetime-local" value="${link.schedStart||''}" oninput="editingLinks[${i}].schedStart=this.value" style="font-size:0.75rem;padding:0.3rem 0.5rem;">
+      </div>
+      <div class="style-group">
+        <label>Scheduled End</label>
+        <input type="datetime-local" value="${link.schedEnd||''}" oninput="editingLinks[${i}].schedEnd=this.value" style="font-size:0.75rem;padding:0.3rem 0.5rem;">
+      </div>
+      <label class="toggle-label"><input type="checkbox" class="toggle-input" ${link.nsfw?'checked':''} onchange="editingLinks[${i}].nsfw=this.checked;renderLinksEditor();"><span class="toggle-slider"></span> NSFW</label>
+      <label class="toggle-label"><input type="checkbox" class="toggle-input" ${link.private?'checked':''} onchange="editingLinks[${i}].private=this.checked;renderLinksEditor();"><span class="toggle-slider"></span> Private</label>
+      <label class="toggle-label"><input type="checkbox" class="toggle-input" ${link.hidden?'checked':''} onchange="editingLinks[${i}].hidden=this.checked;renderLinksEditor();"><span class="toggle-slider"></span> Hidden</label>
+    </div>`;
+}
+
+function updateLinkStats(){
+  const el=document.getElementById('link-stats-row');if(!el)return;
+  const total=editingLinks.filter(l=>l.type!=='category').length;
+  const totalClicks=editingLinks.reduce((a,l)=>a+(l.clicks||0),0);
+  const hidden=editingLinks.filter(l=>l.hidden).length;
+  const nsfw=editingLinks.filter(l=>l.nsfw).length;
+  const scheduled=editingLinks.filter(l=>l.schedStart||l.schedEnd).length;
+  el.innerHTML=`
+    <span>🔗 ${total} link${total!==1?'s':''}</span>
+    <span>👆 ${totalClicks} total clicks</span>
+    ${hidden?`<span>👁 ${hidden} hidden</span>`:''}
+    ${nsfw?`<span>🔞 ${nsfw} NSFW</span>`:''}
+    ${scheduled?`<span>⏰ ${scheduled} scheduled</span>`:''}
+  `;
+}
+
+function updateCatFilter(){
+  const bar=document.getElementById('cat-filter-bar');if(!bar)return;
+  const cats=[...new Set(editingLinks.filter(l=>l.type==='category').map(l=>l.title||'Category'))];
+  const active=bar.querySelector('.cat-filter-chip.active')?.dataset?.cat||'';
+  bar.innerHTML=`<div class="cat-filter-chip${active===''?' active':''}" data-cat="" onclick="filterLinksByCategory('',this)">All</div>`;
+  cats.forEach(c=>{
+    const chip=document.createElement('div');chip.className='cat-filter-chip'+(active===c?' active':'');
+    chip.dataset.cat=c;chip.textContent=c;chip.onclick=function(){filterLinksByCategory(c,this);};
+    bar.appendChild(chip);
+  });
+}
+
+function filterLinksByCategory(cat,el){
+  document.querySelectorAll('.cat-filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderLinksEditor(cat||'');
 }
 function toggleLinkCard(i,btn){const b=document.getElementById(`link-body-${i}`);btn.textContent=b.classList.toggle('collapsed')?'Edit \u25be':'Close \u25b4';}
 function updateLinkPreview(i){
@@ -799,10 +1376,29 @@ function updateLinkPreview(i){
   c.querySelector('.link-preview-title').textContent=editingLinks[i].title||'Untitled Link';
   c.querySelector('.link-preview-url').textContent=editingLinks[i].url||'No URL set';
 }
-function addLink(){
-  editingLinks.push({title:'',url:'',type:'link',icon:'',embedUrl:'',btnBg:'#7c6af7',btnTextColor:'#ffffff',btnRadius:12,btnShadow:'none'});
+function addLink(type){
+  type=type||'link';
+  const defaults={link:{title:'',url:'',btnBg:'#7c6af7',btnTextColor:'#ffffff',btnRadius:12,btnShadow:'none',icon:'',hoverAnim:'none'},
+    music:{title:'My Music',url:'',embedUrl:'',btnBg:'#1db954',btnTextColor:'#fff',btnRadius:12,btnShadow:'none',icon:'🎵'},
+    youtube_embed:{title:'YouTube Video',url:'',btnBg:'#ff0000',btnTextColor:'#fff',btnRadius:12,btnShadow:'none'},
+    twitch_embed:{title:'Twitch Stream',url:'',btnBg:'#9146ff',btnTextColor:'#fff',btnRadius:12,btnShadow:'none'},
+    tiktok_embed:{title:'TikTok Video',url:'',btnBg:'#000',btnTextColor:'#fff',btnRadius:12,btnShadow:'none'},
+    discord:{title:'Join My Discord',url:'',icon:'🎮',btnBg:'#5865F2',btnTextColor:'#fff',btnRadius:12,btnShadow:'none'},
+    steam:{title:'Steam Profile',url:'',icon:'🎮',btnBg:'#1b2838',btnTextColor:'#c7d5e0',btnRadius:12,btnShadow:'none'},
+    social_embed:{title:'Social Post',url:'',btnBg:'#333',btnTextColor:'#fff',btnRadius:12,btnShadow:'none'},
+    category:{title:'New Category',catIcon:'📂'},
+  };
+  editingLinks.push({...(defaults[type]||defaults.link),type});
   renderLinksEditor();
-  setTimeout(()=>{const cards=document.querySelectorAll('.link-card'),last=cards[cards.length-1];if(last){const t=last.querySelector('.link-card-toggle');if(last.querySelector('.link-card-body.collapsed'))t?.click();last.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);
+  setTimeout(()=>{
+    const cards=document.querySelectorAll('.link-card, .link-category-header');
+    const last=cards[cards.length-1];
+    if(last){
+      const t=last.querySelector('.link-card-toggle');
+      if(t&&last.querySelector('.link-card-body.collapsed'))t.click();
+      last.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  },50);
 }
 function removeLink(i){editingLinks.splice(i,1);renderLinksEditor();toast('Link removed','info');}
 
@@ -890,7 +1486,15 @@ async function saveProfile(){
     musicPlatform:platform,musicUrl:rawMusicUrl,musicEmbedUrl,
     musicHeight:parseInt(gv('edit-music-height'))||152,
     musicAutoplay:gc('edit-music-autoplay'),musicVisualizer:gc('edit-music-visualizer'),
-    links:editingLinks.filter(l=>l.title&&l.url).map(l=>({title:l.title,url:makeAbsoluteUrl(l.url),type:l.type||'link',embedUrl:l.embedUrl||'',icon:l.icon||'',btnBg:l.btnBg||'#7c6af7',btnTextColor:l.btnTextColor||'#fff',btnRadius:l.btnRadius??12,btnShadow:l.btnShadow||'none'})),
+    links:editingLinks.filter(l=>l.type==='category'||(l.title&&l.url)).map(l=>{
+      if(l.type==='category')return{type:'category',title:l.title||'Category',catIcon:l.catIcon||'📂'};
+      return{title:l.title,url:makeAbsoluteUrl(l.url),type:l.type||'link',embedUrl:l.embedUrl||'',icon:l.icon||'',
+        btnBg:l.btnBg||'#7c6af7',btnTextColor:l.btnTextColor||'#fff',btnRadius:l.btnRadius??12,btnShadow:l.btnShadow||'none',
+        hoverAnim:l.hoverAnim||'none',category:l.category||'',
+        nsfw:!!l.nsfw,private:!!l.private,hidden:!!l.hidden,
+        schedStart:l.schedStart||'',schedEnd:l.schedEnd||'',
+        clicks:l.clicks||0};
+    }),
     socials:editingSocials.filter(s=>s.platform&&s.url).map(s=>({platform:s.platform,url:makeAbsoluteUrl(s.url),icon:s.icon||'\u{1F517}'})),
     uid:currentUser.uid,email:currentUser.email,
     verified:userDoc.verified||false,verificationRequested:userDoc.verificationRequested||false,admin:userDoc.admin||false,
@@ -1117,21 +1721,112 @@ async function renderProfile(data,container){
     </div>`;
   }
 
-  // Music embeds
-  (data.links||[]).filter(l=>l.type==='music').forEach(l=>{
-    html+=`<div class="pub-music-embed"><iframe src="${escapeHtml(l.embedUrl||l.url)}" frameborder="0" allow="encrypted-media" style="width:100%;height:80px;border:none;display:block;"></iframe></div>`;
-  });
-
-  // Links
-  const regularLinks=(data.links||[]).filter(l=>l.type!=='music');
-  if(regularLinks.length){
-    html+=`<div class="pub-links">`;
-    regularLinks.forEach((link,idx)=>{
+  // Links — with categories, scheduling, NSFW gate, embeds, special types
+  const allLinks=data.links||[];
+  const now=Date.now();
+  // filter: not hidden, not private, within schedule
+  function isLinkVisible(l){
+    if(l.hidden||l.private)return false;
+    if(l.schedStart&&now<new Date(l.schedStart).getTime())return false;
+    if(l.schedEnd&&now>new Date(l.schedEnd).getTime())return false;
+    return true;
+  }
+  const visibleLinks=allLinks.filter(l=>l.type==='category'||isLinkVisible(l));
+  if(visibleLinks.length){
+    html+=`<div class="pub-links" id="pub-links-${data.uid||'preview'}">`;
+    visibleLinks.forEach((link,idx)=>{
+      const type=link.type||'link';
+      // ── Category header ──
+      if(type==='category'){
+        html+='<div style="display:flex;align-items:center;gap:0.5rem;margin:0.5rem 0 0.25rem;opacity:0.5;">'
+          +'<div style="flex:1;height:1px;background:currentColor;opacity:0.2;"></div>'
+          +'<span style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">'+escapeHtml(link.catIcon||'\U0001F4C2')+' '+escapeHtml(link.title||'')+'</span>'
+          +'<div style="flex:1;height:1px;background:currentColor;opacity:0.2;"></div>'
+          +'</div>';
+        return;
+      }
+      const hoverAnimClass=link.hoverAnim&&link.hoverAnim!=='none'?` lha-${link.hoverAnim}`:'';
+      // ── YouTube embed ──
+      if(type==='youtube_embed'){
+        const vid=link.url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+        if(vid){html+='<div class="link-embed-wrap yt-embed-wrap"><iframe src="https://www.youtube.com/embed/'+vid[1]+'?rel=0" allowfullscreen loading="lazy"></iframe></div>';}
+        return;
+      }
+      // ── Twitch embed ──
+      if(type==='twitch_embed'){
+        const ch=link.url.replace(/.*twitch\.tv\//i,'').replace(/\/.*/,'').trim()||link.url.trim();
+        html+='<div class="link-embed-wrap twitch-embed-wrap"><iframe src="https://player.twitch.tv/?channel='+encodeURIComponent(ch)+'&parent='+encodeURIComponent(window.location.hostname)+'&autoplay=false" height="200" allowfullscreen loading="lazy"></iframe></div>';
+        return;
+      }
+      // ── TikTok embed ──
+      if(type==='tiktok_embed'){
+        const m=link.url.match(/video\/(\d+)/);
+        if(m){html+='<div class="link-embed-wrap tiktok-embed-wrap">'
+          +'<blockquote class="tiktok-embed" cite="'+escapeHtml(link.url)+'" data-video-id="'+m[1]+'" style="max-width:605px;min-width:325px;"><section></section></blockquote>'
+          +'<sc'+'ript async src="https://www.tiktok.com/embed.js"></sc'+'ript>'
+          +'</div>';}
+        else{html+='<div class="link-embed-wrap" style="padding:1rem;background:rgba(0,0,0,0.3);border-radius:12px;text-align:center;font-size:0.875rem;opacity:0.6;">TikTok: '+escapeHtml(link.url)+'</div>';}
+        return;
+      }
+      // ── Music embed ──
+      if(type==='music'){
+        html+='<div class="link-embed-wrap pub-music-embed"><iframe src="'+escapeHtml(link.embedUrl||link.url)+'" height="80" allow="encrypted-media" loading="lazy"></iframe></div>';
+        return;
+      }
+      // ── Discord invite ──
+      if(type==='discord'){
+        const dUrl=escapeHtml(makeAbsoluteUrl(link.url));
+        const dTitle=escapeHtml(link.title||'Join Discord');
+        const dUid=escapeHtml(data.uid||'');
+        html+='<a href="'+dUrl+'" target="_blank" rel="noopener noreferrer" class="discord-invite-btn'+hoverAnimClass+'" onclick="trackClick(\''+dUid+'\','+idx+')">'
+          +'<span style="font-size:1.2rem;">🎮</span>'
+          +'<span>'+dTitle+'</span>'
+          +'<span style="font-size:0.75rem;opacity:0.7;margin-left:auto;">Join Server &#8594;</span>'
+          +'</a>';
+        return;
+      }
+      // ── Steam ──
+      if(type==='steam'){
+        const sUrl=escapeHtml(makeAbsoluteUrl(link.url));
+        const sTitle=escapeHtml(link.title||'Steam Profile');
+        const sUid=escapeHtml(data.uid||'');
+        html+='<a href="'+sUrl+'" target="_blank" rel="noopener noreferrer" class="steam-btn'+hoverAnimClass+'" onclick="trackClick(\''+sUid+'\','+idx+')">'
+          +'<span style="font-size:1.2rem;">🎮</span>'
+          +'<span>'+sTitle+'</span>'
+          +'</a>';
+        return;
+      }
+      // ── NSFW gate ──
+      if(link.nsfw){
+        const gateId='nsfw-gate-'+idx+'-'+(data.uid||'p');
+        const linkId='nsfw-link-'+idx+'-'+(data.uid||'p');
+        html+='<div id="'+gateId+'" class="nsfw-gate" onclick="'
+          +"document.getElementById('"+gateId+"').style.display='none';"
+          +"document.getElementById('"+linkId+"').style.display='flex';"
+          +'">'
+          +'<span style="font-size:1.2rem;">&#x1F51E;</span>'
+          +'<span>NSFW Content &#8212; Click to reveal</span>'
+          +'<small>'+escapeHtml(link.title)+'</small>'
+          +'</div>';
+        const nsfwBg=link.btnBg||'#7c6af7';
+        const nsfwStyle='background:'+escapeHtml(nsfwBg)+';color:'+escapeHtml(link.btnTextColor||'#fff')+';border-radius:'+(link.btnRadius??12)+'px;box-shadow:'+escapeHtml(link.btnShadow||'none')+';display:none;';
+        const nsfwUid=escapeHtml(data.uid||'');
+        let nsfwIcon='';
+        if(link.icon){nsfwIcon=isImgSrc(link.icon)?'<img src="'+escapeHtml(link.icon)+'" style="width:20px;height:20px;object-fit:contain;border-radius:3px;flex-shrink:0;">'
+          :'<span>'+escapeHtml(link.icon)+'</span>';}
+        html+='<a id="'+linkId+'" href="'+escapeHtml(makeAbsoluteUrl(link.url))+'" target="_blank" rel="noopener noreferrer" class="pub-link-btn'+hoverAnimClass+'" style="'+nsfwStyle+'" onclick="trackClick(\''+nsfwUid+'\','+idx+')">'
+          +nsfwIcon+'<span>'+escapeHtml(link.title)+'</span></a>';
+        return;
+      }
+      // ── Standard link ──
       const bg=link.btnBg||'#7c6af7';
-      const btnStyle=`background:${escapeHtml(bg)};color:${escapeHtml(link.btnTextColor||'#fff')};border-radius:${link.btnRadius??12}px;box-shadow:${escapeHtml(link.btnShadow||'none')};`;
+      const btnStyle='background:'+escapeHtml(bg)+';color:'+escapeHtml(link.btnTextColor||'#fff')+';border-radius:'+(link.btnRadius??12)+'px;box-shadow:'+escapeHtml(link.btnShadow||'none')+';';
       let iconHtml='';
-      if(link.icon){iconHtml=isImgSrc(link.icon)?`<img src="${escapeHtml(link.icon)}" style="width:20px;height:20px;object-fit:contain;border-radius:3px;flex-shrink:0;">`:`<span>${escapeHtml(link.icon)}</span>`;}
-      html+=`<a href="${escapeHtml(makeAbsoluteUrl(link.url))}" target="_blank" rel="noopener noreferrer" class="pub-link-btn" style="${btnStyle}" onclick="trackClick('${escapeHtml(data.uid||'')}',${idx})">${iconHtml}<span>${escapeHtml(link.title)}</span></a>`;
+      if(link.icon){iconHtml=isImgSrc(link.icon)?'<img src="'+escapeHtml(link.icon)+'" style="width:20px;height:20px;object-fit:contain;border-radius:3px;flex-shrink:0;">'
+        :'<span>'+escapeHtml(link.icon)+'</span>';}
+      const stdUid=escapeHtml(data.uid||'');
+      html+='<a href="'+escapeHtml(makeAbsoluteUrl(link.url))+'" target="_blank" rel="noopener noreferrer" class="pub-link-btn'+hoverAnimClass+'" style="'+btnStyle+'" onclick="trackClick(\''+stdUid+'\','+idx+')">'
+        +iconHtml+'<span>'+escapeHtml(link.title)+'</span></a>';
     });
     html+=`</div>`;
   }
@@ -1276,7 +1971,25 @@ async function loadAnalytics(){
 }
 async function trackClick(profileId,linkIndex){
   if(!profileId)return;
-  try{await db.collection('analytics').add({profileId,eventType:'click',linkIndex,timestamp:firebase.firestore.FieldValue.serverTimestamp()});}catch(e){}
+  try{
+    await db.collection('analytics').add({profileId,eventType:'click',linkIndex,timestamp:firebase.firestore.FieldValue.serverTimestamp()});
+    // Increment per-link click counter
+    const pSnap=await db.collection('profiles').doc(profileId).get();
+    if(pSnap.exists){
+      const links=[...(pSnap.data().links||[])];
+      let realIdx=0,visCount=0;
+      for(let j=0;j<links.length;j++){
+        if(links[j].type!=='category'){
+          if(visCount===linkIndex){realIdx=j;break;}
+          visCount++;
+        }
+      }
+      if(links[realIdx]){
+        links[realIdx].clicks=(links[realIdx].clicks||0)+1;
+        await db.collection('profiles').doc(profileId).update({links});
+      }
+    }
+  }catch(e){}
 }
 
 // ============ ADMIN ============
@@ -1306,7 +2019,7 @@ async function loadAdminUsers(){
 }
 async function adminToggleVerify(userId,verify){
   if(!isAdmin)return;
-  try{await db.collection('profiles').doc(userId).update({verified:verify,verifiacationRequested:false});toast(`User ${verify?'verified \u2714\ufe0f':'unverified'}`,'success');loadAdminUsers();}
+  try{await db.collection('profiles').doc(userId).update({verified:verify,verificationRequested:false});toast(`User ${verify?'verified \u2714\ufe0f':'unverified'}`,'success');loadAdminUsers();}
   catch(e){toast('Error: '+e.message,'error');}
 }
 
